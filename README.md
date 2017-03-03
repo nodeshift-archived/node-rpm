@@ -67,11 +67,20 @@ Then use the macro:
 Just note also that major sections in the spec file also use % but they are no
 macros as they do not use the define keyword.
 
+Pathes are listed using:
+
+    Patch1: nodejs-disable-gyp-deps.patch
+
+And then applied using the patch directive `%patch':
+
+    %patch1 -p1
+
 #### RPM build directories
 This directory is created in `/root/rpmbuild` and has the following subdirectories:
 
-* BUILD    this is where RPM builds the software
-* RPMS     where the binary RPM are stored after being created
-* SOURCES  where we place the sources
-* SPECS    where spec file should be placed
-* SRPMS    where the source RPM are stored after being created
+* BUILD      this is where RPM builds node
+* RPMS       where the binary RPM are stored after being created
+* SOURCES    where we place the sources
+* SPECS      where spec file should be placed
+* SRPMS      where the source RPM are stored after being created
+* BUILDROOT  a staging area that looks like the final installation directory
