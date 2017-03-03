@@ -49,7 +49,7 @@ Copy a RPM form the container:
     $ docker rm $(docker ps -a -q)
 
 
-### RPM Spec file notes
+### nodjs.spec walkthrough/notes
 A spec file is build up using RPM directives which have the following format:
 
     <tagname>:<value>
@@ -74,6 +74,59 @@ Pathes are listed using:
 And then applied using the patch directive `%patch':
 
     %patch1 -p1
+
+Preparing the build process is used with the %prep directive:
+
+    %prep
+    %setup -q -n node-v%{version}
+
+The setup command changes to /root/rpmbuild directory and extracts the source code.
+
+The `-q` is to make it quit and `-n` to name the directory (of the extracted source)
+which in our case will be `~/rpmbuild/BUILD/node-v6.9.1/`
+After this the patches are applied and then the deps that are not used 'nvm', 'libuv', 'http-parser', and 'zlib' are removed:
+
+    $ rm -rf deps/npm \
+       deps/uv \
+       deps/http-parser \
+       deps/zlib
+
+src/node_root_certs.h is also removed from the sources after patch2 has been applied.
+
+The `%build` section does the actual build prepared in the `%prep` section.
+Apart from setting compiler flags the normal configure is found:
+
+    $ ./configure --prefix=%{_prefix} \
+           --shared-http-parser \
+           --shared-zlib \
+           --shared-libuv \
+           --without-npm \
+           --without-dtrace \
+           --shared-openssl
+
+Then make is run specifying a `BUILDTYPE` of Debug or Release:
+
+    $ make BUILDTYPE=Release|Debug
+
+Next, the %install section installs the software:
+
+    %install
+    ./tools/install.py install %{buildroot} %{_prefix}
+
+The `%check` section currently only run the parallel tests:
+
+    %check
+    %{?scl:scl enable %{scl} "}
+    python tools/test.py --mode=release parallel -J
+    %{?scl:"}
+
+This will miss the cctest and addons for example. Perhaps this is done as they
+are currently failing for them but hopefully in the future this could be update
+to run the full suite of tests.
+
+The `%files` section specifies all the files that should be installed from this
+package.
+
 
 #### RPM build directories
 This directory is created in `/root/rpmbuild` and has the following subdirectories:
