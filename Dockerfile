@@ -10,6 +10,7 @@ RUN mkdir -p /usr/src/node-rhel
 WORKDIR /usr/src/node-rhel/
 
 COPY rpm-repo/nodejs.spec rpm-repo/nodejs-tarball.sh /usr/src/node-rhel/
+COPY rpm-repo/nodejs.spec /root/rpmbuild/SPEC
 
 COPY rpm-repo/0001-Disable-crypto-tests.patch   \
      rpm-repo/0001-Disable-failing-tests.patch  \
