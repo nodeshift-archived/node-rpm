@@ -30,6 +30,19 @@ The run the following command to build the RPM:
 
     $ rpmbuild -ba nodejs.spec
 
+If all goes well you should see the following output:
+
+    Wrote: /root/rpmbuild/SRPMS/nodejs-6.9.1-2.fc25.src.rpm
+    Wrote: /root/rpmbuild/RPMS/x86_64/nodejs-6.9.1-2.fc25.x86_64.rpm
+    Wrote: /root/rpmbuild/RPMS/x86_64/nodejs-devel-6.9.1-2.fc25.x86_64.rpm
+    Wrote: /root/rpmbuild/RPMS/noarch/nodejs-docs-6.9.1-2.fc25.noarch.rpm
+    Wrote: /root/rpmbuild/RPMS/x86_64/nodejs-debuginfo-6.9.1-2.fc25.x86_64.rpm
+
+
+Copy a RPM form the container:
+
+    $ docker cp <containerId>:/root/rpmbuild/RPMS/x86_64/nodejs-6.9.1-2.fc25.x86_64.rpm .
+
 
 ### Delete old containers
 
