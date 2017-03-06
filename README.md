@@ -49,6 +49,37 @@ Copy a RPM form the container:
     $ docker rm $(docker ps -a -q)
 
 
+### Questions
+
+#### Why are only the parallel test run
+Currentl only the parallel test are run and nothing else:
+
+    python tools/test.py --mode=release parallel -J
+
+This will miss the cctest and addons for example. Perhaps this is done as they
+are currently failing for them but hopefully in the future this could be update
+to run the full suite of tests. 
+
+
+
+#### Disabled tests
+`test/parallel/npm-install.js` fails because npm in removed. In upstream there is a check 
+added to see if crypto is installed, and if not this test will be skipped. So this test
+could be enabled at some point. Also there is a configuration option `--without-npm` that 
+migth be usable. This seems to be because the test are dependant on the deps/npm which 
+has been removed. But I'm not sure why the deps is removed from the source
+tree. It looks like we can avoid installing this using the `--without-npm` and then still 
+be able to run the tests
+
+`test-net-connect-immediate-finish.js`passes for me. Need to find out the what differences
+there might be compared to the target environment this is normally run on.
+
+`test-net-better-error-messages-port-hostname.js`
+
+
+#### Is scldevel really needed?
+This seems to build fine without this build requirement, is it really needed?
+
 ### nodjs.spec walkthrough/notes
 A spec file is build up using RPM directives which have the following format:
 
