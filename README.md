@@ -51,15 +51,35 @@ Copy a RPM form the container:
 
 ### Questions
 
-#### Why are only the parallel test run
+#### Does openssl need to be removed from the downloaded tar?
+Currently the nodejs-tarball.sh downloads the Node.js version specified in the 
+spec file and then removed `dep/openssl` from it. Perhaps it would be enough
+to just configure `--without-ssl` and not remove it. Is this so that it does not
+end up in the source rpm file?
+
+    $ rpm -qpl ~/rpmbuild/SRPMS/nodejs-6.9.1-2.fc25.src.rpm
+    0001-Disable-crypto-tests.patch
+    0001-Disable-failing-tests.patch
+    0002-Use-openssl-1.0.1.patch
+    node-v6.9.1-stripped.tar.gz
+    nodejs-disable-gyp-deps.patch
+    nodejs-tarball.sh
+    nodejs-use-system-certs.patch
+    nodejs.spec
+
+#### Why are only the parallel test run?
 Currentl only the parallel test are run and nothing else:
 
     python tools/test.py --mode=release parallel -J
 
-This will miss the cctest and addons for example. Perhaps this is done as they
-are currently failing for them but hopefully in the future this could be update
-to run the full suite of tests. 
+This will miss the cctest and addons for example. Some of these test depend on `npm` which
+has been removed from the deps directory which would explain why those test are not being
+executed. 
 
+#### Does npm really need to be removed?
+It looks like npm is removed to avoid it from being installed on the target system, but
+this is accomplished using the `--without-npm`flag which is already specified.
+If needed deps/npm could be removed after as the last step in the checks section.
 
 
 #### Disabled tests
