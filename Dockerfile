@@ -6,20 +6,19 @@ RUN yum install -y gcc-c++ gyp http-parser-devel libuv-devel openssl-devel procp
 
 RUN rpmdev-setuptree
 
-RUN mkdir -p /usr/src/node-rhel
-WORKDIR /usr/src/node-rhel/
+RUN mkdir -p /usr/src/node-rpm
+WORKDIR /usr/src/node-rpm/
 
-COPY rpm-repo/nodejs.spec rpm-repo/nodejs-tarball.sh /usr/src/node-rhel/
-COPY rpm-repo/nodejs.spec /root/rpmbuild/SPEC
+COPY src/nodejs.spec src/nodejs-tarball.sh /usr/src/node-rpm/
+COPY src/nodejs.spec /root/rpmbuild/SPEC
 
-COPY rpm-repo/0001-Disable-crypto-tests.patch   \
-     rpm-repo/0001-Disable-failing-tests.patch  \
-     rpm-repo/0002-Use-openssl-1.0.1.patch      \
-     rpm-repo/nodejs-disable-gyp-deps.patch     \
-     rpm-repo/nodejs-tarball.sh                 \
-     rpm-repo/nodejs-use-system-certs.patch     \
-     rpm-repo/sources /root/rpmbuild/SOURCES/
+COPY src/patches/0001-Disable-crypto-tests.patch   \
+     src/patches/0001-Disable-failing-tests.patch  \
+     src/patches/0002-Use-openssl-1.0.1.patch      \
+     src/patches/nodejs-disable-gyp-deps.patch     \
+     src/patches/nodejs-use-system-certs.patch     \
+     src/nodejs-tarball.sh /root/rpmbuild/SOURCES/ 
 
-RUN /usr/src/node-rhel/nodejs-tarball.sh
-RUN cp /usr/src/node-rhel/*.tar.gz /root/rpmbuild/SOURCES/
+RUN /usr/src/node-rpm/nodejs-tarball.sh
+RUN cp /usr/src/node-rpm/*.tar.gz /root/rpmbuild/SOURCES/
 CMD ["bash"]

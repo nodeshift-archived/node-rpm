@@ -1,0 +1,77 @@
+From e90119932ce27998f5961dbad7ae30f7b6930cb1 Mon Sep 17 00:00:00 2001
+From: Zuzana Svetlikova <zsvetlik@redhat.com>
+Date: Wed, 11 Jan 2017 14:54:02 +0100
+Subject: [PATCH] Disable crypto tests
+
+---
+ test/{parallel => disabled}/test-crypto-dh.js             | 0
+ test/{parallel => disabled}/test-crypto-fips.js           | 0
+ test/{parallel => disabled}/test-tls-cnnic-whitelist.js   | 0
+ test/{parallel => disabled}/test-tls-dhe.js               | 0
+ test/{parallel => disabled}/test-tls-ecdh-disable.js      | 0
+ test/{parallel => disabled}/test-tls-ecdh.js              | 0
+ test/{parallel => disabled}/test-tls-empty-sni-context.js | 0
+ test/{parallel => disabled}/test-tls-pfx-gh-5100-regr.js  | 0
+ test/{parallel => disabled}/test-tls-securepair-server.js | 0
+ test/{parallel => disabled}/test-tls-sni-option.js        | 0
+ test/{parallel => disabled}/test-tls-sni-server-client.js | 0
+ 11 files changed, 0 insertions(+), 0 deletions(-)
+ rename test/{parallel => disabled}/test-crypto-dh.js (100%)
+ rename test/{parallel => disabled}/test-crypto-fips.js (100%)
+ rename test/{parallel => disabled}/test-tls-cnnic-whitelist.js (100%)
+ rename test/{parallel => disabled}/test-tls-dhe.js (100%)
+ rename test/{parallel => disabled}/test-tls-ecdh-disable.js (100%)
+ rename test/{parallel => disabled}/test-tls-ecdh.js (100%)
+ rename test/{parallel => disabled}/test-tls-empty-sni-context.js (100%)
+ rename test/{parallel => disabled}/test-tls-pfx-gh-5100-regr.js (100%)
+ rename test/{parallel => disabled}/test-tls-securepair-server.js (100%)
+ rename test/{parallel => disabled}/test-tls-sni-option.js (100%)
+ rename test/{parallel => disabled}/test-tls-sni-server-client.js (100%)
+
+diff --git a/test/parallel/test-crypto-dh.js b/test/disabled/test-crypto-dh.js
+similarity index 100%
+rename from test/parallel/test-crypto-dh.js
+rename to test/disabled/test-crypto-dh.js
+diff --git a/test/parallel/test-crypto-fips.js b/test/disabled/test-crypto-fips.js
+similarity index 100%
+rename from test/parallel/test-crypto-fips.js
+rename to test/disabled/test-crypto-fips.js
+diff --git a/test/parallel/test-tls-cnnic-whitelist.js b/test/disabled/test-tls-cnnic-whitelist.js
+similarity index 100%
+rename from test/parallel/test-tls-cnnic-whitelist.js
+rename to test/disabled/test-tls-cnnic-whitelist.js
+diff --git a/test/parallel/test-tls-dhe.js b/test/disabled/test-tls-dhe.js
+similarity index 100%
+rename from test/parallel/test-tls-dhe.js
+rename to test/disabled/test-tls-dhe.js
+diff --git a/test/parallel/test-tls-ecdh-disable.js b/test/disabled/test-tls-ecdh-disable.js
+similarity index 100%
+rename from test/parallel/test-tls-ecdh-disable.js
+rename to test/disabled/test-tls-ecdh-disable.js
+diff --git a/test/parallel/test-tls-ecdh.js b/test/disabled/test-tls-ecdh.js
+similarity index 100%
+rename from test/parallel/test-tls-ecdh.js
+rename to test/disabled/test-tls-ecdh.js
+diff --git a/test/parallel/test-tls-empty-sni-context.js b/test/disabled/test-tls-empty-sni-context.js
+similarity index 100%
+rename from test/parallel/test-tls-empty-sni-context.js
+rename to test/disabled/test-tls-empty-sni-context.js
+diff --git a/test/parallel/test-tls-pfx-gh-5100-regr.js b/test/disabled/test-tls-pfx-gh-5100-regr.js
+similarity index 100%
+rename from test/parallel/test-tls-pfx-gh-5100-regr.js
+rename to test/disabled/test-tls-pfx-gh-5100-regr.js
+diff --git a/test/parallel/test-tls-securepair-server.js b/test/disabled/test-tls-securepair-server.js
+similarity index 100%
+rename from test/parallel/test-tls-securepair-server.js
+rename to test/disabled/test-tls-securepair-server.js
+diff --git a/test/parallel/test-tls-sni-option.js b/test/disabled/test-tls-sni-option.js
+similarity index 100%
+rename from test/parallel/test-tls-sni-option.js
+rename to test/disabled/test-tls-sni-option.js
+diff --git a/test/parallel/test-tls-sni-server-client.js b/test/disabled/test-tls-sni-server-client.js
+similarity index 100%
+rename from test/parallel/test-tls-sni-server-client.js
+rename to test/disabled/test-tls-sni-server-client.js
+-- 
+2.11.0
+
