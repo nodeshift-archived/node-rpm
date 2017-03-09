@@ -100,6 +100,23 @@ there might be compared to the target environment this is normally run on.
 #### Is scldevel really needed?
 This seems to build fine without this build requirement, is it really needed?
 
+#### Suggestion
+This repository could be reponsible for creating RPMs for Node [distributions](http://nodejs.org/dist) and 
+publishing the RPMs as github releases. Travis CI would be responsible for building the RPMs and publishing.
+
+This would allow us to take responsibility for the RPM creation and fix any new issue identified that concern
+Node.js source code changes. 
+If we can also find out what additional tests are run on an RPM we might be able to extend CI execution to 
+include them before publishing the final RPM.
+
+Development process:
+* For each major version of Node.js a branch in this repo will exist for it
+* For any minor/patch release a branch will be created for it and pushed for Travis CI to run (with out publishing)
+* If CI fails then manual building using Docker can be done to identify the issue and fix
+* When CI completes a tag is created for the minor/patch version and published
+
+_____
+
 ### nodjs.spec walkthrough/notes
 A spec file is build up using RPM directives which have the following format:
 
