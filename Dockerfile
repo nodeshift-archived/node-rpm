@@ -9,7 +9,7 @@ RUN rpmdev-setuptree
 RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/
 
-COPY src/nodejs.spec src/nodejs-tarball.sh /usr/src/node-rpm/
+COPY src/nodejs.spec src/nodejs-tarball.sh src/run.sh /usr/src/node-rpm/
 COPY src/nodejs.spec /root/rpmbuild/SPEC
 
 COPY src/patches/0001-Disable-crypto-tests.patch   \
@@ -19,6 +19,4 @@ COPY src/patches/0001-Disable-crypto-tests.patch   \
      src/patches/nodejs-use-system-certs.patch     \
      src/nodejs-tarball.sh /root/rpmbuild/SOURCES/ 
 
-RUN /usr/src/node-rpm/nodejs-tarball.sh
-RUN cp /usr/src/node-rpm/*.tar.gz /root/rpmbuild/SOURCES/
-CMD ["bash"]
+CMD ["./run.sh"]

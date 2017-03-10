@@ -11,7 +11,7 @@
 %endif
 
 Name: %{?scl_prefix}nodejs
-Version: 6.9.1
+Version: %{getenv:VERSION}
 Release: 2%{?dist}
 Summary: JavaScript runtime
 License: MIT and ASL 2.0 and ISC and BSD

@@ -1,9 +1,7 @@
+[![Build Status](https://travis-ci.org/danbev/node-rpm.svg?branch=master)](https://travis-ci.org/danbev/node-rpm)
+
 ### RHEL Node.js RPM Packaging image
 This project exist to help me understand how Node.js is packaged as an RPM by Fedora/RHEL.
-
-### Cloning the git repo
-
-    $ git clone -b rhscl-2.4-rh-nodejs6-rhel-7 git://pkgs.devel.redhat.com/rpms/nodejs rpm-repo
 
 ### Increase memory limit
 When runnnig the build you may require more than the default 2GB or memory.
@@ -18,7 +16,7 @@ If you see an error similar to this you may need to increase your memory setting
 
 ### Running a Docker container
 
-    $ docker run -ti danbev/fedora-node
+    $ docker run -ti --env VERSION=6.9.1 danbev/fedora-node
 
 ### Building the Node RPM
 Before running rpmbuild I needed to remove the `BuildRequirement` for scldev as it could not be found. This
