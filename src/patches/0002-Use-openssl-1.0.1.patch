@@ -70,10 +70,10 @@ index 9cf216f..888a0f8 100644
  
 +#ifndef SSL_get_server_tmp_key
 +/*
-+	1.0.2 SSL_get_server_tmp_key(s, pk) "backport". BAD HACK!!!
-+	NOTE: This imports "foreign" knowledge and thus will break, when SESS_CERT
-+	      or CERT_PKEY change, which is definitely the case for the later for
-+	      all OpenSSL lib vers != 1.0.1. So don't try to bind to something else!
++1.0.2 SSL_get_server_tmp_key(s, pk) "backport". BAD HACK!!!
++NOTE: This imports "foreign" knowledge and thus will break, when SESS_CERT
++      or CERT_PKEY change, which is definitely the case for the later for
++      all OpenSSL lib vers != 1.0.1. So don't try to bind to something else!
 + */
 +# define SSL_PKEY_NUM            8
 +typedef struct cert_pkey_st {
@@ -107,40 +107,40 @@ index 9cf216f..888a0f8 100644
 +} SESS_CERT;
 +
 +static long SSL_get_server_tmp_key(SSL *s, void *parg) {
-+	if (s->server || !s->session || !s->session->sess_cert)
-+		return 0;
-+	else {
-+		SESS_CERT *sc;
-+		EVP_PKEY *ptmp;
-+		int rv = 0;
-+		sc = s->session->sess_cert;
++if (s->server || !s->session || !s->session->sess_cert)
++return 0;
++else {
++SESS_CERT *sc;
++EVP_PKEY *ptmp;
++int rv = 0;
++sc = s->session->sess_cert;
 +#if !defined(OPENSSL_NO_RSA) && !defined(OPENSSL_NO_DH) && !defined(OPENSSL_NO_EC) && !defined(OPENSSL_NO_ECDH)
-+		if (!sc->peer_rsa_tmp && !sc->peer_dh_tmp && !sc->peer_ecdh_tmp)
-+			return 0;
++if (!sc->peer_rsa_tmp && !sc->peer_dh_tmp && !sc->peer_ecdh_tmp)
++return 0;
 +#endif
-+		ptmp = EVP_PKEY_new();
-+		if (!ptmp)
-+			return 0;
-+		if (0) ;
++ptmp = EVP_PKEY_new();
++if (!ptmp)
++return 0;
++if (0) ;
 +#ifndef OPENSSL_NO_RSA
-+		else if (sc->peer_rsa_tmp)
-+			rv = EVP_PKEY_set1_RSA(ptmp, sc->peer_rsa_tmp);
++else if (sc->peer_rsa_tmp)
++rv = EVP_PKEY_set1_RSA(ptmp, sc->peer_rsa_tmp);
 +#endif
 +#ifndef OPENSSL_NO_DH
-+		else if (sc->peer_dh_tmp)
-+			rv = EVP_PKEY_set1_DH(ptmp, sc->peer_dh_tmp);
++else if (sc->peer_dh_tmp)
++rv = EVP_PKEY_set1_DH(ptmp, sc->peer_dh_tmp);
 +#endif
 +#ifndef OPENSSL_NO_ECDH
-+		else if (sc->peer_ecdh_tmp)
-+			rv = EVP_PKEY_set1_EC_KEY(ptmp, sc->peer_ecdh_tmp);
++else if (sc->peer_ecdh_tmp)
++rv = EVP_PKEY_set1_EC_KEY(ptmp, sc->peer_ecdh_tmp);
 +#endif
-+		if (rv) {
-+			*(EVP_PKEY **)parg = ptmp;
-+			return 1;
-+		}
-+		EVP_PKEY_free(ptmp);
-+		return 0;
-+	}
++if (rv) {
++*(EVP_PKEY **)parg = ptmp;
++return 1;
++}
++EVP_PKEY_free(ptmp);
++return 0;
++}
 +}
 +#endif /* SSL_get_server_tmp_key */
 +
@@ -179,18 +179,18 @@ index 9cf216f..888a0f8 100644
 -      // NOTE: Increments reference count on `ca`
 -      r = SSL_CTX_add1_chain_cert(ctx, ca);
 +#if OPENSSL_VERSION_NUMBER >= 0x10002000L
-+		// If ctx->cert->key != NULL create ctx->cert->key->chain if not
-+		// already there, push 'ca' to this chain and finally increment the ca
-+		// reference count by 1 (this is the diff between *_add1_* and *_add0_*
-+		// - the later increments by 0 ;-)) and return 1. Otherwise or if
-+		// something fails in between, return 0.
-+		r = SSL_CTX_add1_chain_cert(ctx, ca);
++// If ctx->cert->key != NULL create ctx->cert->key->chain if not
++// already there, push 'ca' to this chain and finally increment the ca
++// reference count by 1 (this is the diff between *_add1_* and *_add0_*
++// - the later increments by 0 ;-)) and return 1. Otherwise or if
++// something fails in between, return 0.
++r = SSL_CTX_add1_chain_cert(ctx, ca);
 +#else
-+		// Create ctx->extra_certs if not already there, just push 'ca' to this
-+		// chain and return 1. If something fails, return 0.
-+		// NOTE: 1.0.1- does not support multiple certs having its own chain in
-+		//       a single context. There is just one: extra_chain!
-+		r = SSL_CTX_add_extra_chain_cert(ctx, ca);
++// Create ctx->extra_certs if not already there, just push 'ca' to this
++// chain and return 1. If something fails, return 0.
++// NOTE: 1.0.1- does not support multiple certs having its own chain in
++//       a single context. There is just one: extra_chain!
++r = SSL_CTX_add_extra_chain_cert(ctx, ca);
 +#endif
  
        if (!r) {
@@ -255,29 +255,29 @@ index 9cf216f..888a0f8 100644
      w->sni_context_.Reset(env->isolate(), ctx);
  
      int rv;
-+	X509* x509;
-+	EVP_PKEY* pkey;
-+	STACK_OF(X509)* chain;
++X509* x509;
++EVP_PKEY* pkey;
++STACK_OF(X509)* chain;
  
      // NOTE: reference count is not increased by this API methods
 -    X509* x509 = SSL_CTX_get0_certificate(sc->ctx_);
 -    EVP_PKEY* pkey = SSL_CTX_get0_privatekey(sc->ctx_);
 -    STACK_OF(X509)* chain;
 +#if OPENSSL_VERSION_NUMBER >= 0x10002000L
-+	x509 = SSL_CTX_get0_certificate(sc->ctx_);
-+	pkey = SSL_CTX_get0_privatekey(sc->ctx_);
-+	rv = SSL_CTX_get0_chain_certs(sc->ctx_, &chain);
++x509 = SSL_CTX_get0_certificate(sc->ctx_);
++pkey = SSL_CTX_get0_privatekey(sc->ctx_);
++rv = SSL_CTX_get0_chain_certs(sc->ctx_, &chain);
 +#else
-+	SSL *ssl = SSL_new(sc->ctx_);
-+	rv = SSL_CTX_get_extra_chain_certs(sc->ctx_, &chain);
-+	if (ssl) {
-+		SSL_set_connect_state(ssl);	/* just cleanup/reset state - cheap */
-+		x509 = SSL_get_certificate(ssl);
-+		SSL_free(ssl);
-+	} else {
-+		x509 = NULL;
-+		pkey = NULL;
-+	}
++SSL *ssl = SSL_new(sc->ctx_);
++rv = SSL_CTX_get_extra_chain_certs(sc->ctx_, &chain);
++if (ssl) {
++SSL_set_connect_state(ssl);/* just cleanup/reset state - cheap */
++x509 = SSL_get_certificate(ssl);
++SSL_free(ssl);
++} else {
++x509 = NULL;
++pkey = NULL;
++}
 +#endif
  
 -    rv = SSL_CTX_get0_chain_certs(sc->ctx_, &chain);
@@ -287,31 +287,31 @@ index 9cf216f..888a0f8 100644
 -      rv = SSL_use_PrivateKey(w->ssl_, pkey);
 -    if (rv && chain != nullptr)
 -      rv = SSL_set1_chain(w->ssl_, chain);
-+	if (rv)
-+		rv = SSL_use_certificate(w->ssl_, x509);
-+	if (rv)
-+		rv = SSL_use_PrivateKey(w->ssl_, pkey);
-+	if (rv && chain != nullptr) {
++if (rv)
++rv = SSL_use_certificate(w->ssl_, x509);
++if (rv)
++rv = SSL_use_PrivateKey(w->ssl_, pkey);
++if (rv && chain != nullptr) {
 +#if OPENSSL_VERSION_NUMBER >= 0x10002000L
-+		// replaces w->ssl_->cert->key->chain with a copy of the given chain,
-+		// which is allowed to be NULL
-+		rv = SSL_set1_chain(w->ssl_, chain);
++// replaces w->ssl_->cert->key->chain with a copy of the given chain,
++// which is allowed to be NULL
++rv = SSL_set1_chain(w->ssl_, chain);
 +#else
-+		// just replace the extra chain with the given chain - 1.0.1- does not
-+		// support chain per cert
-+		SSL_CTX_clear_extra_chain_certs(w->ssl_->ctx);
-+		if (chain != NULL) {
-+			int i;
-+			SSL_CTX* ctx = w->ssl_->ctx;
-+			for (i = 0; i < sk_X509_num(chain); i++) {
-+				// can't do anything: however others might be ok and still
-+				// satisfy requirements
-+				SSL_CTX_add_extra_chain_cert(ctx, sk_X509_value(chain,i));
-+			}
-+		}
-+		rv = 1;
++// just replace the extra chain with the given chain - 1.0.1- does not
++// support chain per cert
++SSL_CTX_clear_extra_chain_certs(w->ssl_->ctx);
++if (chain != NULL) {
++int i;
++SSL_CTX* ctx = w->ssl_->ctx;
++for (i = 0; i < sk_X509_num(chain); i++) {
++// can't do anything: however others might be ok and still
++// satisfy requirements
++SSL_CTX_add_extra_chain_cert(ctx, sk_X509_value(chain,i));
++}
++}
++rv = 1;
 +#endif
-+	}
++}
      if (rv)
        rv = w->SetCACerts(sc);
      if (!rv) {

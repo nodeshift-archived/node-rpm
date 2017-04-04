@@ -1,8 +1,6 @@
-%{?scl:%scl_package nodejs}
-%{!?scl:%global pkg_name %{name}}
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
-
 %global with_debug 1
+
+%{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 # ARM builds currently break on the Debug builds, so we'll just
 # build the standard runtime until that gets sorted out.
@@ -10,11 +8,74 @@
 %global with_debug 0
 %endif
 
-Name: %{?scl_prefix}nodejs
-Version: %{getenv:VERSION}
-Release: 2%{?dist}
+# == Node.js Version ==
+# Note: Fedora should only ship LTS versions of Node.js (currently expected
+# to be major versions with even numbers). The odd-numbered versions are new
+# feature releases that are only supported for nine months, which is shorter
+# than a Fedora release lifecycle.
+%global nodejs_epoch 1
+%global nodejs_major 6
+%global nodejs_minor 9
+%global nodejs_patch 1
+%global nodejs_abi %{nodejs_major}.%{nodejs_minor}
+%global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
+%global nodejs_release 2
+
+# == Bundled Dependency Versions ==
+# v8 - from deps/v8/include/v8-version.h
+%global v8_major 5
+%global v8_minor 1
+%global v8_build 281
+%global v8_patch 84
+# V8 presently breaks ABI at least every x.y release while never bumping SONAME
+%global v8_abi %{v8_major}.%{v8_minor}
+%global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
+
+# c-ares - from deps/cares/include/ares_version.h
+%global c_ares_major 1
+%global c_ares_minor 10
+%global c_ares_patch 1
+%global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
+
+# http-parser - from deps/http_parser/http_parser.h
+%global http_parser_major 2
+%global http_parser_minor 7
+%global http_parser_patch 0
+%global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
+
+# punycode - from lib/punycode.js
+# Note: this was merged into the mainline since 0.6.x
+# Note: this will be unmerged in v7 or v8
+%global punycode_major 2
+%global punycode_minor 0
+%global punycode_patch 0
+%global punycode_version %{punycode_major}.%{punycode_minor}.%{punycode_patch}
+
+# npm - from deps/npm/package.json
+%global npm_epoch 1
+%global npm_major 3
+%global npm_minor 10
+%global npm_patch 8
+%global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
+
+# In order to avoid needing to keep incrementing the release version for the
+# main package forever, we will just construct one for npm that is guaranteed
+# to increment safely. Changing this can only be done during an update when the
+# base npm version number is increasing.
+%global npm_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
+
+# Filter out the NPM bundled dependencies so we aren't providing them
+%global __provides_exclude_from ^%{_prefix}/lib/node_modules/npm/.*$
+%global __requires_exclude_from ^%{_prefix}/lib/node_modules/npm/.*$
+
+
+Name: nodejs
+Epoch: %{nodejs_epoch}
+Version: %{nodejs_version}
+Release: %{nodejs_release}%{?dist}
 Summary: JavaScript runtime
 License: MIT and ASL 2.0 and ISC and BSD
+Group: Development/Languages
 URL: http://nodejs.org/
 
 ExclusiveArch: %{nodejs_arches}
@@ -22,65 +83,60 @@ ExclusiveArch: %{nodejs_arches}
 # nodejs bundles openssl, but we use the system version in Fedora
 # because openssl contains prohibited code, we remove openssl completely from
 # the tarball, using the script in Source100
-Source0: node-v%{version}-stripped.tar.gz
-Source100: %{pkg_name}-tarball.sh
+Source0: node-v%{nodejs_version}-stripped.tar.gz
+Source100: %{name}-tarball.sh
 
 # The native module Requires generator remains in the nodejs SRPM, so it knows
 # the nodejs and v8 versions.  The remainder has migrated to the
 # nodejs-packaging SRPM.
-#Source7: nodejs_native.attr
+Source7: nodejs_native.attr
 
 # Disable running gyp on bundled deps we don't use
-Patch1: nodejs-disable-gyp-deps.patch
+Patch1: 0001-disable-running-gyp-files-for-bundled-deps.patch
+
+# EPEL only has OpenSSL 1.0.1, so we need to carry a patch on that platform
+Patch2: 0002-Use-openssl-1.0.1.patch
 
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
-Patch2: nodejs-use-system-certs.patch
+Patch3: 0003-CA-Certificates-are-provided-by-Fedora.patch
 
-# openssl-1.0.2 isn't in RHEL yet, so we use old one
-Patch3:  0002-Use-openssl-1.0.1.patch
-
-# some tests are failing, we turn them off
-Patch4: 0001-Disable-crypto-tests.patch
-Patch5: 0001-Disable-failing-tests.patch
-
-
-# V8 presently breaks ABI at least every x.y release while never bumping SONAME
-#%global v8_version 5.1.281.84
-%global v8_abi 5.1
-
-BuildRequires: %{?scl_prefix}gyp
-#BuildRequires: %{?scl_prefix}scldevel
 BuildRequires: python-devel
-BuildRequires: %{?scl_prefix}libuv-devel >= 1.9.1
-BuildRequires: %{?scl_prefix}http-parser-devel >= 2.7.0
+BuildRequires: libuv-devel >= 1:1.9.1
+Requires: libuv >= 1:1.9.1
+BuildRequires: libicu-devel
 BuildRequires: zlib-devel
-BuildRequires: openssl-devel
-BuildRequires: procps-ng
-Requires: %{?scl_prefix}libuv >= 1.9.1
-Requires: %{?scl_prefix}http-parser >= 2.7.0
-Requires: openssl
+BuildRequires: gcc >= 4.8.0
+BuildRequires: gcc-c++ >= 4.8.0
 
-# Node.js requires some features from openssl 1.0.1 for SPDY support
-#BuildRequires: openssl-devel >= 1:1.0.2
+%if 0%{?epel}
+BuildRequires: openssl-devel >= 1:1.0.1
+%else
+%if 0%{?fedora} > 25
+BuildRequires: compat-openssl10-devel >= 1:1.0.2
+%else
+BuildRequires: openssl-devel >= 1:1.0.2
+%endif
+%endif
 
 # we need the system certificate store when Patch2 is applied
 Requires: ca-certificates
 
 #we need ABI virtual provides where SONAMEs aren't enough/not present so deps
 #break when binary compatibility is broken
-%global nodejs_abi 6.9
-Provides: %{?scl_prefix}nodejs(abi) = %{nodejs_abi}
-Provides: %{?scl_prefix}nodejs(v8-abi) = %{v8_abi}
+Provides: nodejs(abi) = %{nodejs_abi}
+Provides: nodejs(abi%{nodejs_major}) = %{nodejs_abi}
+Provides: nodejs(v8-abi) = %{v8_abi}
+Provides: nodejs(v8-abi%{v8_major}) = %{v8_abi}
 
 #this corresponds to the "engine" requirement in package.json
-Provides: %{?scl_prefix}nodejs(engine) = %{version}
+Provides: nodejs(engine) = %{nodejs_version}
 
 # Node.js currently has a conflict with the 'node' package in Fedora
 # The ham-radio group has agreed to rename their binary for us, but
 # in the meantime, we're setting an explicit Conflicts: here
-Conflicts: %{?scl_prefix}node <= 0.3.2-12
+Conflicts: node <= 0.3.2-12
 
 # The punycode module was absorbed into the standard library in v0.6.
 # It still exists as a seperate package for the benefit of users of older
@@ -88,26 +144,31 @@ Conflicts: %{?scl_prefix}node <= 0.3.2-12
 # we don't need the seperate nodejs-punycode package, so we Provide it here so
 # dependent packages don't need to override the dependency generator.
 # See also: RHBZ#11511811
-# UPDATE: punycode will be unabsorbed from node in v7/v8 release
-Provides: %{?scl_prefix}nodejs-punycode = 2.0.0
-Provides: %{?scl_prefix}npm(punycode) = 2.0.0
+# UPDATE: punycode will be deprecated and so we should unbundle it in Node v8 
+# and use upstream module instead
+# https://github.com/nodejs/node/commit/29e49fc286080215031a81effbd59eac092fff2f
+Provides: nodejs-punycode = %{punycode_version}
+Provides: npm(punycode) = %{punycode_version}
 
 
 # Node.js has forked c-ares from upstream in an incompatible way, so we need
 # to carry the bundled version internally.
 # See https://github.com/nodejs/node/commit/766d063e0578c0f7758c3a965c971763f43fec85
-Provides: %{?scl_prefix}bundled(c-ares) = 1.10.1
+Provides: bundled(c-ares) = %{c_ares_version}
 
 # Node.js is closely tied to the version of v8 that is used with it. It makes
 # sense to use the bundled version because upstream consistently breaks ABI
 # even in point releases. Node.js upstream has now removed the ability to build
 # against a shared system version entirely.
 # See https://github.com/nodejs/node/commit/d726a177ed59c37cf5306983ed00ecd858cfbbef
-Provides: %{?scl_prefix}bundled(v8) = 5.1.281.84
+Provides: bundled(v8) = %{v8_version}
 
 # Node.js and http-parser share an upstream. The http-parser upstream does not
 # do releases often and is almost always far behind the bundled version
-#Provides: %%{?scl_prefix}bundled(http-parser) = 2.5.1
+Provides: bundled(http-parser) = %{http_parser_version}
+
+Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}
+
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -118,82 +179,102 @@ real-time applications that run across distributed devices.
 
 %package devel
 Summary: JavaScript runtime - development headers
-Requires: %{?scl_prefix}%{pkg_name}%{?_isa} == %{version}-%{release}
-Requires: %{?scl_prefix}libuv-devel%{?_isa} %{?scl_prefix}http-parser-devel%{?_isa}
-Requires: openssl-devel%{?_isa} zlib-devel%{?_isa}
-Requires: %{?scl_prefix}runtime
+Group: Development/Languages
+Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{release}
+Requires: libuv-devel%{?_isa}
+Requires: openssl-devel%{?_isa}
+Requires: zlib-devel%{?_isa}
+Requires: nodejs-packaging
 
 %description devel
 Development headers for the Node.js JavaScript runtime.
+
+%package -n npm
+Summary: Node.js Package Manager
+Epoch: %{npm_epoch}
+Version: %{npm_version}
+Release: %{npm_release}%{?dist}
+
+# We used to ship npm separately, but it is so tightly integrated with Node.js
+# (and expected to be present on all Node.js systems) that we ship it bundled
+# now.
+Obsoletes: npm < 0:3.5.4-6
+Provides: npm = %{npm_epoch}:%{npm_version}
+Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+
+# Do not add epoch to the virtual NPM provides or it will break
+# the automatic dependency-generation script.
+Provides: npm(npm) = %{npm_version}
+
+%description -n npm
+npm is a package manager for node.js. You can use it to install and publish
+your node programs. It manages dependencies and does other cool stuff.
 
 %package docs
 Summary: Node.js API documentation
 Group: Documentation
 BuildArch: noarch
 
+# We don't require that the main package be installed to
+# use the docs, but if it is installed, make sure the
+# version always matches
+Conflicts: %{name} > %{epoch}:%{nodejs_version}-%{release}
+Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{release}
+
 %description docs
 The API documentation for the Node.js JavaScript runtime.
 
+
 %prep
-%setup -q -n node-v%{version}
+%setup -q -n node-v%{nodejs_version}
 
 # remove bundled dependencies that we aren't building
 %patch1 -p1
-rm -rf deps/npm \
-       deps/uv \
-       deps/http-parser \
-       deps/zlib 
+rm -rf deps/uv \
+       deps/zlib
 
 # remove bundled CA certificates
-%patch2 -p1
 rm -f src/node_root_certs.h
-
-# use old openssl
 %patch3 -p1
 
-# disable tests
-%patch4 -p1
-%patch5 -p1
+%if 0%{?epel}
+%patch2 -p1
+%endif
+
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
-# Node's v8 breaks with GCC 8 because of incorrect usage of methods on
+# Node's v8 breaks with GCC 6 because of incorrect usage of methods on
 # NULL objects. We need to pass -fno-delete-null-pointer-checks
 export CFLAGS='%{optflags} -g \
                -D_LARGEFILE_SOURCE \
                -D_FILE_OFFSET_BITS=64 \
                -DZLIB_CONST \
                -fno-delete-null-pointer-checks'
-
 export CXXFLAGS='%{optflags} -g \
                  -D_LARGEFILE_SOURCE \
                  -D_FILE_OFFSET_BITS=64 \
                  -DZLIB_CONST \
-                 -fno-delete-null-pointer-checks -I%{_includedir}' 
-
-export LDFLAGS='%{optflags} -L%{_libdir}'
+                 -fno-delete-null-pointer-checks'
 
 ./configure --prefix=%{_prefix} \
-           --shared-http-parser \
+           --shared-openssl \
            --shared-zlib \
            --shared-libuv \
-           --without-npm \
            --without-dtrace \
-           --shared-openssl
-
+           --with-intl=system-icu
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-%{?scl:scl enable %{scl} - << \EOF}
 make BUILDTYPE=Debug %{?_smp_mflags}
-%{?scl:EOF}
 %else
-%{?scl:scl enable %{scl} - << \EOF}
 make BUILDTYPE=Release %{?_smp_mflags}
-%{?scl:EOF}
 %endif
 
+
 %install
+rm -rf %{buildroot}
+
 ./tools/install.py install %{buildroot} %{_prefix}
 
 # and remove dtrace file again
@@ -212,13 +293,13 @@ mkdir -p %{buildroot}%{_prefix}/lib/node_modules
 
 # ensure Requires are added to every native module that match the Provides from
 # the nodejs build in the buildroot
-#install -Dpm0644 %%{SOURCE7} %%{buildroot}%{_rpmconfigdir}/fileattrs/nodejs_native.attr
-#cat << EOF > %{buildroot}%{_rpmconfigdir}/nodejs_native.req
+install -Dpm0644 %{SOURCE7} %{buildroot}%{_rpmconfigdir}/fileattrs/nodejs_native.attr
+cat << EOF > %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 #!/bin/sh
-#echo 'nodejs(abi) = %nodejs_abi'
-#echo 'nodejs(v8-abi) = %v8_abi'
-#EOF
-#chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
+echo 'nodejs(abi%{nodejs_major}) >= %nodejs_abi'
+echo 'nodejs(v8-abi%{v8_major}) >= %v8_abi'
+EOF
+chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 
 #install documentation
 mkdir -p %{buildroot}%{_pkgdocdir}/html
@@ -232,26 +313,67 @@ cp -p common.gypi %{buildroot}%{_datadir}/node
 # Install the GDB init tool into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
 
-%check 
-%{?scl:scl enable %{scl} "}
-python tools/test.py --mode=release parallel -J 
-%{?scl:"}
+# Since the old version of NPM was unbundled, there are a lot of symlinks in
+# it's node_modules directory. We need to keep these as symlinks to ensure we
+# can backtrack on this if we decide to.
+
+# Rename the npm node_modules directory to node_modules.bundled
+mv %{buildroot}/%{_prefix}/lib/node_modules/npm/node_modules \
+   %{buildroot}/%{_prefix}/lib/node_modules/npm/node_modules.bundled
+
+# Recreate all the symlinks
+mkdir -p %{buildroot}/%{_prefix}/lib/node_modules/npm/node_modules
+FILES=%{buildroot}/%{_prefix}/lib/node_modules/npm/node_modules.bundled/*
+for f in $FILES
+do
+  module=`basename $f`
+  ln -s ../node_modules.bundled/$module %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/$module
+done
+
+# install NPM docs to mandir
+mkdir -p %{buildroot}%{_mandir} \
+         %{buildroot}%{_pkgdocdir}/npm
+
+cp -pr deps/npm/man/* %{buildroot}%{_mandir}/
+rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/man
+ln -sf %{_mandir}  %{buildroot}%{_prefix}/lib/node_modules/npm/man
+
+# Install Markdown and HTML documentation to %{_pkgdocdir}
+cp -pr deps/npm/html deps/npm/doc %{buildroot}%{_pkgdocdir}/npm/
+rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/html \
+       %{buildroot}%{_prefix}/lib/node_modules/npm/doc
+
+ln -sf %{_pkgdocdir} %{buildroot}%{_prefix}/lib/node_modules/npm/html
+ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
+
+
+%check
+# Fail the build if the versions don't match
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8, '%{v8_version}')"
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.ares.replace(/-DEV$/, ''), '%{c_ares_version}')"
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.http_parser, '%{http_parser_version}')"
+
+# Ensure we have punycode and that the version matches
+%{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"punycode\").version, '%{punycode_version}')"
+
+# Ensure we have npm and that the version matches
+NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
 
 %files
 %{_bindir}/node
-%{_mandir}/man1/node.*
 %dir %{_prefix}/lib/node_modules
 %dir %{_datadir}/node
 %dir %{_datadir}/systemtap
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
-#%%{_rpmconfigdir}/fileattrs/nodejs_native.attr
-#%%{_rpmconfigdir}/nodejs_native.req
-%dir %{_pkgdocdir}
+%{_rpmconfigdir}/fileattrs/nodejs_native.attr
+%{_rpmconfigdir}/nodejs_native.req
 %license LICENSE
 %doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
 %doc ROADMAP.md WORKING_GROUPS.md
- 
+%doc %{_mandir}/man*/*
+
 
 %files devel
 %if %{?with_debug} == 1
@@ -261,87 +383,191 @@ python tools/test.py --mode=release parallel -J
 %{_datadir}/node/common.gypi
 %{_pkgdocdir}/gdbinit
 
+
+%files -n npm
+%{_bindir}/npm
+%{_prefix}/lib/node_modules/npm
+%ghost %{_sysconfdir}/npmrc
+%ghost %{_sysconfdir}/npmignore
+
 %files docs
 %dir %{_pkgdocdir}
 %{_pkgdocdir}/html
+%{_pkgdocdir}/npm/html
+%{_pkgdocdir}/npm/doc
 
 %changelog
-* Wed Jan 11 2017 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.9.1-2
-- Rebuild from zvetlik/rh-nodejs6
-- newer releases have problems with debug
-- add procps-ng for tests
-- remove unused patches
+* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com> 6.9.1-2
+- Bump release for nodejs (ericdhelms@gmail.com)
+- Downstream Brew does not support Recommends (ericdhelms@gmail.com)
 
-* Thu Nov 03 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.9.1-1
-- Update to 6.9.1
+* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com>
+- Bump release for nodejs (ericdhelms@gmail.com)
+- Downstream Brew does not support Recommends (ericdhelms@gmail.com)
 
-* Wed Oct 19 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.9.0-1
-- update to v6.9.0 LTS
+* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com> 6.9.1-1
+- new package built with tito
 
-* Tue Oct 04 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.7.0-5
-- Disable failing crypto tests
+* Thu Oct 20 2016 Stephen Gallagher <sgallagh@redhat.com> - -
+- Update to 6.9.1 LTS release
+- Fix a regression introduced in v6.8.0 in readable stream that caused unpipe
+  to remove the wrong stream
+- https://nodejs.org/en/blog/release/v6.9.1/
 
-* Tue Oct 04 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.7.0-4
-- Require openssl
+* Tue Oct 18 2016 Stephen Gallagher <sgallagh@redhat.com> - -
+- Update to 6.9.0 LTS release
+- https://nodejs.org/en/blog/release/v6.9.0/
 
-* Tue Oct 04 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.7.0-2
-- Build with shared openssl with EPEL7 patch
+* Mon Oct 17 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.8.1-5
+- Add dist tag to npm nodejs dependency
 
-* Mon Oct 03 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.7.0-1
+* Mon Oct 17 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.8.1-4
+- Fix typo in npm nodejs dependency
+
+* Sat Oct 15 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.8.1-3
+- Bump release version for tagging bug
+
+* Sat Oct 15 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.8.1-1
+- Update node to v6.8.0
+- Fix FTBFS against non-bundled zlib
+
+* Thu Oct 13 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 1:6.8.0-108
+- Update node to v6.8.0 and npm@3.10.8
+
+* Tue Sep 27 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.7.0-107
 - Update to 6.7.0
+- https://nodejs.org/en/blog/release/v6.7.0/
 
-* Wed Aug 31 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 6.5.0-1
-- Update to 6.5.0, meanwhile built with bundled openssl
-- update system-certs patch
+* Fri Sep 16 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.6.0-106
+- Drop Conflicts: from main package.
+  It wasn't needed and was breaking upgrades in some cases.
+- Move npm support files into the npm package
+- Mark manpages as %%doc
 
-* Wed Apr 06 2016 Tomas Hrcka <thrcka@redhat.com> - 4.4.2-1
-- Rebase to latest upstream LTS release 4.4.2
-- https://nodejs.org/en/blog/release/v4.4.1/
+* Fri Sep 16 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.6.0-105
+- Update to 6.6.0
+- https://github.com/nodejs/node/blob/v6.6.0/doc/changelogs/CHANGELOG_V6.md#6.6.0
 
-* Tue Apr 05 2016 Tomas Hrcka <thrcka@redhat.com> - 4.4.1-2
-- Rebase to latest upstream LTS release 4.4.1
-- https://nodejs.org/en/blog/release/v4.4.1/
+* Mon Sep 12 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.5.0-104
+- Update to 6.5.0
+- Add support for building on EPEL 7 against OpenSSL 1.0.1
+- Modify v8_abi autorequires to avoid unnecessary rebuilds
 
-* Thu Mar 17 2016 Tomas Hrcka <thrcka@redhat.com> - 4.4.0-1
-- Rebase to latest upstream LTS release 4.4.0
+* Fri Jun 24 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 0.10.46-1
+- Update to 0.10.46(security fix)
+- https://github.com/nodejs/node/blob/v0.10.46/ChangeLog
+- Bump http-parser version
 
-* Tue Mar 01 2016 Tomas Hrcka <thrcka@redhat.com> - 4.3.0-5
-- New upstream release 4.3.0
-- https://nodejs.org/en/blog/release/v4.3.0/
-- Build with bundled openssl, this will be reverted ASAP
-- Unbundled http-parser
+* Wed Feb 10 2016 Stephen Gallagher <sgallagh@redhat.com> - 0.10.43-4
+- Verify that the built node reports the expected versions
+- Properly Provides: http-parser
+- Fix Provides: for punycode
 
-* Thu Jul 16 2015 Tomas Hrcka <thrcka@redhat.com> - 0.10.40-1
-- Rebase to latest upstream release
+* Wed Feb 10 2016 Stephen Gallagher <sgallagh@redhat.com> - 0.10.42-3
+- Remove duplicated content from spec file
 
-* Wed Jul 01 2015 Tomas Hrcka <thrcka@redhat.com> - 0.10.39-1
-- Rebase to latest upstream release
+* Wed Feb 10 2016 Stephen Gallagher <sgallagh@redhat.com> - 0.10.42-2
+- Re-enable debug builds on supported arches
 
-* Wed Mar 25 2015 Tomas Hrcka <thrcka@redhat.com> - 0.10.35-4
-- Enable tests during build time
+* Wed Feb 10 2016 Stephen Gallagher <sgallagh@redhat.com> - 0.10.42-1
+- Update to Node.js 0.10.42
+- https://github.com/nodejs/node/blob/v0.10.42/ChangeLog
+- Bundle v8, c-ares and http-parser with Node.js
+- Drop patches that revert v8 UTF8 change
+- Resolves: RHBZ#1306203
+- Resolves: RHBZ#1306200
+- Resolves: RHBZ#1306207
 
-* Tue Mar 17 2015 Tomas Hrcka <thrcka@redhat.com> - 0.10.35-2
-- Reflect dependency on specific ABI changes in v8
-- RHBZ#1197110
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.36-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Jan 07 2015 Tomas Hrcka <thrcka@redhat.com> - 0.10.35-1
-- New upstream release 0.10.35
+* Wed Apr 29 2015 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.36-4
+- fix incorrect Requires on libuv (RHBZ#1215719)
 
-* Sun Feb 02 2014 Tomas Hrcka <thrcka@redhat.com> - 0.10.25-1
-- New upstream release 0.10.25
+* Tue Feb 24 2015 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.36-3
+- bump v8 requires (RHBZ#1195457)
 
-* Tue Jan 14 2014 Tomas Hrcka <thrcka@redhat.com> - 0.10.24-1
+* Thu Feb 19 2015 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.36-2
+- build against compat-libuv010
+
+* Thu Feb 19 2015 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.36-1
+- new upstream release 0.10.36
+  http://blog.nodejs.org/2015/01/26/node-v0-10-36-stable/
+- Please note that several upstream releases were skipped due to regressions
+  reported in the upstream bug tracker.  Please also review the 0.10.34 and
+  0.10.35 changelogs available at the above URL for a list of all changes.
+
+* Wed Nov 19 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.33-1
+- new upstream release 0.10.33
+  http://blog.nodejs.org/2014/10/23/node-v0-10-33-stable/
+- This release disables SSLv3 to secure Node.js services against the POODLE
+  attack.  (CVE-2014-3566; RHBZ#1152789)  For more information or to learn how
+  to re-enable SSLv3 in order to support legacy clients, please see the upstream
+  release announcement linked above.
+
+* Tue Oct 21 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.32-2
+- add Provides nodejs-punycode (RHBZ#1151811)
+
+* Thu Sep 18 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.32-1
+- new upstream release 0.10.32
+  http://blog.nodejs.org/2014/08/19/node-v0-10-31-stable/
+  http://blog.nodejs.org/2014/09/16/node-v0-10-32-stable/
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.30-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 01 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.30-1
+- new upstream release 0.10.30
+  http://blog.nodejs.org/2014/07/31/node-v0-10-30-stable/
+
+* Thu Jun 19 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.29-1
+- new upstream release 0.10.29
+  http://blog.nodejs.org/2014/06/16/node-v0-10-29-stable/
+- The invalid UTF8 fix has been reverted since this breaks v8 API, which cannot
+  be done in a stable distribution release.  This build of nodejs will behave as
+  if NODE_INVALID_UTF8 was set.  For more information on the implications, see:
+  http://blog.nodejs.org/2014/06/16/openssl-and-breaking-utf-8-change/
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.28-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 03 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.28-2
+- use the system certificate store instead of the bundled copy
+  both are based on the Mozilla CA list, so the only effect this should have is
+  making additional certificates added by the system administrator available to
+  node
+
+* Sat May 03 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.28-1
+- new upstream release 0.10.28
+  There is no dfference between 0.10.27 and 0.10.28 for Fedora, as the only
+  thing updated was npm, which is shipped seperately.  The latest was only
+  packaged to avoid confusion.  Please see the v0.10.27 changelog for relevant
+  changes in this update:
+  http://blog.nodejs.org/2014/05/01/node-v0-10-27-stable/
+
+* Thu Feb 20 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.26-1
+- new upstream release 0.10.26
+  http://blog.nodejs.org/2014/02/18/node-v0-10-26-stable/
+
+* Fri Feb 14 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.25-2
+- rebuild for icu-53 (via v8)
+
+* Mon Jan 27 2014 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.25-1
+- new upstream release 0.10.25
+  http://blog.nodejs.org/2014/01/23/node-v0-10-25-stable/
+
+* Thu Dec 19 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.24-1
 - new upstream release 0.10.24
+  http://blog.nodejs.org/2013/12/19/node-v0-10-24-stable/
+- upstream install script installs the headers now
 
-* Tue Nov 26 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.21-3
-- rebuilt with v8314 collection
+* Thu Dec 12 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.23-1
+- new upstream release 0.10.23
+  http://blog.nodejs.org/2013/12/11/node-v0-10-23-stable/
 
 * Tue Nov 12 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.22-1
 - new upstream release 0.10.22
   http://blog.nodejs.org/2013/11/12/node-v0-10-22-stable/
-
-* Mon Oct 21 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.21-2
-- Build with system wide c-ares
 
 * Fri Oct 18 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.21-1
 - new upstream release 0.10.21
@@ -363,6 +589,7 @@ python tools/test.py --mode=release parallel -J
 * Tue Aug 27 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.17-1
 - new upstream release 0.10.17
   http://blog.nodejs.org/2013/08/21/node-v0-10-17-stable/
+- fix duplicated/conflicting documentation files (RHBZ#1001253)
 
 * Sat Aug 17 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.16-1
 - new upstream release 0.10.16
@@ -373,8 +600,10 @@ python tools/test.py --mode=release parallel -J
 * Wed Aug 14 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.14-3
 - fix typo in _isa macro in v8 Requires
 
-* Wed Aug 07 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.5-6
- - Remove badly licensed fonts in script instead of patch
+* Mon Aug 05 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.14-2
+- use unversioned docdir for -docs subpackage
+  https://fedoraproject.org/wiki/Changes/UnversionedDocdirs
+- use main package's docdir instead of a seperate -docs directory
 
 * Thu Jul 25 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.14-1
 - new upstream release 0.10.14
@@ -384,17 +613,6 @@ python tools/test.py --mode=release parallel -J
 - new upstream release 0.10.13
   http://blog.nodejs.org/2013/07/09/node-v0-10-13-stable/
 - remove RPM macros, etc. now that they've migrated to nodejs-packaging
-
-* Wed Jun 19 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.5-5
- - added patch to remove badly licensed web fonts
-
-* Wed Jun 19 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.5-5
- - added patch to remove badly licensed web fonts
-
-* Wed Jun 19 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.5-4
-  - strip openssl from the tarball it contains prohibited code (RHBZ#967736)
-  - patch makefile so it do not use bundled deps
-  - new stripped tarball
 
 * Wed Jun 19 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.12-1
 - new upstream release 0.10.12
@@ -421,9 +639,6 @@ python tools/test.py --mode=release parallel -J
 - new upstream release 0.10.6
   http://blog.nodejs.org/2013/05/14/node-v0-10-6-stable/
 
-* Tue May 14 2013 Tomas Hrcka <thrcka@redhat.com> - 0.10.5-3.1
- - updated to latest upstream stable release
-
 * Mon May 06 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.5-3
 - nodejs-fixdep: work properly when a package has no dependencies
 
@@ -438,19 +653,6 @@ python tools/test.py --mode=release parallel -J
 * Mon Apr 15 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.4-1
 - new upstream release 0.10.4
   http://blog.nodejs.org/2013/04/11/node-v0-10-4-stable/
-- drop dependency generator files not supported on EL6
-- port nodejs_default_filter to EL6
-- add nodejs_find_provides_and_requires macro to invoke dependency generator
-- invoke the standard RPM provides and requires generators from the Node.js ones
-- write native module Requires from nodejs.req
-- change the c-ares-devel Requires in -devel to match the BuildRequires
-
-* Tue Apr 09 2013 Stephen Gallagher <sgallagh@redhat.com> - 0.10.3-2.1
-- Build against c-ares 1.9
-
-* Mon Apr 08 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.10.3-3
-- Add support for software collections
-- Move rpm macros and tooling to separate package
 - add no-op macro to permit spec compatibility with EPEL
 
 * Thu Apr 04 2013 T.C. Hollingsworth <tchollingsworth@gmail.com> - 0.10.3-2
@@ -551,9 +753,6 @@ python tools/test.py --mode=release parallel -J
 - guard libuv depedency so it always gets bumped when nodejs does
 - add -devel subpackage with enough to make node-gyp happy
 
-* Thu Dec 20 2012 Stephen Gallagher <sgallagh@redhat.com> - 0.9.3-9
-- Drop requirement on openssl 1.0.1
-
 * Wed Dec 19 2012 Dan Horák <dan[at]danny.cz> - 0.9.3-8
 - set exclusive arch list to match v8
 
@@ -585,3 +784,4 @@ python tools/test.py --mode=release parallel -J
 
 * Mon Apr 09 2012 Adrian Alves <alvesadrian@fedoraproject.org> 0.6.5
 - First build.
+

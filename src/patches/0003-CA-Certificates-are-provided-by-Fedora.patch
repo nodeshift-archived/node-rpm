@@ -1,12 +1,10 @@
-From e0aac817a87c927f70a6f8edb63a4103a4109dfc Mon Sep 17 00:00:00 2001
-From: Stephen Gallagher <sgallagh@redhat.com>
-Date: Tue, 1 Dec 2015 16:29:07 -0500
-Subject: [PATCH 2/2] Do not bundle CA Certificates
+From 08305ba6b7fddab1f35c59dc82a3c6b11ceceae3 Mon Sep 17 00:00:00 2001
+From: Haikel Guemar <hguemar@fedoraproject.org>
+Date: Tue, 26 Jul 2016 22:00:25 +0200
+Subject: [PATCH 3/3] CA Certificates are provided by Fedora.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-
-CA Certificates are provided by Fedora.
 
 Forwarded: need some feedback before submitting the matter upstream
 Author: Jérémy Lal <kapouer@melix.org>
@@ -19,31 +17,30 @@ Modified 2015-12-01 by Stephen Gallagher <sgallagh@redhat.com> to update for
 Node.js 4.2
 
 Modified 2016-03-04 by Stephen Gallagher <sgallagh@redhat.com> to update for
-Node.js 5.7.1
+Node.js 5.4.1
+
+Modified 2016-07-26 by Haikel Guemar <hguemar@fedoraproject.org> to update for
+Node.js 4.4.7
 ---
- src/node_crypto.cc | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ src/node_crypto.cc | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
 diff --git a/src/node_crypto.cc b/src/node_crypto.cc
-index acd83e9f2f41ade75ee9a3c8061acfa8b3dbf0f4..70ffe035f8be24b2eb6daf71185649d8ae7d579f 100644
+index 888a0f8..3feff0e 100644
 --- a/src/node_crypto.cc
 +++ b/src/node_crypto.cc
-@@ -119,11 +119,11 @@ static X509_NAME *cnnic_ev_name =
-                   sizeof(CNNIC_EV_ROOT_CA_SUBJECT_DATA)-1);
+@@ -192,8 +192,8 @@ static X509_NAME *cnnic_ev_name =
  
  static Mutex* mutexes;
  
- const char* const root_certs[] = {
+-const char* const root_certs[] = {
 -#include "node_root_certs.h"  // NOLINT(build/include_order)
++const char* root_certs[] = {
 +  NULL
  };
  
  X509_STORE* root_cert_store;
- 
- // Just to generate static methods
-@@ -748,33 +748,21 @@ void SecureContext::AddRootCerts(const FunctionCallbackInfo<Value>& args) {
-   (void) &clear_error_on_return;  // Silence compiler warning.
- 
+@@ -847,29 +847,17 @@ void SecureContext::AddRootCerts(const FunctionCallbackInfo<Value>& args) {
    CHECK_EQ(sc->ca_store_, nullptr);
  
    if (!root_cert_store) {
@@ -80,8 +77,6 @@ index acd83e9f2f41ade75ee9a3c8061acfa8b3dbf0f4..70ffe035f8be24b2eb6daf71185649d8
  }
  
  
- void SecureContext::SetCiphers(const FunctionCallbackInfo<Value>& args) {
-   SecureContext* sc;
 -- 
-2.7.2
+2.9.0
 
