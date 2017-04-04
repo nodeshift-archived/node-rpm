@@ -25,6 +25,7 @@ COPY src/patches/0001-disable-running-gyp-files-for-bundled-deps.patch \
      src/patches/0002-Use-openssl-1.0.1.patch                          \
      src/patches/0002-Use-openssl-1.0.1.patch                          \
      src/patches/0003-CA-Certificates-are-provided-by-Fedora.patch     \
+     src/nodejs_native.attr                                            \
      src/nodejs-tarball.sh /root/rpmbuild/SOURCES/
 
 CMD ["./run.sh"]
