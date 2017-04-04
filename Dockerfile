@@ -8,10 +8,11 @@ RUN yum install -y gcc-c++                                              \
                    libuv-devel                                          \
                    openssl-devel                                        \
                    libicu-devel                                         \
+                   systemtap-sdt-devel                                  \
                    procps-ng                                            \
                    python-devel                                         \
                    zlib-devel                                           \
-                   wget 
+                   wget
 
 RUN rpmdev-setuptree
 

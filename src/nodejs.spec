@@ -1,4 +1,4 @@
-%global with_debug 1
+%global with_debug 0
 
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
@@ -16,17 +16,17 @@
 %global nodejs_epoch 1
 %global nodejs_major 7
 %global nodejs_minor 7
-%global nodejs_patch 3
+%global nodejs_patch 4
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 2
+%global nodejs_release 1
 
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
 %global v8_major 5
 %global v8_minor 5
 %global v8_build 372
-%global v8_patch 41
+%global v8_patch 42
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -92,7 +92,7 @@ Source100: %{name}-tarball.sh
 Source7: nodejs_native.attr
 
 # Disable running gyp on bundled deps we don't use
-Patch1: 0001-disable-running-gyp-files-for-bundled-deps.patch
+#Patch1: 0001-disable-running-gyp-files-for-bundled-deps.patch
 
 # EPEL only has OpenSSL 1.0.1, so we need to carry a patch on that platform
 Patch2: 0002-Use-openssl-1.0.1.patch
@@ -109,6 +109,7 @@ BuildRequires: libicu-devel
 BuildRequires: zlib-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
+BuildRequires: systemtap-sdt-devel
 
 %if 0%{?epel}
 BuildRequires: openssl-devel >= 1:1.0.1
@@ -144,7 +145,7 @@ Conflicts: node <= 0.3.2-12
 # we don't need the seperate nodejs-punycode package, so we Provide it here so
 # dependent packages don't need to override the dependency generator.
 # See also: RHBZ#11511811
-# UPDATE: punycode will be deprecated and so we should unbundle it in Node v8 
+# UPDATE: punycode will be deprecated and so we should unbundle it in Node v8
 # and use upstream module instead
 # https://github.com/nodejs/node/commit/29e49fc286080215031a81effbd59eac092fff2f
 Provides: nodejs-punycode = %{punycode_version}
@@ -167,7 +168,13 @@ Provides: bundled(v8) = %{v8_version}
 # do releases often and is almost always far behind the bundled version
 Provides: bundled(http-parser) = %{http_parser_version}
 
-Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}
+# Make sure we keep NPM up to date when we update Node.js
+%if 0%{?epel}
+# EPEL doesn't support Recommends, so make it strict
+Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
+%else
+Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
+%endif
 
 
 %description
@@ -180,7 +187,7 @@ real-time applications that run across distributed devices.
 %package devel
 Summary: JavaScript runtime - development headers
 Group: Development/Languages
-Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Requires: libuv-devel%{?_isa}
 Requires: openssl-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
@@ -218,8 +225,8 @@ BuildArch: noarch
 # We don't require that the main package be installed to
 # use the docs, but if it is installed, make sure the
 # version always matches
-Conflicts: %{name} > %{epoch}:%{nodejs_version}-%{release}
-Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{release}
+Conflicts: %{name} > %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description docs
 The API documentation for the Node.js JavaScript runtime.
@@ -230,8 +237,6 @@ The API documentation for the Node.js JavaScript runtime.
 
 # remove bundled dependencies that we aren't building
 #%patch1 -p1
-#rm -rf deps/uv \
-#       deps/zlib
 
 # remove bundled CA certificates
 rm -f src/node_root_certs.h
@@ -257,11 +262,15 @@ export CXXFLAGS='%{optflags} -g \
                  -DZLIB_CONST \
                  -fno-delete-null-pointer-checks'
 
+# Explicit new lines in C(XX)FLAGS can break naive build scripts
+export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
+export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
+
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
            --shared-zlib \
            --shared-libuv \
-           --without-dtrace \
+           --with-dtrace \
            --with-intl=system-icu
 
 %if %{?with_debug} == 1
@@ -270,15 +279,12 @@ make BUILDTYPE=Debug %{?_smp_mflags}
 %else
 make BUILDTYPE=Release %{?_smp_mflags}
 %endif
-
+rm -rf deps/uv deps/zlib
 
 %install
 rm -rf %{buildroot}
 
 ./tools/install.py install %{buildroot} %{_prefix}
-
-# and remove dtrace file again
-rm -rf %{buildroot}/%{_prefix}/lib/dtrace
 
 # Set the binary permissions properly
 chmod 0755 %{buildroot}/%{_bindir}/node
@@ -367,6 +373,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %dir %{_datadir}/systemtap
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
+%dir %{_usr}/lib/dtrace
+%{_usr}/lib/dtrace/node.d
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
 %{_rpmconfigdir}/nodejs_native.req
 %license LICENSE
@@ -396,18 +404,35 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
-* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com> 6.9.1-2
-- Bump release for nodejs (ericdhelms@gmail.com)
-- Downstream Brew does not support Recommends (ericdhelms@gmail.com)
+* Wed Feb 1 2017 Zuzana Svetlikova <zsvetlik@redhat.com> - 1:6.9.5-1
+- Update to v6.9.5(security)
+- Reenable debug mode (https://github.com/nodejs/node/pull/10525)
 
-* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com>
-- Bump release for nodejs (ericdhelms@gmail.com)
-- Downstream Brew does not support Recommends (ericdhelms@gmail.com)
+* Tue Jan 17 2017 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.4-2
+- Enable DTrace support.
+- Eliminate newlines from CFLAGS due to broken dtrace shim
+  https://sourceware.org/bugzilla/show_bug.cgi?id=21063
+  Thanks to Kinston Hughes for the fix.
 
-* Wed Nov 16 2016 Eric D Helms <ericdhelms@gmail.com> 6.9.1-1
-- new package built with tito
+* Tue Jan 10 2017 Zuzana Svetlikova <zsvetlik@redhat.com> - 1:6.9.4-1
+- Update to v6.9.4
 
-* Thu Oct 20 2016 Stephen Gallagher <sgallagh@redhat.com> - -
+* Thu Jan 05 2017 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.3-1
+- https://nodejs.org/en/blog/release/v6.9.3/
+
+* Wed Dec 21 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.2-2
+- Debug builds are failing. Disable them.
+
+* Thu Dec 08 2016 Zuzana Svetlikova <zsvetlik@redhat.com> - 1:6.9.2-1
+- Update to v6.9.2
+
+* Tue Nov 08 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.1-4
+- Fix incorrect Conflicts for nodejs-docs
+
+* Tue Nov 08 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.1-2
+- Bump revision and rebuild for s390x
+
+* Thu Oct 20 2016 Stephen Gallagher <sgallagh@redhat.com> - 1:6.9.1-1
 - Update to 6.9.1 LTS release
 - Fix a regression introduced in v6.8.0 in readable stream that caused unpipe
   to remove the wrong stream
