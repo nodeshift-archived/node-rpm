@@ -229,9 +229,9 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}
 
 # remove bundled dependencies that we aren't building
-%patch1 -p1
-rm -rf deps/uv \
-       deps/zlib
+#%patch1 -p1
+#rm -rf deps/uv \
+#       deps/zlib
 
 # remove bundled CA certificates
 rm -f src/node_root_certs.h
