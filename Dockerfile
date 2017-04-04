@@ -19,7 +19,7 @@ RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/
 
 COPY src/nodejs.spec src/nodejs-tarball.sh src/run.sh /usr/src/node-rpm/
-COPY src/nodejs.spec /root/rpmbuild/SPEC
+COPY src/nodejs.spec /root/rpmbuild/SPECS
 
 COPY src/patches/0001-disable-running-gyp-files-for-bundled-deps.patch \
      src/patches/0002-Use-openssl-1.0.1.patch                          \
