@@ -2,10 +2,8 @@ language: generic
 services:
 - docker
 install:
-- export VERSION=$(cat version.txt)
-- echo "Building version $VERSION"
 - docker build -t bucharestgold/fedora-node . 
-- docker run -it --env VERSION=$VERSION -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node
+- docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node
 before_deploy:
 - echo "Before deploy."
 deploy:
@@ -13,8 +11,7 @@ deploy:
   api_key:
     secure: RvNgC1v4N8ER27r+K3hh1TVw19BvYXEdPJtnExm8X7YRgmV1ATjmuB5Tk8DgOPm1eeyYEV/+II9cdefIq9oxNBsOcyD6O030l0DTXAwSHdFV3SzUTaj6XLtq0PGbUt4Hj+ZaePgV5J5G0gHsR3F4WsXLcb7N6qWw0diSSnRhY4Z11uJ8hORmiipTc5ZtUzoyONWD0wfhuqQYARJ9LJcp71NUiBPmHcA2V1Az/NNj1VY4Evw/MWQUnRft4Bs8FmiXdMXHUtDNpDhLJluTC/CIW4KjdyQdIuRp4ysA830nYV9Iv3I+SdoOJuPg+MlWH8MGtpAssTl0G3c4uXzv31O8bLfjuY8RnamTnuO8yLv9bFEFZi8m7e0oV3NRhQTCQahbBVgy7s2Dk3HTd2GEosF8i7CITZRf6aC1CbFpPV0RJFnexlPbmX7U/jH373Dq4gS4iITpgTvzdzwmjN4P3NLWilY/08T2PKoEMWH15pzl9yg7bsrmvJ74ZyE8k1XxFFT0OQurtBNuM3Mq94Nt/7TbwwrqFWEYJjjEFOw+bB3pn5LB1689CVxWXMk8oyQAiYVBRxvWKJ14OrVw1tqkRUrL8WvMYr6vzgw8oD1Hbj6+79ZYtP96zPcr5I6sfjyfkrARKtuydutKB8ZKmeHzFG2tiiBJe6NddiTqlvT9Z1dufpA=
   file_glob: true
-  file: rpms/*.rpm
+  file: rpms/**/*.rpm
   skip_clean: true
   on:
-    tags: false
-    all_branch: true
+    tags: true

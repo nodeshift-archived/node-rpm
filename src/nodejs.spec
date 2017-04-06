@@ -24,9 +24,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
 %global v8_major 5
-%global v8_minor 1
-%global v8_build 281
-%global v8_patch 84
+%global v8_minor 5
+%global v8_build 372
+%global v8_patch 41
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -53,9 +53,9 @@
 
 # npm - from deps/npm/package.json
 %global npm_epoch 1
-%global npm_major 3
-%global npm_minor 10
-%global npm_patch 8
+%global npm_major 4
+%global npm_minor 1
+%global npm_patch 2
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -371,7 +371,6 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_rpmconfigdir}/nodejs_native.req
 %license LICENSE
 %doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
-%doc ROADMAP.md WORKING_GROUPS.md
 %doc %{_mandir}/man*/*
 
 
