@@ -52,3 +52,217 @@ This can be done by increasing the memory limit in Docker for Mac preferences.
 If you see an error similar to this you may need to increase your memory settings:
 
     collect2: fatal error: ld terminated with signal 9 [Killed]
+
+
+### Node.js version in Fedora/RHEL/SCL
+
+[RHEL versions)()
+[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)
+[Software Collections (SCL)](https://www.softwarecollections.org/en/scls/?search=nodejs)
+
+Extra packages for Enterprise Linux (EPEL)
+RHEL 7: https://dl.fedoraproject.org/pub/epel/7/x86_64/n/nodejs-6.10.1-2.el7.x86_64.rpm
+RHEL 6: https://dl.fedoraproject.org/pub/epel/6/x86_64/nodejs-0.10.48-3.el6.x86_64.rpm
+RHEL 5: N/A
+
+### Running an empty RHEL container
+This is mainly to verify if Node is installed by default on RHEL.
+
+    $ docker pull registry.access.redhat.com/rhel7.3
+    $ docker run -it registry.access.redhat.com/rhel7.3 bash
+
+As far as I can tell Node is not installed by default on RHEL.
+
+### Installing SCL Node.js
+
+    $ docker run -it registry.access.redhat.com/rhel7.3 bash
+    [root@468a8a25b34b /]# subscription-manager register --username xxx@redhat.com --password xxx --auto-attach
+    [root@468a8a25b34b /]# yum-config-manager --enable rhel-server-rhscl-7-rpms
+    [root@468a8a25b34b /]# yum install rh-nodejs4
+    ==============================================================================================================================================
+     Package                                                 Arch           Version                        Repository                        Size
+    ==============================================================================================================================================
+    Installing:
+     rh-nodejs4                                              x86_64         2.2-5.el7                      rhel-server-rhscl-7-rpms         6.3 k
+    Installing for dependencies:
+     cpp                                                     x86_64         4.8.5-11.el7                   rhel-7-server-rpms               5.9 M
+     gcc                                                     x86_64         4.8.5-11.el7                   rhel-7-server-rpms                16 M
+     gcc-c++                                                 x86_64         4.8.5-11.el7                   rhel-7-server-rpms               7.2 M
+     glibc-devel                                             x86_64         2.17-157.el7_3.1               rhel-7-server-rpms               1.1 M
+     glibc-headers                                           x86_64         2.17-157.el7_3.1               rhel-7-server-rpms               668 k
+     kernel-headers                                          x86_64         3.10.0-514.10.2.el7            rhel-7-server-rpms               4.8 M
+     keyutils-libs-devel                                     x86_64         1.5.8-3.el7                    rhel-7-server-rpms                37 k
+     krb5-devel                                              x86_64         1.14.1-27.el7_3                rhel-7-server-rpms               651 k
+     libcom_err-devel                                        x86_64         1.42.9-9.el7                   rhel-7-server-rpms                31 k
+     libgomp                                                 x86_64         4.8.5-11.el7                   rhel-7-server-rpms               152 k
+     libkadm5                                                x86_64         1.14.1-27.el7_3                rhel-7-server-rpms               173 k
+     libmpc                                                  x86_64         1.0.1-3.el7                    rhel-7-server-rpms                51 k
+     libselinux-devel                                        x86_64         2.5-6.el7                      rhel-7-server-rpms               186 k
+     libsepol-devel                                          x86_64         2.5-6.el7                      rhel-7-server-rpms                74 k
+     libstdc++-devel                                         x86_64         4.8.5-11.el7                   rhel-7-server-rpms               1.5 M
+     libverto-devel                                          x86_64         0.2.5-4.el7                    rhel-7-server-rpms                12 k
+     make                                                    x86_64         1:3.82-23.el7                  rhel-7-server-rpms               421 k
+     mpfr                                                    x86_64         3.1.1-4.el7                    rhel-7-server-rpms               203 k
+     openssl                                                 x86_64         1:1.0.1e-60.el7_3.1            rhel-7-server-rpms               713 k
+     openssl-devel                                           x86_64         1:1.0.1e-60.el7_3.1            rhel-7-server-rpms               1.2 M
+     pcre-devel                                              x86_64         8.32-15.el7_2.1                rhel-7-server-rpms               479 k
+     python-devel                                            x86_64         2.7.5-48.el7                   rhel-7-server-rpms               393 k
+     rh-nodejs4-gyp                                          noarch         0.1-0.11.1617svn.el7           rhel-server-rhscl-7-rpms         404 k
+     rh-nodejs4-http-parser                                  x86_64         2.7.0-2.el7                    rhel-server-rhscl-7-rpms          30 k
+     rh-nodejs4-http-parser-devel                            x86_64         2.7.0-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-libuv                                        x86_64         1:1.7.5-8.el7                  rhel-server-rhscl-7-rpms          72 k
+     rh-nodejs4-libuv-devel                                  x86_64         1:1.7.5-8.el7                  rhel-server-rhscl-7-rpms          40 k
+     rh-nodejs4-node-gyp                                     noarch         3.3.1-4.el7                    rhel-server-rhscl-7-rpms          33 k
+     rh-nodejs4-nodejs                                       x86_64         4.6.2-4.el7                    rhel-server-rhscl-7-rpms         4.3 M
+     rh-nodejs4-nodejs-abbrev                                noarch         1.0.7-2.el7                    rhel-server-rhscl-7-rpms         7.3 k
+     rh-nodejs4-nodejs-ansi                                  noarch         0.3.0-3.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-ansi-regex                            noarch         2.0.0-5.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-ansicolors                            noarch         0.3.2-2.el7                    rhel-server-rhscl-7-rpms         6.5 k
+     rh-nodejs4-nodejs-ansistyles                            noarch         0.1.3-4.el7                    rhel-server-rhscl-7-rpms         6.6 k
+     rh-nodejs4-nodejs-archy                                 noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms         6.7 k
+     rh-nodejs4-nodejs-are-we-there-yet                      noarch         1.0.6-2.el7                    rhel-server-rhscl-7-rpms         8.8 k
+     rh-nodejs4-nodejs-array-index                           noarch         0.1.1-4.el7                    rhel-server-rhscl-7-rpms         8.8 k
+     rh-nodejs4-nodejs-asap                                  noarch         1.0.0-5.el7                    rhel-server-rhscl-7-rpms         7.8 k
+     rh-nodejs4-nodejs-async-some                            noarch         1.0.2-3.el7                    rhel-server-rhscl-7-rpms         6.9 k
+     rh-nodejs4-nodejs-balanced-match                        noarch         0.2.1-3.el7                    rhel-server-rhscl-7-rpms         6.8 k
+     rh-nodejs4-nodejs-bl                                    noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-block-stream                          noarch         0.0.8-1.el7                    rhel-server-rhscl-7-rpms         9.0 k
+     rh-nodejs4-nodejs-brace-expansion                       noarch         1.1.1-3.el7                    rhel-server-rhscl-7-rpms         8.5 k
+     rh-nodejs4-nodejs-builtin-modules                       noarch         1.1.1-4.el7                    rhel-server-rhscl-7-rpms         7.0 k
+     rh-nodejs4-nodejs-builtins                              noarch         1.0.2-3.el7                    rhel-server-rhscl-7-rpms         5.6 k
+     rh-nodejs4-nodejs-caseless                              noarch         0.11.0-2.el7                   rhel-server-rhscl-7-rpms         9.0 k
+     rh-nodejs4-nodejs-char-spinner                          noarch         1.0.1-4.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-chmodr                                noarch         1.0.2-4.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-chownr                                noarch         1.0.1-4.el7                    rhel-server-rhscl-7-rpms         6.5 k
+     rh-nodejs4-nodejs-clone                                 noarch         0.2.0-4.el7                    rhel-server-rhscl-7-rpms         8.3 k
+     rh-nodejs4-nodejs-cmd-shim                              noarch         2.0.0-4.el7                    rhel-server-rhscl-7-rpms         8.5 k
+     rh-nodejs4-nodejs-columnify                             noarch         1.5.4-1.el7                    rhel-server-rhscl-7-rpms          14 k
+     rh-nodejs4-nodejs-concat-map                            noarch         0.0.1-3.el7                    rhel-server-rhscl-7-rpms         6.0 k
+     rh-nodejs4-nodejs-concat-stream                         noarch         1.4.4-6.el7                    rhel-server-rhscl-7-rpms         7.9 k
+     rh-nodejs4-nodejs-config-chain                          noarch         1.1.9-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-core-util-is                          noarch         1.0.2-3.el7                    rhel-server-rhscl-7-rpms         6.2 k
+     rh-nodejs4-nodejs-debug                                 noarch         2.2.0-4.el7                    rhel-server-rhscl-7-rpms          15 k
+     rh-nodejs4-nodejs-debuglog                              noarch         1.0.1-5.el7                    rhel-server-rhscl-7-rpms         6.2 k
+     rh-nodejs4-nodejs-defaults                              noarch         1.0.0-7.el7                    rhel-server-rhscl-7-rpms         5.4 k
+     rh-nodejs4-nodejs-delegates                             noarch         0.1.0-3.el7                    rhel-server-rhscl-7-rpms         5.5 k
+     rh-nodejs4-nodejs-devel                                 x86_64         4.6.2-4.el7                    rhel-server-rhscl-7-rpms         4.6 M
+     rh-nodejs4-nodejs-dezalgo                               noarch         1.0.2-4.el7                    rhel-server-rhscl-7-rpms         7.5 k
+     rh-nodejs4-nodejs-editor                                noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms         6.8 k
+     rh-nodejs4-nodejs-forever-agent                         noarch         0.5.0-4.el7                    rhel-server-rhscl-7-rpms         9.5 k
+     rh-nodejs4-nodejs-fs-vacuum                             noarch         1.2.6-4.el7                    rhel-server-rhscl-7-rpms         7.3 k
+     rh-nodejs4-nodejs-fs-write-stream-atomic                noarch         1.0.3-4.el7                    rhel-server-rhscl-7-rpms         7.1 k
+     rh-nodejs4-nodejs-fstream                               noarch         1.0.3-3.el7                    rhel-server-rhscl-7-rpms          25 k
+     rh-nodejs4-nodejs-fstream-ignore                        noarch         1.0.2-4.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-fstream-npm                           noarch         1.0.7-2.el7                    rhel-server-rhscl-7-rpms          12 k
+     rh-nodejs4-nodejs-gauge                                 noarch         1.2.2-6.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-github-url-from-git                   noarch         1.4.0-2.el7                    rhel-server-rhscl-7-rpms         6.6 k
+     rh-nodejs4-nodejs-github-url-from-username-repo         noarch         1.0.2-1.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-glob                                  noarch         7.0.3-1.el7                    rhel-server-rhscl-7-rpms          21 k
+     rh-nodejs4-nodejs-graceful-fs                           noarch         4.1.2-4.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-has-unicode                           noarch         2.0.0-3.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-hosted-git-info                       noarch         2.1.4-4.el7                    rhel-server-rhscl-7-rpms         9.2 k
+     rh-nodejs4-nodejs-imurmurhash                           noarch         0.1.4-1.el7                    rhel-server-rhscl-7-rpms         8.3 k
+     rh-nodejs4-nodejs-inflight                              noarch         1.0.4-3.el7                    rhel-server-rhscl-7-rpms         6.4 k
+     rh-nodejs4-nodejs-inherits                              noarch         2.0.0-15.el7                   rhel-server-rhscl-7-rpms         9.4 k
+     rh-nodejs4-nodejs-ini                                   noarch         1.3.4-2.el7                    rhel-server-rhscl-7-rpms         8.8 k
+     rh-nodejs4-nodejs-init-package-json                     noarch         1.9.3-1.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-is-absolute                           noarch         0.2.3-4.el7                    rhel-server-rhscl-7-rpms         6.8 k
+     rh-nodejs4-nodejs-is-builtin-module                     noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-is-relative                           noarch         0.2.1-4.el7                    rhel-server-rhscl-7-rpms         6.3 k
+     rh-nodejs4-nodejs-is-unc-path                           noarch         0.1.1-4.el7                    rhel-server-rhscl-7-rpms         6.6 k
+     rh-nodejs4-nodejs-is-windows                            noarch         0.1.0-4.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-isarray                               noarch         0.0.1-5.el7                    rhel-server-rhscl-7-rpms         7.1 k
+     rh-nodejs4-nodejs-jju                                   noarch         1.2.1-4.el7                    rhel-server-rhscl-7-rpms         8.1 k
+     rh-nodejs4-nodejs-json-parse-helpfulerror               noarch         1.0.3-2.el7                    rhel-server-rhscl-7-rpms         6.2 k
+     rh-nodejs4-nodejs-json-stringify-safe                   noarch         5.0.0-3.el7                    rhel-server-rhscl-7-rpms         6.8 k
+     rh-nodejs4-nodejs-lockfile                              noarch         1.0.1-3.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-lodash._basetostring                  noarch         3.0.1-3.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-lodash._createpadding                 noarch         3.6.1-2.el7                    rhel-server-rhscl-7-rpms         6.6 k
+     rh-nodejs4-nodejs-lodash.pad                            noarch         3.1.1-1.el7                    rhel-server-rhscl-7-rpms         6.9 k
+     rh-nodejs4-nodejs-lodash.padleft                        noarch         3.1.1-3.el7                    rhel-server-rhscl-7-rpms         7.0 k
+     rh-nodejs4-nodejs-lodash.padright                       noarch         3.1.1-2.el7                    rhel-server-rhscl-7-rpms         7.0 k
+     rh-nodejs4-nodejs-lodash.repeat                         noarch         3.0.1-3.el7                    rhel-server-rhscl-7-rpms         6.8 k
+     rh-nodejs4-nodejs-lru-cache                             noarch         3.2.0-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-mime-db                               noarch         1.15.0-4.el7                   rhel-server-rhscl-7-rpms          23 k
+     rh-nodejs4-nodejs-mime-types                            noarch         2.1.3-2.el7                    rhel-server-rhscl-7-rpms         7.9 k
+     rh-nodejs4-nodejs-minimatch                             noarch         3.0.2-1.el7                    rhel-server-rhscl-7-rpms          17 k
+     rh-nodejs4-nodejs-minimist                              noarch         0.0.8-2.el7                    rhel-server-rhscl-7-rpms         8.0 k
+     rh-nodejs4-nodejs-mkdirp                                noarch         0.5.0-2.el7                    rhel-server-rhscl-7-rpms         8.3 k
+     rh-nodejs4-nodejs-ms                                    noarch         0.7.1-4.el7                    rhel-server-rhscl-7-rpms         8.0 k
+     rh-nodejs4-nodejs-mute-stream                           noarch         0.0.4-4.el7                    rhel-server-rhscl-7-rpms         7.8 k
+     rh-nodejs4-nodejs-node-uuid                             noarch         1.4.1-3.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-nopt                                  noarch         3.0.6-3.el7                    rhel-server-rhscl-7-rpms          14 k
+     rh-nodejs4-nodejs-normalize-git-url                     noarch         3.0.1-2.el7                    rhel-server-rhscl-7-rpms         6.7 k
+     rh-nodejs4-nodejs-normalize-package-data                noarch         2.3.5-2.el7                    rhel-server-rhscl-7-rpms          15 k
+     rh-nodejs4-nodejs-npm-cache-filename                    noarch         1.0.2-2.el7                    rhel-server-rhscl-7-rpms         5.8 k
+     rh-nodejs4-nodejs-npm-install-checks                    noarch         1.0.6-2.el7                    rhel-server-rhscl-7-rpms         7.7 k
+     rh-nodejs4-nodejs-npm-package-arg                       noarch         4.1.0-2.el7                    rhel-server-rhscl-7-rpms         8.9 k
+     rh-nodejs4-nodejs-npm-registry-client                   noarch         7.1.0-1.el7                    rhel-server-rhscl-7-rpms          26 k
+     rh-nodejs4-nodejs-npm-user-validate                     noarch         0.1.1-2.el7                    rhel-server-rhscl-7-rpms         6.4 k
+     rh-nodejs4-nodejs-npmlog                                noarch         2.0.0-3.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-once                                  noarch         1.3.3-2.el7                    rhel-server-rhscl-7-rpms         6.5 k
+     rh-nodejs4-nodejs-opener                                noarch         1.4.1-2.el7                    rhel-server-rhscl-7-rpms         7.4 k
+     rh-nodejs4-nodejs-os-homedir                            noarch         1.0.1-2.el7                    rhel-server-rhscl-7-rpms         5.8 k
+     rh-nodejs4-nodejs-os-tmpdir                             noarch         1.0.1-4.el7                    rhel-server-rhscl-7-rpms         5.9 k
+     rh-nodejs4-nodejs-osenv                                 noarch         0.1.3-3.el7                    rhel-server-rhscl-7-rpms         7.6 k
+     rh-nodejs4-nodejs-path-array                            noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms         7.1 k
+     rh-nodejs4-nodejs-path-is-absolute                      noarch         1.0.0-2.el7                    rhel-server-rhscl-7-rpms         5.9 k
+     rh-nodejs4-nodejs-path-is-inside                        noarch         1.0.1-1.el7                    rhel-server-rhscl-7-rpms         6.3 k
+     rh-nodejs4-nodejs-process-nextick-args                  noarch         1.0.2-3.el7                    rhel-server-rhscl-7-rpms         5.8 k
+     rh-nodejs4-nodejs-promzard                              noarch         0.3.0-3.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-proto-list                            noarch         1.2.2-6.el7                    rhel-server-rhscl-7-rpms         6.7 k
+     rh-nodejs4-nodejs-pseudomap                             noarch         1.0.2-1.el7                    rhel-server-rhscl-7-rpms         7.3 k
+     rh-nodejs4-nodejs-qs                                    noarch         1.2.2-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-read                                  noarch         1.0.5-2.el7                    rhel-server-rhscl-7-rpms         8.9 k
+     rh-nodejs4-nodejs-read-installed                        noarch         4.0.3-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-read-package-json                     noarch         2.0.3-1.el7                    rhel-server-rhscl-7-rpms          12 k
+     rh-nodejs4-nodejs-readable-stream                       noarch         2.0.2-6.el7                    rhel-server-rhscl-7-rpms          22 k
+     rh-nodejs4-nodejs-readdir-scoped-modules                noarch         1.0.2-2.el7                    rhel-server-rhscl-7-rpms         7.0 k
+     rh-nodejs4-nodejs-realize-package-specifier             noarch         3.0.1-2.el7                    rhel-server-rhscl-7-rpms         7.5 k
+     rh-nodejs4-nodejs-request                               noarch         2.42.0-7.el7                   rhel-server-rhscl-7-rpms          33 k
+     rh-nodejs4-nodejs-retry                                 noarch         0.9.0-1.el7                    rhel-server-rhscl-7-rpms          12 k
+     rh-nodejs4-nodejs-rimraf                                noarch         2.5.2-2.el7                    rhel-server-rhscl-7-rpms          11 k
+     rh-nodejs4-nodejs-semver                                noarch         5.1.0-2.el7                    rhel-server-rhscl-7-rpms          20 k
+     rh-nodejs4-nodejs-sha                                   noarch         2.0.1-3.1.el7                  rhel-server-rhscl-7-rpms         8.0 k
+     rh-nodejs4-nodejs-slide                                 noarch         1.1.6-2.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-sorted-object                         noarch         1.0.0-5.el7                    rhel-server-rhscl-7-rpms         6.6 k
+     rh-nodejs4-nodejs-spdx-correct                          noarch         1.0.2-2.el7                    rhel-server-rhscl-7-rpms         9.6 k
+     rh-nodejs4-nodejs-spdx-exceptions                       noarch         1.0.4-3.el7                    rhel-server-rhscl-7-rpms         5.1 k
+     rh-nodejs4-nodejs-spdx-expression-parse                 noarch         1.0.2-2.el7                    rhel-server-rhscl-7-rpms          13 k
+     rh-nodejs4-nodejs-spdx-license-ids                      noarch         1.2.0-1.el7                    rhel-server-rhscl-7-rpms         9.2 k
+     rh-nodejs4-nodejs-string_decoder                        noarch         0.10.31-3.el7                  rhel-server-rhscl-7-rpms         7.6 k
+     rh-nodejs4-nodejs-strip-ansi                            noarch         3.0.0-2.el7                    rhel-server-rhscl-7-rpms         6.5 k
+     rh-nodejs4-nodejs-tar                                   noarch         2.2.1-3.el7                    rhel-server-rhscl-7-rpms          23 k
+     rh-nodejs4-nodejs-text-table                            noarch         0.2.0-3.el7                    rhel-server-rhscl-7-rpms         6.9 k
+     rh-nodejs4-nodejs-tunnel-agent                          noarch         0.4.3-1.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-uid-number                            noarch         0.0.5-3.el7                    rhel-server-rhscl-7-rpms         7.1 k
+     rh-nodejs4-nodejs-umask                                 noarch         1.1.0-5.el7                    rhel-server-rhscl-7-rpms         6.9 k
+     rh-nodejs4-nodejs-unc-path-regex                        noarch         0.1.1-3.el7                    rhel-server-rhscl-7-rpms         6.4 k
+     rh-nodejs4-nodejs-util-deprecate                        noarch         1.0.1-3.el7                    rhel-server-rhscl-7-rpms         6.3 k
+     rh-nodejs4-nodejs-util-extend                           noarch         1.0.1-8.el7                    rhel-server-rhscl-7-rpms         6.1 k
+     rh-nodejs4-nodejs-validate-npm-package-license          noarch         3.0.1-2.el7                    rhel-server-rhscl-7-rpms          10 k
+     rh-nodejs4-nodejs-validate-npm-package-name             noarch         2.2.2-4.el7                    rhel-server-rhscl-7-rpms         7.5 k
+     rh-nodejs4-nodejs-wcwidth                               noarch         1.0.0-7.el7                    rhel-server-rhscl-7-rpms         9.8 k
+     rh-nodejs4-nodejs-which                                 noarch         1.2.0-5.el7                    rhel-server-rhscl-7-rpms         9.1 k
+     rh-nodejs4-nodejs-wrappy                                noarch         1.0.1-3.el7                    rhel-server-rhscl-7-rpms         5.7 k
+     rh-nodejs4-nodejs-write-file-atomic                     noarch         1.1.2-4.el7                    rhel-server-rhscl-7-rpms         7.1 k
+     rh-nodejs4-npm                                          noarch         2.15.1-8.el7                   rhel-server-rhscl-7-rpms         495 k
+     rh-nodejs4-runtime                                      x86_64         2.2-5.el7                      rhel-server-rhscl-7-rpms         1.1 M
+     scl-utils                                               x86_64         20130529-17.el7_1              rhel-7-server-rpms                24 k
+     zlib-devel                                              x86_64         1.2.7-17.el7                   rhel-7-server-rpms                50 k
+
+    Transaction Summary
+    ==============================================================================================================================================
+    Install  1 Package (+165 Dependent packages)
+
+    Total download size: 54 M
+    Installed size: 134 M
+    Is this ok [y/d/N]:y
+    ...
+    [root@468a8a25b34b /]# scl enable rh-nodejs4 bash
+    [root@468a8a25b34b /]# node -v
+    v4.6.2
+
+From the above output you can see all the packages that get installed plus how to use the `scl` tool to enable rh-nodejs4 in a
+new process running bash.
+    
