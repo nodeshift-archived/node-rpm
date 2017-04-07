@@ -14,7 +14,7 @@ a branch should be created.
 The normal work flow would then be:
 1. Branch off v&lt;n&gt;x-staging (where n is the major version of Node.js) 
 2. Update Node.js version in [nodejs.spec](./src/nodejs.spec)
-3. Either run the [build locally](#running_the_build_locally) or
+3. Either run the [build locally](#running-the-build-locally) or
   commit the changes and create a pull request against the branch in question
 
 Both of these options will run through the build process and report back any failures. It might be
