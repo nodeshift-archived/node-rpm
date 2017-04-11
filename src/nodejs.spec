@@ -91,16 +91,13 @@ Source100: %{name}-tarball.sh
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-# Disable running gyp on bundled deps we don't use
-#Patch1: 0001-disable-running-gyp-files-for-bundled-deps.patch
-
 # EPEL only has OpenSSL 1.0.1, so we need to carry a patch on that platform
-Patch2: 0002-Use-openssl-1.0.1.patch
+Patch1: 0002-Use-openssl-1.0.1.patch
 
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
-Patch3: 0003-CA-Certificates-are-provided-by-Fedora.patch
+Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 
 BuildRequires: python-devel
 BuildRequires: libuv-devel >= 1:1.9.1
@@ -121,7 +118,7 @@ BuildRequires: openssl-devel >= 1:1.0.2
 %endif
 %endif
 
-# we need the system certificate store when Patch2 is applied
+# we need the system certificate store when Patch1 is applied
 Requires: ca-certificates
 
 #we need ABI virtual provides where SONAMEs aren't enough/not present so deps
@@ -235,15 +232,12 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}
 
-# remove bundled dependencies that we aren't building
-#%patch1 -p1
-
 # remove bundled CA certificates
 rm -f src/node_root_certs.h
-%patch3 -p1
+%patch2 -p1
 
 %if 0%{?epel}
-%patch2 -p1
+%patch1 -p1
 %endif
 
 
