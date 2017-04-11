@@ -57,26 +57,125 @@ If you see an error similar to this you may need to increase your memory setting
     collect2: fatal error: ld terminated with signal 9 [Killed]
 
 
-### Node.js version in Fedora/RHEL/SCL
+### Node.js versions in Fedora/RHEL/CentOS
 
-RHEL versions N/A  
-[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)  
-[Software Collections (SCL)](https://www.softwarecollections.org/en/scls/?search=nodejs)
 
-Extra packages for Enterprise Linux (EPEL)
-RHEL 7: https://dl.fedoraproject.org/pub/epel/7/x86_64/n/nodejs-6.10.1-2.el7.x86_64.rpm
-RHEL 6: https://dl.fedoraproject.org/pub/epel/6/x86_64/nodejs-0.10.48-3.el6.x86_64.rpm
-RHEL 5: N/A
+| OS Version | Package Node Version | SCL     |  EPEL     | Nodejs.org |
+|------------|:--------------------:|--------:|----------:|:-----------|
+| RHEL 7.3   | [N/A](#rhel-def)      | [v4.6.2](#rhel-scl)  |   [N/A](#rhel-epel)     | [v7.9.0](#rhel-nodejsorg)    |
+| Fedora 25  | [v6.10.0](#fedora-def)| [v4.6.2](#fedora-scl)  | [v6.10.0](#fedora-epel)   | [v7.9.0](#fedora-nodejsorg)    |
+| CentOS  7  | [N/A](#centos-def)    | [v4.4.2](#centos-scl)  | [v6.10.0](#centos-epel)   | [v7.9.0](#centos-nodejsorg)    |
 
-### Running an empty RHEL container
-This is mainly to verify if Node is installed by default on RHEL.
+* Packaged in this case refers to having a repository preconfigured so that a direct install command using 
+a package manager is possible, for example running `yum install -y nodejs` out of the box.
+
+### Installing Node on RHEL
+
+#### <a id="rhel-def"></a>Default packaged version
 
     $ docker pull registry.access.redhat.com/rhel7.3
     $ docker run -it registry.access.redhat.com/rhel7.3 bash
+    $ subscription-manager register --username xxx --password xxx --auto-attach
+    $ node -v
+    $ yum install -y nodejs
+    Loaded plugins: ovl, product-id, search-disabled-repos, subscription-manager
+    No package nodejs available.
+    Error: Nothing to do
 
-As far as I can tell Node is not installed by default on RHEL.
 
-### Installing SCL Node.js
+#### <a id="rhel-scl"></a>Install Node using SCL
+
+    $ docker run -it registry.access.redhat.com/rhel7.3 bash
+    $ subscription-manager register --username xxx --password xxx --auto-attach
+    $ yum-config-manager --enable rhel-server-rhscl-7-rpms
+    $ yum install rh-nodejs4
+    $ scl enable rh-nodejs4 bash
+    $ node -v
+    v4.6.2
+
+
+#### <a id="rhel-epel"></a>Install Node using EPEL
+I'm still trying to figure out the correct repos to use for this. Documentation exist but not very good. 
+
+
+#### <a id="rhel-nodejsorg"></a>Install Node using nodejs.org
+
+    $ docker run -it registry.access.redhat.com/rhel7.3 bash
+    $ curl --silent --location https://rpm.nodesource.com/setup_7.x | bash -
+    $ yum install -y nodejs
+    $ node -v
+    v7.9.0
+
+----
+
+
+### Installing Node on Fedora
+
+#### <a id="fedora-def"></a>Default packaged version
+  
+    $ docker pull fedora
+    $ docker run -it fedora bash
+    $ dnf install nodejs
+    $ node -v
+    v6.10.0
+
+#### <a id="fedora-scl"></a>Install Node using SCL
+Need to investigate.
+
+#### <a id="fedora-epel"></a>Install Node using EPEL
+Need to investigate.
+
+
+#### <a id="fedora-nodejsorg"></a>Install Node using nodejs.org
+
+    $ docker run -it fedora bash
+    $ curl --silent --location https://rpm.nodesource.com/setup_7.x | bash -
+    $ yum install -y nodejs
+    $ node -v
+    v7.9.0
+
+----
+
+### Installing Node.js on CentOS
+
+#### <a id="centos-def"></a>Default packaged version
+
+    $ docker pull centos
+    $ docker run -it centos bash
+    $ yum install -y  nodejs
+    No package nodejs available.
+    Error: Nothing to do
+
+#### <a id="centos-scl"></a>Install Node using SCL
+
+    $ docker pull centos
+    $ docker run -it centos bash
+    $ yum install -y centos-release-scl
+    $ yum install -y rh-nodejs4
+    $ scl enable rh-nodejs4 bash
+    $ node -v
+    v4.4.2
+
+#### <a id="centos-epel"></a>Install Node using EPEL
+
+    $ docker pull centos
+    $ docker run -it centos bash
+    $ yum install epel-release
+    $ yum install -y nodejs
+    $ node -v
+    v6.10.1
+
+#### <a id="centos-nodejsorg"></a>Install Node using nodejs.org
+
+    $ docker run -it centos bash
+    $ curl --silent --location https://rpm.nodesource.com/setup_7.x | bash -
+    $ yum install -y nodejs
+    $ node -v
+    v7.9.0
+
+----
+
+### List of packages installed with SCL
 
     $ docker run -it registry.access.redhat.com/rhel7.3 bash
     [root@468a8a25b34b /]# subscription-manager register --username xxx@redhat.com --password xxx --auto-attach
@@ -269,3 +368,11 @@ As far as I can tell Node is not installed by default on RHEL.
 From the above output you can see all the packages that get installed plus how to use the `scl` tool to enable rh-nodejs4 in a
 new process running bash.
     
+
+[Software Collections (SCL)](https://www.softwarecollections.org/en/scls/?search=nodejs)
+[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)  
+
+Extra packages for Enterprise Linux (EPEL)
+RHEL 7: https://dl.fedoraproject.org/pub/epel/7/x86_64/n/nodejs-6.10.1-2.el7.x86_64.rpm
+RHEL 6: https://dl.fedoraproject.org/pub/epel/6/x86_64/nodejs-0.10.48-3.el6.x86_64.rpm
+RHEL 5: N/A
