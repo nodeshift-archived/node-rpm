@@ -1,14 +1,17 @@
-[![Build Status](https://travis-ci.org/danbev/node-rpm.svg?branch=master)](https://travis-ci.org/danbev/node-rpm)
+[![Build Status](https://travis-ci.org/bucharest-gold/node-rpm.svg?branch=master)](https://travis-ci.org/bucharest-gold/node-rpm)
 
 ### Node.js RPM Packaging
-This project purpose is to create RPMs targeted for Fedora and RHEL.
+This purpose of this project is to create RPMs targeted for Fedora and RHEL to allow us to help identify issues
+early and contribute changes upstream when possible.
 
+The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
+[koji build](https://koji.fedoraproject.org/koji/buildinfo?buildID=861930).
 
 ### Releases 
-Built releases are published on [github](https://github.com/danbev/node-rpm/releases).
+Built releases are published on [github](https://github.com/bucharest-gold/node-rpm/releases).
 
 ### Building a new RPM
-If there is a new version released for Node.js there is no existing staging branch for that version
+If there is a new version released for Node.js and there is no existing staging branch for that version
 a branch should be created.
 
 The normal work flow would then be:
@@ -56,8 +59,8 @@ If you see an error similar to this you may need to increase your memory setting
 
 ### Node.js version in Fedora/RHEL/SCL
 
-[RHEL versions)()
-[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)
+RHEL versions N/A  
+[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)  
 [Software Collections (SCL)](https://www.softwarecollections.org/en/scls/?search=nodejs)
 
 Extra packages for Enterprise Linux (EPEL)
