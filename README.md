@@ -365,14 +365,5 @@ Need to investigate.
     [root@468a8a25b34b /]# node -v
     v4.6.2
 
-From the above output you can see all the packages that get installed plus how to use the `scl` tool to enable rh-nodejs4 in a
+From the above output you can see all the packages that get installed plus how to use the scl tool to enable rh-nodejs4 in a
 new process running bash.
-    
-
-[Software Collections (SCL)](https://www.softwarecollections.org/en/scls/?search=nodejs)
-[Fedora versions](https://koji.fedoraproject.org/koji/packageinfo?packageID=15154)  
-
-Extra packages for Enterprise Linux (EPEL)
-RHEL 7: https://dl.fedoraproject.org/pub/epel/7/x86_64/n/nodejs-6.10.1-2.el7.x86_64.rpm
-RHEL 6: https://dl.fedoraproject.org/pub/epel/6/x86_64/nodejs-0.10.48-3.el6.x86_64.rpm
-RHEL 5: N/A
