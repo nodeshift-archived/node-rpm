@@ -126,7 +126,8 @@ a package manager is possible, for example running `yum install -y nodejs` out o
     v6.10.0
 
 #### <a id="fedora-scl"></a>Install Node using SCL
-Need to investigate.
+The [rh-nodejs4](https://www.softwarecollections.org/en/scls/rhscl/rh-nodejs4/) on the
+Software Collections site only provides instructions for RHEL and CentOS.
 
 #### <a id="fedora-epel"></a>Install Node using EPEL
 Not applicable as EPEL is only for RHEL, CentOS, and Scientific Linux.
