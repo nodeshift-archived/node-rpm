@@ -129,7 +129,7 @@ a package manager is possible, for example running `yum install -y nodejs` out o
 Need to investigate.
 
 #### <a id="fedora-epel"></a>Install Node using EPEL
-Need to investigate.
+Not applicable as EPEL is only for RHEL, CentOS, and Scientific Linux.
 
 
 #### <a id="fedora-nodejsorg"></a>Install Node using nodejs.org
