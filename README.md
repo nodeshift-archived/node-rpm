@@ -62,7 +62,7 @@ If you see an error similar to this you may need to increase your memory setting
 
 | OS Version | Package Node Version | SCL     |  EPEL     | Nodejs.org |
 |------------|:--------------------:|--------:|----------:|:-----------|
-| RHEL 7.3   | [N/A](#rhel-def)      | [v4.6.2](#rhel-scl)  |   [N/A](#rhel-epel)     | [v7.9.0](#rhel-nodejsorg)    |
+| RHEL 7.3   | [N/A](#rhel-def)      | [v4.6.2](#rhel-scl)  |   [v6.10.1](#rhel-epel)     | [v7.9.0](#rhel-nodejsorg)    |
 | Fedora 25  | [v6.10.0](#fedora-def)| [v4.6.2](#fedora-scl)  | [v6.10.0](#fedora-epel)   | [v7.9.0](#fedora-nodejsorg)    |
 | CentOS  7  | [N/A](#centos-def)    | [v4.4.2](#centos-scl)  | [v6.10.0](#centos-epel)   | [v7.9.0](#centos-nodejsorg)    |
 
@@ -95,8 +95,14 @@ a package manager is possible, for example running `yum install -y nodejs` out o
 
 
 #### <a id="rhel-epel"></a>Install Node using EPEL
-I'm still trying to figure out the correct repos to use for this. Documentation exist but not very good. 
 
+    $ docker pull registry.access.redhat.com/rhel7.3
+    $ docker run -it registry.access.redhat.com/rhel7.3 bash
+    $ subscription-manager register --username xxx --password xxx --auto-attach
+    $ rpm -Uvh http://ftp.acc.umu.se/mirror/fedora/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+    $ yum install -y nodejs
+    $ node -v
+    v6.10.1
 
 #### <a id="rhel-nodejsorg"></a>Install Node using nodejs.org
 
