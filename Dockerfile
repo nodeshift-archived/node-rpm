@@ -1,20 +1,4 @@
-FROM fedora:latest
-
-RUN yum install -y @development-tools
-RUN yum install -y fedora-packager
-RUN yum install -y gcc-c++                                              \
-                   gyp                                                  \
-                   http-parser-devel                                    \
-                   libuv-devel                                          \
-                   openssl-devel                                        \
-                   libicu-devel                                         \
-                   systemtap-sdt-devel                                  \
-                   procps-ng                                            \
-                   python-devel                                         \
-                   zlib-devel                                           \
-                   wget
-
-RUN rpmdev-setuptree
+FROM bucharestgold/rpmbuild-base:latest
 
 RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/

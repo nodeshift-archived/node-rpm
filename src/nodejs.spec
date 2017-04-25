@@ -83,8 +83,7 @@ ExclusiveArch: %{nodejs_arches}
 # nodejs bundles openssl, but we use the system version in Fedora
 # because openssl contains prohibited code, we remove openssl completely from
 # the tarball, using the script in Source100
-Source0: node-v%{nodejs_version}-stripped.tar.gz
-Source100: %{name}-tarball.sh
+Source0: node-v%{nodejs_version}.tar.gz
 
 # The native module Requires generator remains in the nodejs SRPM, so it knows
 # the nodejs and v8 versions.  The remainder has migrated to the
