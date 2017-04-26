@@ -1,5 +1,4 @@
-#FROM bucharestgold/rpmbuild-base:latest
-FROM dbevenius/rpmbuild-base:latest
+FROM bucharestgold/rpmbuild-base:latest
 
 RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/
