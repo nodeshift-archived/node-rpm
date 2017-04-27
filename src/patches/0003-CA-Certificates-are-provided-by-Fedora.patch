@@ -22,14 +22,15 @@ Node.js 5.4.1
 Modified 2016-07-26 by Haikel Guemar <hguemar@fedoraproject.org> to update for
 Node.js 4.4.7
 ---
- src/node_crypto.cc | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+
+ src/node_crypto.cc | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
 diff --git a/src/node_crypto.cc b/src/node_crypto.cc
-index 4c28295..ae933a6 100644
+index 25cb003..9c6da38 100644
 --- a/src/node_crypto.cc
 +++ b/src/node_crypto.cc
-@@ -121,7 +121,7 @@ static X509_NAME *cnnic_ev_name =
+@@ -117,7 +117,7 @@ static X509_NAME *cnnic_ev_name =
  static Mutex* mutexes;
  
  const char* const root_certs[] = {
@@ -37,23 +38,29 @@ index 4c28295..ae933a6 100644
 +  NULL
  };
  
- std::string extra_root_certs_file;  // NOLINT(runtime/string)
-@@ -837,19 +837,14 @@ void SecureContext::AddRootCerts(const FunctionCallbackInfo<Value>& args) {
-   (void) &clear_error_on_return;  // Silence compiler warning.
+ X509_STORE* root_cert_store;
+@@ -751,25 +751,14 @@ void SecureContext::AddRootCerts(const FunctionCallbackInfo<Value>& args) {
+   CHECK_EQ(sc->ca_store_, nullptr);
  
    if (!root_cert_store) {
--    root_cert_store = NewRootCertStore();
+-    root_cert_store = X509_STORE_new();
 -
--    if (!extra_root_certs_file.empty()) {
--      unsigned long err = AddCertsFromFile(  // NOLINT(runtime/int)
--                                           root_cert_store,
--                                           extra_root_certs_file.c_str());
--      if (err) {
--        ProcessEmitWarning(sc->env(),
--                           "Ignoring extra certs from `%s`, load failed: %s\n",
--                           extra_root_certs_file.c_str(),
--                           ERR_error_string(err, nullptr));
+-    for (size_t i = 0; i < arraysize(root_certs); i++) {
+-      BIO* bp = NodeBIO::NewFixed(root_certs[i], strlen(root_certs[i]));
+-      if (bp == nullptr) {
+-        return;
 -      }
+-
+-      X509 *x509 = PEM_read_bio_X509(bp, nullptr, CryptoPemCallback, nullptr);
+-      if (x509 == nullptr) {
+-        BIO_free_all(bp);
+-        return;
+-      }
+-
+-      X509_STORE_add_cert(root_cert_store, x509);
+-
+-      BIO_free_all(bp);
+-      X509_free(x509);
 +    if (SSL_CTX_load_verify_locations(sc->ctx_, "/etc/pki/tls/certs/ca-bundle.crt", NULL) == 1) {
 +      root_cert_store = SSL_CTX_get_cert_store(sc->ctx_);
 +    } else {
@@ -61,11 +68,9 @@ index 4c28295..ae933a6 100644
 +      root_cert_store = X509_STORE_new();
      }
 +  } else {
-+      SSL_CTX_set_cert_store(sc->ctx_, root_cert_store);
++    SSL_CTX_set_cert_store(sc->ctx_, root_cert_store);
    }
  
-   // Increment reference count so global store is not deleted along with CTX.
-
--- 
+   sc->ca_store_ = root_cert_store;
 2.9.0
 
