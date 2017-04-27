@@ -4,6 +4,7 @@ version=$(rpm -q --specfile --qf='%{version}\n' nodejs.spec | head -n1)
 echo "Building with version $version"
 
 pushd ../node
+git fetch --tags
 git checkout -fb ${version} v${version}
 popd
 

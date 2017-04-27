@@ -27,26 +27,26 @@ Node.js 4.4.7
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/node_crypto.cc b/src/node_crypto.cc
-index 4d93dd4..fcfc35c 100644
+index 85d05a2..22a2cef 100644
 --- a/src/node_crypto.cc
 +++ b/src/node_crypto.cc
-@@ -117,7 +117,7 @@ static X509_NAME *cnnic_ev_name =
+@@ -147,7 +147,7 @@ static X509_NAME *cnnic_ev_name =
  static Mutex* mutexes;
  
- const char* const root_certs[] = {
+ static const char* const root_certs[] = {
 -#include "node_root_certs.h"  // NOLINT(build/include_order)
 +  NULL
  };
  
- X509_STORE* root_cert_store;
-@@ -707,6 +707,7 @@ static X509_STORE* NewRootCertStore() {
+ static std::string extra_root_certs_file;  // NOLINT(runtime/string)
+@@ -749,6 +749,7 @@ static X509_STORE* NewRootCertStore() {
    }
  
    X509_STORE* store = X509_STORE_new();
 +  X509_STORE_load_locations(store, "/etc/pki/tls/certs/ca-bundle.crt", NULL);
-   for (auto& cert : *root_certs_vector) {
-     X509_up_ref(cert);
-     X509_STORE_add_cert(store, cert);
+   if (ssl_openssl_cert_store) {
+     X509_STORE_set_default_paths(store);
+   } else {
 
 2.9.0
 
