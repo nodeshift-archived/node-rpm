@@ -15,7 +15,7 @@
 # than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 7
-%global nodejs_minor 0
+%global nodejs_minor 1
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -55,7 +55,7 @@
 %global npm_epoch 1
 %global npm_major 3
 %global npm_minor 10
-%global npm_patch 8
+%global npm_patch 9
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
