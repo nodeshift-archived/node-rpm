@@ -16,7 +16,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 7
 %global nodejs_minor 2
-%global nodejs_patch 0
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -26,7 +26,7 @@
 %global v8_major 5
 %global v8_minor 4
 %global v8_build 500
-%global v8_patch 43
+%global v8_patch 44
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -55,7 +55,7 @@
 %global npm_epoch 1
 %global npm_major 3
 %global npm_minor 10
-%global npm_patch 9
+%global npm_patch 10
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
