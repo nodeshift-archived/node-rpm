@@ -15,7 +15,7 @@
 # than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 7
-%global nodejs_minor 1
+%global nodejs_minor 2
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -26,7 +26,7 @@
 %global v8_major 5
 %global v8_minor 4
 %global v8_build 500
-%global v8_patch 36
+%global v8_patch 43
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
