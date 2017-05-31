@@ -384,6 +384,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_includedir}/node
 %{_datadir}/node/common.gypi
 %{_pkgdocdir}/gdbinit
+%{_pkgdocdir}/lldbinit
+%{_pkgdocdir}/lldb_commands.py
 
 
 %files -n npm
