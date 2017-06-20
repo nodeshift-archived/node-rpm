@@ -98,6 +98,10 @@ Patch1: 0002-Use-openssl-1.0.1.patch
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
 Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 
+Patch3: 0004-Intl-test.patch
+Patch4: 0005-Zlib-test.patch
+Patch5: 0006-FIPS-test.patch
+
 BuildRequires: python-devel
 BuildRequires: libuv-devel >= 1:1.9.1
 Requires: libuv >= 1:1.9.1
@@ -231,14 +235,15 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}
 
-# remove bundled CA certificates
-rm -f src/node_root_certs.h
 %patch2 -p1
 
 %if 0%{?epel}
 %patch1 -p1
 %endif
 
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -272,7 +277,6 @@ make BUILDTYPE=Debug %{?_smp_mflags}
 %else
 make BUILDTYPE=Release %{?_smp_mflags}
 %endif
-rm -rf deps/uv deps/zlib
 
 %install
 rm -rf %{buildroot}
@@ -349,6 +353,7 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 
 
 %check
+make -j8 test
 # Fail the build if the versions don't match
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8, '%{v8_version}')"

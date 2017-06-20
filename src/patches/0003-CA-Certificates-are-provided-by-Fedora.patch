@@ -23,22 +23,13 @@ Modified 2016-07-26 by Haikel Guemar <hguemar@fedoraproject.org> to update for
 Node.js 4.4.7
 ---
 
- src/node_crypto.cc | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ src/node_crypto.cc | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/src/node_crypto.cc b/src/node_crypto.cc
-index 85d05a2..22a2cef 100644
+index 85d05a2..296c9f5 100644
 --- a/src/node_crypto.cc
 +++ b/src/node_crypto.cc
-@@ -147,7 +147,7 @@ static X509_NAME *cnnic_ev_name =
- static Mutex* mutexes;
- 
- static const char* const root_certs[] = {
--#include "node_root_certs.h"  // NOLINT(build/include_order)
-+  NULL
- };
- 
- static std::string extra_root_certs_file;  // NOLINT(runtime/string)
 @@ -749,6 +749,7 @@ static X509_STORE* NewRootCertStore() {
    }
  
@@ -49,4 +40,3 @@ index 85d05a2..22a2cef 100644
    } else {
 
 2.9.0
-

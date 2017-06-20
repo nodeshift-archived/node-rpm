@@ -8,6 +8,9 @@ COPY src/nodejs.spec /root/rpmbuild/SPECS
 
 COPY src/patches/0002-Use-openssl-1.0.1.patch                          \
      src/patches/0003-CA-Certificates-are-provided-by-Fedora.patch     \
+     src/patches/0004-Intl-test.patch                                  \
+     src/patches/0005-Zlib-test.patch                                  \
+     src/patches/0006-FIPS-test.patch                                  \
      src/nodejs_native.attr                                            \
      src/nodejs-tarball.sh /root/rpmbuild/SOURCES/
 

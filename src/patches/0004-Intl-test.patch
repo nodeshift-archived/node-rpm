@@ -1,0 +1,96 @@
+ test/common/README.md                          | 11 +++++++++++
+ test/common/index.js                           |  6 ++++++
+ test/parallel/test-icu-data-dir.js             |  6 +++++-
+ test/parallel/test-url-domain-ascii-unicode.js |  6 +++++-
+ test/parallel/test-url-format-whatwg.js        |  4 ++++
+ 5 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/test/common/README.md b/test/common/README.md
+index 01d1911..357e47f 100644
+--- a/test/common/README.md
++++ b/test/common/README.md
+@@ -106,6 +106,16 @@ Checks for 'openssl'.
+ 
+ Checks `hasCrypto` and `crypto` with fips.
+ 
++### hasIntl
++* return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
++
++Checks if [internationalization] is supported.
++
++### hasSmallICU
++* return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
++
++Checks `hasIntl` and `small-icu` is supported.
++
+ ### hasIPv6
+ * return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
+ 
+@@ -296,3 +306,4 @@ Node.js
+ [WHATWG URL API](https://nodejs.org/api/url.html#url_the_whatwg_url_api)
+ implementation with tests from
+ [W3C Web Platform Tests](https://github.com/w3c/web-platform-tests).
++[internationalization]: https://github.com/nodejs/no    de/wiki/Intl
+diff --git a/test/common/index.js b/test/common/index.js
+index d657e36..e331bfa 100644
+--- a/test/common/index.js
++++ b/test/common/index.js
+@@ -689,6 +689,12 @@ Object.defineProperty(exports, 'hasIntl', {
+   }
+ });
+ 
++Object.defineProperty(exports, 'hasSmallICU', {
++  get: function() {
++    return process.binding('config').hasSmallICU;
++  }
++});
++
+ // Useful for testing expected internal/error objects
+ exports.expectsError = function expectsError({code, type, message}) {
+   return function(error) {
+diff --git a/test/parallel/test-icu-data-dir.js b/test/parallel/test-icu-data-dir.js
+index 07a4391..3882acb 100644
+--- a/test/parallel/test-icu-data-dir.js
++++ b/test/parallel/test-icu-data-dir.js
+@@ -1,5 +1,9 @@
+ 'use strict';
+-require('../common');
++const common = require('../common');
++if (!(common.hasIntl && common.hasSmallICU)) {
++  common.skip('missing Intl');
++  return;
++}
+ const assert = require('assert');
+ const { spawnSync } = require('child_process');
+ 
+diff --git a/test/parallel/test-url-domain-ascii-unicode.js b/test/parallel/test-url-domain-ascii-unicode.js
+index 9c288cb..2be8ac7 100644
+--- a/test/parallel/test-url-domain-ascii-unicode.js
++++ b/test/parallel/test-url-domain-ascii-unicode.js
+@@ -1,6 +1,10 @@
+ 'use strict';
+ 
+-require('../common');
++const common = require('../common');
++if (!common.hasIntl) {
++  common.skip('missing Intl');
++  return;
++}
+ const strictEqual = require('assert').strictEqual;
+ const url = require('url');
+ 
+diff --git a/test/parallel/test-url-format-whatwg.js b/test/parallel/test-url-format-whatwg.js
+index f9e5691..f7363fd 100644
+--- a/test/parallel/test-url-format-whatwg.js
++++ b/test/parallel/test-url-format-whatwg.js
+@@ -1,6 +1,10 @@
+ 'use strict';
+ 
+ const common = require('../common');
++if (!common.hasIntl) {
++  common.skip('missing Intl');
++  return;
++}
+ const assert = require('assert');
+ const url = require('url');
+ const URL = url.URL;
