@@ -233,8 +233,9 @@ The API documentation for the Node.js JavaScript runtime.
 
 
 %prep
-%setup -q -n node-v%{nodejs_version}
+%setup -q -D -T -n node-v%{nodejs_version}
 
+%if "%{basebuild:0}" == "0"
 %patch2 -p1
 
 %if 0%{?epel}
@@ -244,6 +245,7 @@ The API documentation for the Node.js JavaScript runtime.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%endif # end basebuild
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -273,13 +275,12 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make BUILDTYPE=Debug %{?_smp_mflags}
+make BUILDTYPE=Debug %{?_smp_mflags} test
 %else
-make BUILDTYPE=Release %{?_smp_mflags}
+make BUILDTYPE=Release %{?_smp_mflags} test
 %endif
 
 %install
-rm -rf %{buildroot}
 
 ./tools/install.py install %{buildroot} %{_prefix}
 
@@ -353,7 +354,6 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 
 
 %check
-make -j8 test
 # Fail the build if the versions don't match
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8, '%{v8_version}')"

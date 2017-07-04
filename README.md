@@ -374,3 +374,21 @@ Not applicable as EPEL is only for RHEL, CentOS, and Scientific Linux.
 
 From the above output you can see all the packages that get installed plus how to use the scl tool to enable rh-nodejs4 in a
 new process running bash.
+
+
+### Fedora packages
+
+    $ dnf install -y git
+    $ dnf install -y rpmdevtools
+    $ dnf install -y procps-ng
+    $ dnf install -y gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel zlib-devel libuv-devel
+    $ dnf clean all
+    $ vi ~/.rpmmacros
+    %_topdir /root/rpmbuild_usr_src_debug
+    $ cd cd /root/rpmbuild_usr_src_debug/
+    $ mkdir BUILD
+    $ cd BUILD
+    $ git clone https://github.com/nodejs/node nodejs
+    $ cd /usr/src/node-rpm
+    $ ./run.sh
+    

@@ -1,10 +1,10 @@
-FROM bucharestgold/rpmbuild-base:latest
+FROM bucharestgold/rpmbuild-base:8.1.0
 
 RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/
 
-COPY src/nodejs.spec src/nodejs-tarball.sh src/run.sh /usr/src/node-rpm/
-COPY src/nodejs.spec /root/rpmbuild/SPECS
+COPY src/nodejs.spec src/nodejs-tarball.sh src/run.sh src/build-base-image.sh /usr/src/node-rpm/
+COPY src/nodejs.spec /root/rpmbuild_usr_src_debug/SPECS/
 
 COPY src/patches/0002-Use-openssl-1.0.1.patch                          \
      src/patches/0003-CA-Certificates-are-provided-by-Fedora.patch     \
@@ -12,6 +12,6 @@ COPY src/patches/0002-Use-openssl-1.0.1.patch                          \
      src/patches/0005-Zlib-test.patch                                  \
      src/patches/0006-FIPS-test.patch                                  \
      src/nodejs_native.attr                                            \
-     src/nodejs-tarball.sh /root/rpmbuild/SOURCES/
+     src/nodejs-tarball.sh /root/rpmbuild_usr_src_debug/SOURCES/
 
 CMD ["./run.sh"]
