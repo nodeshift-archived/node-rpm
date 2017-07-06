@@ -1,36 +1,9 @@
- test/common/README.md                          | 11 +++++++++++
  test/common/index.js                           |  6 ++++++
  test/parallel/test-icu-data-dir.js             |  6 +++++-
  test/parallel/test-url-domain-ascii-unicode.js |  6 +++++-
  test/parallel/test-url-format-whatwg.js        |  4 ++++
  5 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/test/common/README.md b/test/common/README.md
-index 01d1911..357e47f 100644
---- a/test/common/README.md
-+++ b/test/common/README.md
-@@ -106,6 +106,16 @@ Checks for 'openssl'.
- 
- Checks `hasCrypto` and `crypto` with fips.
- 
-+### hasIntl
-+* return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
-+
-+Checks if [internationalization] is supported.
-+
-+### hasSmallICU
-+* return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
-+
-+Checks `hasIntl` and `small-icu` is supported.
-+
- ### hasIPv6
- * return [&lt;Boolean>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type)
- 
-@@ -296,3 +306,4 @@ Node.js
- [WHATWG URL API](https://nodejs.org/api/url.html#url_the_whatwg_url_api)
- implementation with tests from
- [W3C Web Platform Tests](https://github.com/w3c/web-platform-tests).
-+[internationalization]: https://github.com/nodejs/no    de/wiki/Intl
 diff --git a/test/common/index.js b/test/common/index.js
 index d657e36..e331bfa 100644
 --- a/test/common/index.js
