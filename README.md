@@ -376,19 +376,45 @@ From the above output you can see all the packages that get installed plus how t
 new process running bash.
 
 
-### Fedora packages
+### Creating a new base image
+A new base image can be created by updating the image in (DockerFile](./Dockerfile) to `fedora` and then following the
+sections below.
+
+#### Install packages
+These are packages that we installed to build Node.js and are required to be installed when creating a new base image.
 
     $ dnf install -y git
     $ dnf install -y rpmdevtools
     $ dnf install -y procps-ng
     $ dnf install -y gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel zlib-devel libuv-devel
     $ dnf clean all
-    $ vi ~/.rpmmacros
-    %_topdir /root/rpmbuild_usr_src_debug
-    $ cd cd /root/rpmbuild_usr_src_debug/
+
+### Configuration
+
+#### Configure the rpmbuild `_topdir`
+
+    $ echo "%_topdir /root/rpmbuild_usr_src_debug" > ~/.rpmmacros
+
+#### Checkout node.js
+
+    $ cd /root/rpmbuild_usr_src_debug/
     $ mkdir BUILD
     $ cd BUILD
     $ git clone https://github.com/nodejs/node nodejs
+
+####  Build Node
     $ cd /usr/src/node-rpm
-    $ ./run.sh
+    $ ./build-base-image.sh
+
+It is possible that the above build will fail while running test but that is not important at this stage. When we
+run the real rpm build there will be a patching stage which will patch any failing tests. The only goal here
+is to compile to save time.
+
+
+#### Commit and push the image
+
+    $ docker commit -a "Daniel Bevenius <daniel.bevenius@gmail.com>" -m "Base Image for building Node.js 8.1.0" 68b03eeff1df bucharestgold/rpmbuild-base-8-1-0
+    $ docker tag bucharestgold/rpmbuild-base-8-1-0 bucharestgold/rpmbuild-base:8.1.0
+    $ docker login
+    $ docker push bucharestgold/rpmbuild-base:8.1.0
     
