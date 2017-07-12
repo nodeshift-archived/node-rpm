@@ -16,7 +16,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 1
-%global nodejs_patch 2
+%global nodejs_patch 3
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -98,8 +98,8 @@ Patch1: 0002-Use-openssl-1.0.1.patch
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
 Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 
-Patch3: 0004-Intl-test.patch
-Patch4: 0005-Zlib-test.patch
+# Patch3: 0004-Intl-test.patch
+# Patch4: 0005-Zlib-test.patch
 Patch5: 0006-FIPS-test.patch
 
 BuildRequires: python-devel
@@ -242,8 +242,8 @@ The API documentation for the Node.js JavaScript runtime.
 %patch1 -p1
 %endif
 
-%patch3 -p1
-%patch4 -p1
+# %patch3 -p1
+# %patch4 -p1
 %patch5 -p1
 %endif # end basebuild
 
