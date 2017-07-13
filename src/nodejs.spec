@@ -16,7 +16,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 1
-%global nodejs_patch 3
+%global nodejs_patch 4
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
