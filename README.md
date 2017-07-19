@@ -418,3 +418,40 @@ is to compile to save time.
     $ docker login
     $ docker push bucharestgold/rpmbuild-base:8.1.0
     
+#### Basic steps to release new RPM versions on github
+
+1. Download and install the latest node version released.
+2. Check the versions of the dependencies using the following command:
+
+```
+$ node -e "console.log(process.versions)"
+```
+
+3. Update the `nodejs.spec` file with the specific dependencies versions.
+
+4. Remove the containers and images
+
+```
+$ docker rm $(docker ps -a -q)
+$ docker rmi $(docker images -q)
+```
+
+5. Build
+
+```
+$ docker build -t bucharestgold/fedora-node . 
+$ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node bash
+$ ./run.sh
+```
+
+6. Copy the rpm files to the host
+
+> example using 'ee223ae857f5' as container ID
+```
+$ docker ps
+$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/SRPMS/ /home/user/SRPMS/
+$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/RPMS/ /home/user/RPMS/
+```
+
+7. Create a new tag and upload the rpm files.
+
