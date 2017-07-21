@@ -425,6 +425,7 @@ is to compile to save time.
 
 ```
 $ node -e "console.log(process.versions)"
+$ npm --version
 ```
 
 3. Update the `nodejs.spec` file with the specific dependencies versions.
@@ -439,7 +440,7 @@ $ docker rmi $(docker images -q)
 5. Build
 
 ```
-$ docker build -t bucharestgold/fedora-node . 
+$ docker build -t bucharestgold/fedora-node .
 $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node bash
 $ ./run.sh
 ```
@@ -449,8 +450,8 @@ $ ./run.sh
 > example using 'ee223ae857f5' as container ID
 ```
 $ docker ps
-$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/SRPMS/ /home/user/SRPMS/
-$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/RPMS/ /home/user/RPMS/
+$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/SRPMS/ /your_directory_here/
+$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/RPMS/ /your_directory_here/
 ```
 
 7. Create a new tag and upload the rpm files.
