@@ -1,4 +1,5 @@
 %global with_debug 0
+%define _unpackaged_files_terminate_build 0
 
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
@@ -15,8 +16,8 @@
 # than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 1
-%global nodejs_patch 4
+%global nodejs_minor 2
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -54,8 +55,8 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 5
-%global npm_minor 0
-%global npm_patch 3
+%global npm_minor 3
+%global npm_patch 0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -100,7 +101,7 @@ Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 
 # Patch3: 0004-Intl-test.patch
 # Patch4: 0005-Zlib-test.patch
-Patch5: 0006-FIPS-test.patch
+# Patch5: 0006-FIPS-test.patch
 
 BuildRequires: python-devel
 BuildRequires: libuv-devel >= 1:1.9.1
@@ -244,7 +245,7 @@ The API documentation for the Node.js JavaScript runtime.
 
 # %patch3 -p1
 # %patch4 -p1
-%patch5 -p1
+# %patch5 -p1
 %endif # end basebuild
 
 %build
