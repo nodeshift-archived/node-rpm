@@ -1,4 +1,4 @@
-FROM bucharestgold/rpmbuild-base:8.1.0
+FROM bucharestgold/rpmbuild-base:8.3.0
 
 RUN mkdir -p /usr/src/node-rpm
 WORKDIR /usr/src/node-rpm/
