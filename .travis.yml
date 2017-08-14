@@ -3,7 +3,8 @@ services:
 - docker
 install:
 - docker build -t bucharestgold/fedora-node . 
-- docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node
+- docker run -it -v ${PWD}/rpms:/root/rpmbuild_usr_src_debug/RPMS bucharestgold/fedora-node
+
 before_deploy:
 - echo "Before deploy."
 deploy:
