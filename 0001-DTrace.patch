@@ -1,0 +1,70 @@
+commit b1c1650cc383ab29fb5523b84630d24d1a12dbcd
+Author: Daniel Bevenius <daniel.bevenius@gmail.com>
+Date:   Wed Nov 15 10:48:01 2017 +0100
+
+    build: fix cctest target --with-dtrace
+    
+    Currently the cctest target will fail on linux when configured
+    --with-dtrace:
+    
+    /node-v9.2.0/out/Release/obj.target/node/src/node_dtrace.o:
+    In function `node::DTRACE_NET_SERVER_CONNECTION(
+        v8::FunctionCallbackInfo<v8::Value> const&)':
+    node_dtrace.cc:(.text+0x103): undefined reference to
+    `node_net__server__connection_semaphore'
+    /node-v9.2.0/out/Release/obj.target/node/src/node_dtrace.o:
+    In function `node::DTRACE_NET_STREAM_END(
+        v8::FunctionCallbackInfo<v8::Value> const&)':
+    ...
+    
+    This is because node_dtrace_provider.o is not linked by the cctest
+    target.
+    
+    This commit tries to fix and simplify the conditions in cctest target
+    so that node_dtrace.o is included for all operating systems that support
+    dtrace, include node_dtrace_ustack.o for all operating systems except
+    mac and linux, and include node_dtrace_provider.o for all operating
+    systems except mac.
+
+diff --git a/node.gyp b/node.gyp
+index 63ace80939..9849bd2ea3 100644
+--- a/node.gyp
++++ b/node.gyp
+@@ -872,7 +872,19 @@
+         [ 'node_use_dtrace=="true"', {
+           'libraries': [
+             '<(OBJ_PATH)<(OBJ_SEPARATOR)node_dtrace.<(OBJ_SUFFIX)',
+-          ]
++          ],
++          'conditions': [
++            ['OS!="mac" and OS!="linux"', {
++              'libraries': [
++                '<(OBJ_PATH)<(OBJ_SEPARATOR)node_dtrace_ustack.<(OBJ_SUFFIX)',
++              ]
++            }],
++            ['OS!="mac"', {
++              'libraries': [
++                '<(SHARED_INTERMEDIATE_DIR)/node_dtrace_provider.o',
++              ]
++            }],
++          ],
+         }],
+         [ 'OS=="win"', {
+           'libraries': [
+@@ -883,16 +895,6 @@
+             '<(OBJ_PATH)<(OBJ_SEPARATOR)backtrace_posix.<(OBJ_SUFFIX)',
+            ],
+         }],
+-        [ 'node_use_dtrace=="true" and OS!="mac" and OS!="linux"', {
+-          'copies': [{
+-            'destination': '<(OBJ_DIR)/cctest/src',
+-            'files': [
+-              '<(OBJ_PATH)<(OBJ_SEPARATOR)node_dtrace_ustack.<(OBJ_SUFFIX)',
+-              '<(OBJ_PATH)<(OBJ_SEPARATOR)node_dtrace_provider.<(OBJ_SUFFIX)',
+-              '<(OBJ_PATH)<(OBJ_SEPARATOR)node_dtrace.<(OBJ_SUFFIX)',
+-            ]},
+-          ],
+-        }],
+         [ 'node_shared_zlib=="false"', {
+           'dependencies': [
+             'deps/zlib/zlib.gyp:zlib',

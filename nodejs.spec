@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 9
-%global nodejs_minor 1
+%global nodejs_minor 2
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 2
 %global v8_build 414
-%global v8_patch 32-node.8
+%global v8_patch 44-node.11
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -67,11 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-# use system certificates instead of the bundled ones
-# modified version of Debian patch:
-# http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
-Patch1: 0001-System-CA-Certificates.patch
-Patch2: 0002-Internet.patch
+Patch1: 0001-DTrace.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -161,7 +157,6 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}-rh
 
 %patch1 -p1
-%patch2 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -188,9 +183,9 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make BUILDTYPE=Debug %{?_smp_mflags} test no-internet=true
+make BUILDTYPE=Debug %{?_smp_mflags} test
 %else
-make BUILDTYPE=Release %{?_smp_mflags} test no-internet=true
+make BUILDTYPE=Release %{?_smp_mflags} test
 %endif
 
 %install
