@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 9
-%global nodejs_minor 3
+%global nodejs_minor 4
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 2
 %global v8_build 414
-%global v8_patch 46-node.15
+%global v8_patch 46-node.17
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -31,8 +31,8 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 5
-%global npm_minor 5
-%global npm_patch 1
+%global npm_minor 6
+%global npm_patch 0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -313,11 +313,13 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu Jan 11 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.4.0-1
+- Updated to use version 9.4.0
 * Wed Dec 13 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.3.0-1
 - Updated to use version 9.3.0
 * Tue Dec 12 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.2.1-1
 - Updated to use version 9.2.1
-* Wed Nov 16 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.2.0-1
+* Thu Nov 16 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.2.0-1
 - Added openssl-system-ca-path configuration variable
 - Updated to use version 8.9.0
 * Wed Nov 1 2017 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.0-1
