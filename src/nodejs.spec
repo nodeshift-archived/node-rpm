@@ -16,7 +16,7 @@
 # than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 4
+%global nodejs_minor 5
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -26,8 +26,8 @@
 # v8 - from deps/v8/include/v8-version.h
 %global v8_major 6
 %global v8_minor 0
-%global v8_build 286
-%global v8_patch 52
+%global v8_build 287
+%global v8_patch 53
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -104,8 +104,6 @@ Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 # Patch5: 0006-FIPS-test.patch
 
 BuildRequires: python-devel
-BuildRequires: libuv-devel >= 1:1.9.1
-Requires: libuv >= 1:1.9.1
 BuildRequires: libicu-devel
 BuildRequires: zlib-devel
 BuildRequires: gcc >= 4.8.0
@@ -189,7 +187,6 @@ real-time applications that run across distributed devices.
 Summary: JavaScript runtime - development headers
 Group: Development/Languages
 Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Requires: libuv-devel%{?_isa}
 Requires: openssl-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
 Requires: nodejs-packaging
@@ -270,7 +267,6 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
            --shared-zlib \
-           --shared-libuv \
            --with-dtrace \
            --with-intl=system-icu
 
