@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 7
+%global nodejs_minor 8
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -71,6 +71,7 @@ Patch1: 0001-System-CA-Certificates.patch
 
 Patch2: 0002-DNS-tests.patch
 Patch3: 0003-serdes.patch
+Patch4: 0004-require-resolve-test.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -158,6 +159,7 @@ The API documentation for the Node.js JavaScript runtime.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
