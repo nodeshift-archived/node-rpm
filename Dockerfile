@@ -14,7 +14,6 @@ WORKDIR /opt/app-root/src/rpmbuild/SPECS/
 COPY nodejs.spec run.sh create_node_tarball.sh /opt/app-root/src/rpmbuild/SPECS/
 
 COPY 0001-System-CA-Certificates.patch             \
-     0002-Internet.patch                           \
      license_xml.js                                \
      license_html.js                               \
      licenses.css                                  \
