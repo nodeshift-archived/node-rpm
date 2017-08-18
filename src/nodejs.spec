@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 8
+%global nodejs_minor 9
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 1
 %global v8_build 534
-%global v8_patch 42
+%global v8_patch 46
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -31,8 +31,8 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 5
-%global npm_minor 4
-%global npm_patch 2
+%global npm_minor 5
+%global npm_patch 1
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -68,10 +68,6 @@ Source7: nodejs_native.attr
 # modified version of Debian patch:
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
 Patch1: 0001-System-CA-Certificates.patch
-
-Patch2: 0002-DNS-tests.patch
-Patch3: 0003-serdes.patch
-Patch4: 0004-require-resolve-test.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -157,9 +153,6 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}
 
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
