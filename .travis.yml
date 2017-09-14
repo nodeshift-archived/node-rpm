@@ -10,7 +10,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: "PwW0HstMln/gNwTlVSDwdHMq7tE80Ppk/F5tNlIExyIpe9ofMpXpjXcH9EajRZF4pNvLW3rv9SNntZSnUTAAPP0mNPn9jC8nz3tGd+63f6qPHOkvCR2UdSRn/aFWM4BlD8MCtKDiWFxqxDiRsUpnTgK2cwp+qC2pDuUV9Rg2IGjYwv98+0CGvjJeidlk6OBkkenRqgvXDdFJ1HQJUUWBRDutS7Q9VFnZUAtJRaZPrx4cIyG8ufjdRLD+T2wvmwuWd9B54szvkA9q5apzhTj1yS8wFdIF9AFArX79n4EpisZHcIsvZjuwvr9DdsJpz/nvDvDOOgKZE+dMK/I0/Uo28EvhOQrlRtPxc6gWO3+2OZNpoWLp2MiOUhC3gVLmaQkEIMJEdFmqZukWS3/mbvARSW46dOaBgBl8K0K2K5VZYLIgTTf7ddVop1XK+eNzYPce7mbj0E4SNQTmlBbjv/0S6Bjdz9L5F9r4Fslay/rZoj93amCxJOnyfiYBVDA3r58ToXpg8lPLkf257JZtIlUSfngtnq+gEMBBBW3DxmXvtBrLrfDm4HMy+RHXlK7aiMAMthBjG9WZsL+ACqy0bDDtn2Yw//NAVZtVfc3RVwiwDPY6iVohnqYOMhsH1Kk3QBwbJL1DzHqQXhM7JFAkYjjIXFJ1QmmWc287QzOkdruC0eU="
+    secure: ""
   file_glob: true
   file: rpms/**/*.rpm
   skip_clean: true
