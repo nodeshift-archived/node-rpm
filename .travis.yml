@@ -9,6 +9,7 @@ deploy:
   api_key:
     secure: I9IFKZSD+vKOrpsnfXInC/X8YIU9i44rj8K4evwlu/xwUj8jcJ2FZz8+V1tD9ahpaxbsU/fU5tskkINvrdfnMzK1wm/stZYxAydDxXW6SvKIPjbmSIzOp7wct0yx6IEro7z3Gt0PZC2I0kiKQcnDgvEMM9jfpQGihrWe2zjP3GQkzUXrOgJo/vn3C3aIlak94BSgp3o7d801ME1M/wQo8isPNQXFukp13D+D4gA+3Ldi7bpWbRaTTGloR54/ylYjToHanhGout1YADJMxOlDK15Chzrb2EJxcMTchOYV0SMcJmcAGbYASDQmIt65YmUJtwWFXGnBw+cd9DNJ9qz7WeNvM11hhMqbrkFzKlErnzds/2JuA9RaKNA5dkssaLIB6f+ILs7UuLoWm11bqGk8aATgkE+793lGrkxfoyn6IGCyX4hsDFYDSFBBIO2o9eUmI7ejQZIG/keV+3GQWBZpkD/7oJZM9g46XHGgu+BtzKl1NeyWL7CEpoJG8p3fdECVBqTqk5fuYDDiZ7X0cgTIFOpoUPU0OydiNbaz24JBTdu4M9oRBtErb3cv3O4c/H/tq4x7645tpitwqW2ajkK/EUY1Fxd0PVSe/8k/DEEAtFF3+4Jz5HrcRc1HlPw5jTMIaTBb94L2yIQ0jHXVXsvgvhEJ9Cr5lq91/iBjWFfZxIk=
   file: rpms/**/*.rpm
+  file_glob: true
   skip_clean: true
   on:
     tags: true
