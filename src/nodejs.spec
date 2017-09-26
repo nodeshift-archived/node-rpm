@@ -104,8 +104,6 @@ Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
 # Patch5: 0006-FIPS-test.patch
 
 BuildRequires: python-devel
-BuildRequires: libicu-devel
-BuildRequires: zlib-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
@@ -151,21 +149,12 @@ Provides: nodejs-punycode = %{punycode_version}
 Provides: npm(punycode) = %{punycode_version}
 
 
-# Node.js has forked c-ares from upstream in an incompatible way, so we need
-# to carry the bundled version internally.
-# See https://github.com/nodejs/node/commit/766d063e0578c0f7758c3a965c971763f43fec85
-Provides: bundled(c-ares) = %{c_ares_version}
-
 # Node.js is closely tied to the version of v8 that is used with it. It makes
 # sense to use the bundled version because upstream consistently breaks ABI
 # even in point releases. Node.js upstream has now removed the ability to build
 # against a shared system version entirely.
 # See https://github.com/nodejs/node/commit/d726a177ed59c37cf5306983ed00ecd858cfbbef
 Provides: bundled(v8) = %{v8_version}
-
-# Node.js and http-parser share an upstream. The http-parser upstream does not
-# do releases often and is almost always far behind the bundled version
-Provides: bundled(http-parser) = %{http_parser_version}
 
 # Make sure we keep NPM up to date when we update Node.js
 %if 0%{?epel}
@@ -266,9 +255,7 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
-           --shared-zlib \
            --with-dtrace \
-           --with-intl=system-icu
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
@@ -354,11 +341,6 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 # Fail the build if the versions don't match
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8, '%{v8_version}')"
-%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.ares.replace(/-DEV$/, ''), '%{c_ares_version}')"
-%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.http_parser, '%{http_parser_version}')"
-
-# Ensure we have punycode and that the version matches
-%{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"punycode\").version, '%{punycode_version}')"
 
 # Ensure we have npm and that the version matches
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
