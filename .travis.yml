@@ -16,4 +16,4 @@ deploy:
     repo: bucharest-gold/node-rpm
     branch: v8.x-staging
 notifications:
-  irc: chat.freenode.net#brass-monkey
+  irc: chat.freenode.net#bucharest-gold
