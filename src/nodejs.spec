@@ -10,10 +10,6 @@
 %endif
 
 # == Node.js Version ==
-# Note: Fedora should only ship LTS versions of Node.js (currently expected
-# to be major versions with even numbers). The odd-numbered versions are new
-# feature releases that are only supported for nine months, which is shorter
-# than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 6
@@ -31,26 +27,6 @@
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
-
-# c-ares - from deps/cares/include/ares_version.h
-%global c_ares_major 1
-%global c_ares_minor 10
-%global c_ares_patch 1
-%global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
-
-# http-parser - from deps/http_parser/http_parser.h
-%global http_parser_major 2
-%global http_parser_minor 7
-%global http_parser_patch 0
-%global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
-
-# punycode - from lib/punycode.js
-# Note: this was merged into the mainline since 0.6.x
-# Note: this will be unmerged in v7 or v8
-%global punycode_major 2
-%global punycode_minor 0
-%global punycode_patch 0
-%global punycode_version %{punycode_major}.%{punycode_minor}.%{punycode_patch}
 
 # npm - from deps/npm/package.json
 %global npm_epoch 1
@@ -88,31 +64,16 @@ Source0: node-v%{nodejs_version}.tar.gz
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-# EPEL only has OpenSSL 1.0.1, so we need to carry a patch on that platform
-Patch1: 0002-Use-openssl-1.0.1.patch
-
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
-Patch2: 0003-CA-Certificates-are-provided-by-Fedora.patch
+Patch1: 0001-System-CA-Certificates.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-
-%if 0%{?epel}
-BuildRequires: openssl-devel >= 1:1.0.1
-%else
-%if 0%{?fedora} > 25
-BuildRequires: compat-openssl10-devel >= 1:1.0.2
-%else
 BuildRequires: openssl-devel >= 1:1.0.2
-%endif
-%endif
-
-# we need the system certificate store when Patch1 is applied
-Requires: ca-certificates
 
 #we need ABI virtual provides where SONAMEs aren't enough/not present so deps
 #break when binary compatibility is broken
@@ -129,33 +90,12 @@ Provides: nodejs(engine) = %{nodejs_version}
 # in the meantime, we're setting an explicit Conflicts: here
 Conflicts: node <= 0.3.2-12
 
-# The punycode module was absorbed into the standard library in v0.6.
-# It still exists as a seperate package for the benefit of users of older
-# versions.  Since we've never shipped anything older than v0.10 in Fedora,
-# we don't need the seperate nodejs-punycode package, so we Provide it here so
-# dependent packages don't need to override the dependency generator.
-# See also: RHBZ#11511811
-# UPDATE: punycode will be deprecated and so we should unbundle it in Node v8
-# and use upstream module instead
-# https://github.com/nodejs/node/commit/29e49fc286080215031a81effbd59eac092fff2f
-Provides: nodejs-punycode = %{punycode_version}
-Provides: npm(punycode) = %{punycode_version}
-
-
 # Node.js is closely tied to the version of v8 that is used with it. It makes
 # sense to use the bundled version because upstream consistently breaks ABI
 # even in point releases. Node.js upstream has now removed the ability to build
 # against a shared system version entirely.
 # See https://github.com/nodejs/node/commit/d726a177ed59c37cf5306983ed00ecd858cfbbef
 Provides: bundled(v8) = %{v8_version}
-
-# Make sure we keep NPM up to date when we update Node.js
-%if 0%{?epel}
-# EPEL doesn't support Recommends, so make it strict
-Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%else
-Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%endif
 
 
 %description
@@ -182,12 +122,9 @@ Epoch: %{npm_epoch}
 Version: %{npm_version}
 Release: %{npm_release}%{?dist}
 
-# We used to ship npm separately, but it is so tightly integrated with Node.js
-# (and expected to be present on all Node.js systems) that we ship it bundled
-# now.
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
-Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Requires: rhoar-nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 # Do not add epoch to the virtual NPM provides or it will break
 # the automatic dependency-generation script.
@@ -215,14 +152,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -D -T -n node-v%{nodejs_version}
 
-%if "%{basebuild:0}" == "0"
-%patch2 -p1
-
-%if 0%{?epel}
 %patch1 -p1
-%endif
-
-%endif # end basebuild
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -288,7 +218,7 @@ rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
 
-# Install the GDB init tool into the documentation directory
+# Install the GDB init and lldbinit tools into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldbinit %{buildroot}/%{_pkgdocdir}/lldbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldb_commands.py %{buildroot}/%{_pkgdocdir}/lldb_commands.py
