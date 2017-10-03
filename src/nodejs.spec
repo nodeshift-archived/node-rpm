@@ -16,7 +16,7 @@
 # than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 5
+%global nodejs_minor 6
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -150,12 +150,12 @@ Provides: npm(punycode) = %{punycode_version}
 Provides: bundled(v8) = %{v8_version}
 
 # Make sure we keep NPM up to date when we update Node.js
-%if 0%{?epel}
+#%if 0%{?epel}
 # EPEL doesn't support Recommends, so make it strict
-Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%else
-Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-%endif
+#Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
+#%else
+#Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
+#%endif
 
 
 %description

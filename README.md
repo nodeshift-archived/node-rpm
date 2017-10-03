@@ -27,15 +27,15 @@ easier to run the build locally to identify the failure if there are any.
 
 #### Build the docker image
 
-    $ docker build -t bucharestgold/fedora-node . 
+    $ docker build -t bucharestgold/rhel-node .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/rhel-node
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/rhel-node bash
 
 Then run the following command to build the RPM:
 
@@ -377,82 +377,18 @@ new process running bash.
 
 
 ### Creating a new base image
-A new base image can be created by updating the image in (DockerFile](./Dockerfile) to `fedora` and then following the
-sections below.
+If version of RHEL needs to be updated we need to rebuild our base docker image using the steps below.
 
-#### Install packages
-These are packages that we installed to build Node.js and are required to be installed when creating a new base image.
-
-    $ dnf install -y git
-    $ dnf install -y rpmdevtools
-    $ dnf install -y procps-ng
-    $ dnf install -y gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel zlib-devel libuv-devel
-    $ dnf clean all
-
-### Configuration
-
-#### Configure the rpmbuild `_topdir`
-
-    $ echo "%_topdir /root/rpmbuild_usr_src_debug" > ~/.rpmmacros
-
-#### Checkout node.js
-
-    $ cd /root/rpmbuild_usr_src_debug/
-    $ mkdir BUILD
-    $ cd BUILD
-    $ git clone https://github.com/nodejs/node nodejs
-
-####  Build Node
-    $ cd /usr/src/node-rpm
-    $ ./build-base-image.sh
-
-It is possible that the above build will fail while running test but that is not important at this stage. When we
-run the real rpm build there will be a patching stage which will patch any failing tests. The only goal here
-is to compile to save time.
-
+    $ docker run -it registry.access.redhat.com/rhel7
+    $ subscription-manager register --serverurl=subscription.rhsm.stage.redhat.com:443/subscription --baseurl=https://cdn.redhat.com --username=xxx --password=xxx --auto-attach
+    $ yum install -y rpmdevtools git gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel make
+    $ yum clean all
+    $ subscription-manager unregister
 
 #### Commit and push the image
 
-    $ docker commit -a "Daniel Bevenius <daniel.bevenius@gmail.com>" -m "Base Image for building Node.js 8.1.0" 68b03eeff1df bucharestgold/rpmbuild-base-8-1-0
-    $ docker tag bucharestgold/rpmbuild-base-8-1-0 bucharestgold/rpmbuild-base:8.1.0
+    $ docker commit -m 'Base RHEL image for Node RPM builds' 44a0d2c36d61 bucharestgold/rhel-base
+    $ docker tag bucharestgold/rhel-base bucharestgold/rhel-base:latest
     $ docker login
-    $ docker push bucharestgold/rpmbuild-base:8.1.0
+    $ docker push bucharestgold/rhel-base:latest
     
-#### Basic steps to release new RPM versions on github
-
-1. Download and install the latest node version released.
-2. Check the versions of the dependencies using the following command:
-
-```
-$ node -e "console.log(process.versions)"
-$ npm --version
-```
-
-3. Update the `nodejs.spec` file with the specific dependencies versions.
-
-4. Remove the containers and images
-
-```
-$ docker rm $(docker ps -a -q)
-$ docker rmi $(docker images -q)
-```
-
-5. Build
-
-```
-$ docker build -t bucharestgold/fedora-node .
-$ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/fedora-node bash
-$ ./run.sh
-```
-
-6. Copy the rpm files to the host
-
-> example using 'ee223ae857f5' as container ID
-```
-$ docker ps
-$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/SRPMS/ /your_directory_here/
-$ docker cp ee223ae857f5:/root/rpmbuild_usr_src_debug/RPMS/ /your_directory_here/
-```
-
-7. Create a new tag and upload the rpm files.
-
