@@ -10,10 +10,6 @@
 %endif
 
 # == Node.js Version ==
-# Note: Fedora should only ship LTS versions of Node.js (currently expected
-# to be major versions with even numbers). The odd-numbered versions are new
-# feature releases that are only supported for nine months, which is shorter
-# than a Fedora release lifecycle.
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 6
@@ -31,26 +27,6 @@
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
-
-# c-ares - from deps/cares/include/ares_version.h
-%global c_ares_major 1
-%global c_ares_minor 10
-%global c_ares_patch 1
-%global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
-
-# http-parser - from deps/http_parser/http_parser.h
-%global http_parser_major 2
-%global http_parser_minor 7
-%global http_parser_patch 0
-%global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
-
-# punycode - from lib/punycode.js
-# Note: this was merged into the mainline since 0.6.x
-# Note: this will be unmerged in v7 or v8
-%global punycode_major 2
-%global punycode_minor 0
-%global punycode_patch 0
-%global punycode_version %{punycode_major}.%{punycode_minor}.%{punycode_patch}
 
 # npm - from deps/npm/package.json
 %global npm_epoch 1
@@ -129,19 +105,6 @@ Provides: nodejs(engine) = %{nodejs_version}
 # in the meantime, we're setting an explicit Conflicts: here
 Conflicts: node <= 0.3.2-12
 
-# The punycode module was absorbed into the standard library in v0.6.
-# It still exists as a seperate package for the benefit of users of older
-# versions.  Since we've never shipped anything older than v0.10 in Fedora,
-# we don't need the seperate nodejs-punycode package, so we Provide it here so
-# dependent packages don't need to override the dependency generator.
-# See also: RHBZ#11511811
-# UPDATE: punycode will be deprecated and so we should unbundle it in Node v8
-# and use upstream module instead
-# https://github.com/nodejs/node/commit/29e49fc286080215031a81effbd59eac092fff2f
-Provides: nodejs-punycode = %{punycode_version}
-Provides: npm(punycode) = %{punycode_version}
-
-
 # Node.js is closely tied to the version of v8 that is used with it. It makes
 # sense to use the bundled version because upstream consistently breaks ABI
 # even in point releases. Node.js upstream has now removed the ability to build
@@ -156,7 +119,6 @@ Provides: bundled(v8) = %{v8_version}
 #%else
 #Recommends: npm = %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
 #%endif
-
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -182,12 +144,9 @@ Epoch: %{npm_epoch}
 Version: %{npm_version}
 Release: %{npm_release}%{?dist}
 
-# We used to ship npm separately, but it is so tightly integrated with Node.js
-# (and expected to be present on all Node.js systems) that we ship it bundled
-# now.
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
-Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Requires: rhoar-nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 # Do not add epoch to the virtual NPM provides or it will break
 # the automatic dependency-generation script.
