@@ -68,6 +68,7 @@ If you see an error similar to this you may need to increase your memory setting
 
 * Packaged in this case refers to having a repository preconfigured so that a direct install command using 
 a package manager is possible, for example running `yum install -y nodejs` out of the box.
+[EPEL](https://fedoraproject.org/wiki/EPEL) is Extra Packages for Enterprise Linux
 
 ### Installing Node on RHEL
 
