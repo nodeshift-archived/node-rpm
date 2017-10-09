@@ -67,7 +67,7 @@ Source7: nodejs_native.attr
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
-Patch1: 0003-CA-Certificates-are-provided-by-Fedora.patch
+Patch1: 0001-System-CA-Certificates.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -218,7 +218,7 @@ rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
 
-# Install the GDB init tool into the documentation directory
+# Install the GDB init and lldbinit tools into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldbinit %{buildroot}/%{_pkgdocdir}/lldbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldb_commands.py %{buildroot}/%{_pkgdocdir}/lldb_commands.py

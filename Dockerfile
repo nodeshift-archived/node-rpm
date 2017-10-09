@@ -12,7 +12,7 @@ WORKDIR /usr/src/node-rpm/
 COPY src/nodejs.spec src/run.sh /usr/src/node-rpm/
 COPY src/nodejs.spec /root/rpmbuild_usr_src_debug/SPECS/
 
-COPY src/patches/0003-CA-Certificates-are-provided-by-Fedora.patch     \
+COPY src/patches/0001-System-CA-Certificates.patch     \
      src/nodejs_native.attr /root/rpmbuild_usr_src_debug/SOURCES/
 
 CMD ["./run.sh"]
