@@ -1,14 +1,14 @@
 [![Build Status](https://travis-ci.org/bucharest-gold/node-rpm.svg?branch=master)](https://travis-ci.org/bucharest-gold/node-rpm)
 
 ### Node.js RPM Packaging
-This purpose of this project is to create RPMs targeted for Fedora and RHEL to allow us to help identify issues
+This purpose of this project is to create RPMs targeted Red Hat Enterprise Linux (RHEL) to allow us to help identify issues
 early and contribute changes upstream when possible.
 
 The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
 [koji build](https://koji.fedoraproject.org/koji/buildinfo?buildID=861930).
 
 ### Releases 
-Built releases are published on [github](https://github.com/bucharest-gold/node-rpm/releases).
+Built releases are [published][] on github
 
 ### Building a new RPM
 If there is a new version released for Node.js and there is no existing staging branch for that version
@@ -42,8 +42,7 @@ Then run the following command to build the RPM:
     $ ./run.sh
 
 ### Built RPMs
-The build RPMS can be found in the [rpms](./rpms) directory and are also published when a tag
-is pushed.
+The build RPMS can be found in the [rpms](./rpms) directory and are also [published][] when a tag is pushed.
 
 ### Delete old containers
 
@@ -56,9 +55,23 @@ If you see an error similar to this you may need to increase your memory setting
 
     collect2: fatal error: ld terminated with signal 9 [Killed]
 
+### Creating a new base image
+If version of RHEL needs to be updated we need to rebuild our base docker image using the steps below.
+
+    $ docker run -it registry.access.redhat.com/rhel7
+    $ subscription-manager register --serverurl=subscription.rhsm.stage.redhat.com:443/subscription --baseurl=https://cdn.redhat.com --username=xxx --password=xxx --auto-attach
+    $ yum install -y rpmdevtools git gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel make
+    $ yum clean all
+    $ subscription-manager unregister
+
+#### Commit and push the image
+
+    $ docker commit -m 'Base RHEL image for Node RPM builds' 44a0d2c36d61 bucharestgold/rhel-base
+    $ docker tag bucharestgold/rhel-base bucharestgold/rhel-base:latest
+    $ docker login
+    $ docker push bucharestgold/rhel-base:latest
 
 ### Node.js versions in Fedora/RHEL/CentOS
-
 
 | OS Version | Package Node Version | SCL     |  EPEL     | Nodejs.org |
 |------------|:--------------------:|--------:|----------:|:-----------|
@@ -376,20 +389,5 @@ Not applicable as EPEL is only for RHEL, CentOS, and Scientific Linux.
 From the above output you can see all the packages that get installed plus how to use the scl tool to enable rh-nodejs4 in a
 new process running bash.
 
+[published]: https://github.com/bucharest-gold/node-rpm/releases
 
-### Creating a new base image
-If version of RHEL needs to be updated we need to rebuild our base docker image using the steps below.
-
-    $ docker run -it registry.access.redhat.com/rhel7
-    $ subscription-manager register --serverurl=subscription.rhsm.stage.redhat.com:443/subscription --baseurl=https://cdn.redhat.com --username=xxx --password=xxx --auto-attach
-    $ yum install -y rpmdevtools git gcc gcc-c++ openssl-devel libicu-devel python-devel systemtap-sdt-devel make
-    $ yum clean all
-    $ subscription-manager unregister
-
-#### Commit and push the image
-
-    $ docker commit -m 'Base RHEL image for Node RPM builds' 44a0d2c36d61 bucharestgold/rhel-base
-    $ docker tag bucharestgold/rhel-base bucharestgold/rhel-base:latest
-    $ docker login
-    $ docker push bucharestgold/rhel-base:latest
-    
