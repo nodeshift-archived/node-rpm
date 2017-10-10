@@ -150,7 +150,7 @@ The API documentation for the Node.js JavaScript runtime.
 
 
 %prep
-%setup -q -D -T -n node-v%{nodejs_version}
+%setup -q -n node-v%{nodejs_version}
 
 %patch1 -p1
 
