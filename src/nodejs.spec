@@ -179,9 +179,9 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make BUILDTYPE=Debug %{?_smp_mflags} test
+make BUILDTYPE=Debug test
 %else
-make BUILDTYPE=Release %{?_smp_mflags} test
+make BUILDTYPE=Release test
 %endif
 
 %install
