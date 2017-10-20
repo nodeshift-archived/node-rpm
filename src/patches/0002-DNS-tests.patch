@@ -1,0 +1,42 @@
+---
+diff --git a/test/parallel/test-net-better-error-messages-port-hostname.js b/test/parallel/test-net-better-error-messages-port-hostname.js
+index dac1714167..49f98a8e62 100644
+--- a/test/parallel/test-net-better-error-messages-port-hostname.js
++++ b/test/parallel/test-net-better-error-messages-port-hostname.js
+@@ -9,7 +9,13 @@ const c = net.createConnection(0, 'this.hostname.is.invalid');
+ c.on('connect', common.mustNotCall());
+
+ c.on('error', common.mustCall(function(e) {
+-  assert.strictEqual(e.code, 'ENOTFOUND');
++  // If Name Service Switch is available on the operating system then it
++  // might be configured differently (/etc/nsswitch.conf).
++  // If the system is configured with no dns the error code will be EAI_AGAIN,
++  // but if there are more services after the dns entry, for example some
++  // linux distributions skip a myhostname service by default which would
++  // still produce the ENOTFOUND error.
++  assert.ok(e.code === 'ENOTFOUND' || e.code === 'EAI_AGAIN');
+   assert.strictEqual(e.port, 0);
+   assert.strictEqual(e.hostname, 'this.hostname.is.invalid');
+ }));
+diff --git a/test/parallel/test-net-connect-immediate-finish.js b/test/parallel/test-net-connect-immediate-finish.js
+index 1b65ce15ab..3ec579c7fc 100644
+--- a/test/parallel/test-net-connect-immediate-finish.js
++++ b/test/parallel/test-net-connect-immediate-finish.js
+@@ -32,7 +32,13 @@ const client = net.connect({
+ client.once('error', common.mustCall((err) => {
+   assert(err);
+   assert.strictEqual(err.code, err.errno);
+-  assert.strictEqual(err.code, 'ENOTFOUND');
++  // If Name Service Switch is available on the operating system then it
++  // might be configured differently (/etc/nsswitch.conf).
++  // If the system is configured with no dns the error code will be EAI_AGAIN,
++  // but if there are more services after the dns entry, for example some
++  // linux distributions skip a myhostname service by default which would
++  // still produce the ENOTFOUND error.
++  assert.ok(err.code === 'ENOTFOUND' || err.code === 'EAI_AGAIN');
+   assert.strictEqual(err.host, err.hostname);
+   assert.strictEqual(err.host, 'this.hostname.is.invalid');
+   assert.strictEqual(err.syscall, 'getaddrinfo');
+
+ src/node_crypto.cc | 1 +
+ 1 file changed, 1 insertion(+)

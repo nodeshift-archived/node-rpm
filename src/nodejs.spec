@@ -69,6 +69,8 @@ Source7: nodejs_native.attr
 # http://patch-tracker.debian.org/patch/series/view/nodejs/0.10.26~dfsg1-1/2014_donotinclude_root_certs.patch
 Patch1: 0001-System-CA-Certificates.patch
 
+Patch2: 0002-DNS-tests.patch
+
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
@@ -153,6 +155,7 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}
 
 %patch1 -p1
+%patch2 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
