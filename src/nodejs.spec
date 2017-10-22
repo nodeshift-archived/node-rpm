@@ -70,6 +70,7 @@ Source7: nodejs_native.attr
 Patch1: 0001-System-CA-Certificates.patch
 
 Patch2: 0002-DNS-tests.patch
+Patch3: 0003-serdes.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -156,6 +157,7 @@ The API documentation for the Node.js JavaScript runtime.
 
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)

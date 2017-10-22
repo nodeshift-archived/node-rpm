@@ -1,0 +1,101 @@
+---
+diff --git a/test/parallel/test-v8-serdes.js b/test/parallel/test-v8-serdes.js
+index 981e196157..d47d5a01fb 100644
+--- a/test/parallel/test-v8-serdes.js
++++ b/test/parallel/test-v8-serdes.js
+@@ -60,54 +60,58 @@ const deserializerTypeError =
+   }, /foobar/);
+ }
+ 
+-{
+-  const ser = new v8.DefaultSerializer();
+-  ser._writeHostObject = common.mustCall((object) => {
+-    assert.strictEqual(object, process.stdin._handle);
+-    const buf = Buffer.from('stdin');
++if (process.stdin._handle !== undefined) {
++  {
++    const ser = new v8.DefaultSerializer();
++    ser._writeHostObject = common.mustCall((object) => {
++      assert.strictEqual(object, process.stdin._handle);
++      const buf = Buffer.from('stdin');
+ 
+-    ser.writeUint32(buf.length);
+-    ser.writeRawBytes(buf);
++      ser.writeUint32(buf.length);
++      ser.writeRawBytes(buf);
+ 
+-    ser.writeUint64(1, 2);
+-    ser.writeDouble(-0.25);
+-  });
++      ser.writeUint64(1, 2);
++      ser.writeDouble(-0.25);
++    });
+ 
+-  ser.writeHeader();
+-  ser.writeValue({ val: process.stdin._handle });
++    ser.writeHeader();
++    ser.writeValue({ val: process.stdin._handle });
+ 
+-  const des = new v8.DefaultDeserializer(ser.releaseBuffer());
+-  des._readHostObject = common.mustCall(() => {
+-    const length = des.readUint32();
+-    const buf = des.readRawBytes(length);
++    const des = new v8.DefaultDeserializer(ser.releaseBuffer());
++    des._readHostObject = common.mustCall(() => {
++      const length = des.readUint32();
++      const buf = des.readRawBytes(length);
+ 
+-    assert.strictEqual(buf.toString(), 'stdin');
++      assert.strictEqual(buf.toString(), 'stdin');
+ 
+-    assert.deepStrictEqual(des.readUint64(), [1, 2]);
+-    assert.strictEqual(des.readDouble(), -0.25);
+-    return process.stdin._handle;
+-  });
++      assert.deepStrictEqual(des.readUint64(), [1, 2]);
++      assert.strictEqual(des.readDouble(), -0.25);
++      return process.stdin._handle;
++    });
+ 
+-  des.readHeader();
++    des.readHeader();
+ 
+-  assert.strictEqual(des.readValue().val, process.stdin._handle);
++    assert.strictEqual(des.readValue().val, process.stdin._handle);
++  }
+ }
+ 
+-{
+-  const ser = new v8.DefaultSerializer();
+-  ser._writeHostObject = common.mustCall((object) => {
+-    throw new Error('foobar');
+-  });
+-
+-  ser.writeHeader();
+-  assert.throws(() => {
+-    ser.writeValue({ val: process.stdin._handle });
+-  }, /foobar/);
+-}
++if (process.stdin._handle !== undefined) {
++  {
++    const ser = new v8.DefaultSerializer();
++    ser._writeHostObject = common.mustCall((object) => {
++      throw new Error('foobar');
++    });
++
++    ser.writeHeader();
++    assert.throws(() => {
++      ser.writeValue({ val: process.stdin._handle });
++    }, /foobar/);
++  }
+ 
+-{
+-  assert.throws(() => v8.serialize(process.stdin._handle),
+-                /^Error: Unknown host object type: \[object .*\]$/);
++  {
++    assert.throws(() => v8.serialize(process.stdin._handle),
++                  /^Error: Unknown host object type: \[object .*\]$/);
++  }
+ }
+ 
+ {
