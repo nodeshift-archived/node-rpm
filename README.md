@@ -389,5 +389,57 @@ Not applicable as EPEL is only for RHEL, CentOS, and Scientific Linux.
 From the above output you can see all the packages that get installed plus how to use the scl tool to enable rh-nodejs4 in a
 new process running bash.
 
+### RPM package information
+Information about the installed RPM can be retreived using the following rpm command:
+```console
+[root@e8b41340469a node-rpm]# rpm -qi rhoar-nodejs 
+Name        : rhoar-nodejs
+Epoch       : 1
+Version     : 8.8.0
+Release     : 1.el7
+Architecture: x86_64
+Install Date: Thu Oct 26 07:07:30 2017
+Group       : Development/Languages
+Size        : 26254177
+License     : MIT and ASL 2.0 and ISC and BSD
+Signature   : (none)
+Source RPM  : rhoar-nodejs-8.8.0-1.el7.src.rpm
+Build Date  : Wed Oct 25 13:25:39 2017
+Build Host  : e8b41340469a
+Relocations : (not relocatable)
+URL         : http://nodejs.org/
+Summary     : JavaScript runtime
+Description :
+Node.js is a platform built on Chrome's JavaScript runtime
+for easily building fast, scalable network applications.
+Node.js uses an event-driven, non-blocking I/O model that
+makes it lightweight and efficient, perfect for data-intensive
+real-time applications that run across distributed devices.
+```
+### License information
+License information can be retrieved using the following rpm command:
+
+    $ rpm -qa rhoar-nodejs --qf "%{name}: %{license}\n"
+    rhoar-nodejs: MIT and ASL 2.0 and ISC and BSD
+
+### Useful RPM commands
+To find the package that a node executable belongs to:
+
+    $ which node
+    $ rpm -qf /usr/bin/node
+    rhoar-nodejs-8.8.0-1.el7.x86_64
+
+To list the documentation for an install rpm:
+
+    $ rpm -qd rhoar-nodejs
+    /usr/share/doc/rhoar-nodejs-8.8.0/AUTHORS
+    /usr/share/doc/rhoar-nodejs-8.8.0/CHANGELOG.md
+    /usr/share/doc/rhoar-nodejs-8.8.0/COLLABORATOR_GUIDE.md
+    /usr/share/doc/rhoar-nodejs-8.8.0/GOVERNANCE.md
+    /usr/share/doc/rhoar-nodejs-8.8.0/README.md
+    /usr/share/doc/rhoar-nodejs-8.8.0/node_license.xml
+    /usr/share/doc/rhoar-nodejs-8.8.0/npm_license.xml
+    ...
+
 [published]: https://github.com/bucharest-gold/node-rpm/releases
 

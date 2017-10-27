@@ -11,6 +11,9 @@ COPY src/patches/0001-System-CA-Certificates.patch     \
      src/patches/0002-DNS-tests.patch                  \
      src/patches/0003-serdes.patch                     \
      src/patches/0004-require-resolve-test.patch       \
+     src/license_xml.js                                \
+     src/license_html.js                               \
+     src/licenses.css                                  \
      src/nodejs_native.attr /root/rpmbuild/SOURCES/
 
 CMD ["./run.sh"]

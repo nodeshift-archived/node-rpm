@@ -220,6 +220,7 @@ chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 mkdir -p %{buildroot}%{_pkgdocdir}/html
 cp -pr doc/* %{buildroot}%{_pkgdocdir}/html
 rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
+cp %{_sourcedir}/licenses.css licenses.css
 
 #node-gyp needs common.gypi too
 mkdir -p %{buildroot}%{_datadir}/node
@@ -263,7 +264,6 @@ rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/html \
 ln -sf %{_pkgdocdir} %{buildroot}%{_prefix}/lib/node_modules/npm/html
 ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 
-
 %check
 # Fail the build if the versions don't match
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
@@ -271,6 +271,10 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 
 # Ensure we have npm and that the version matches
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
+
+# Generate license.xml and license.html
+%{buildroot}/%{_bindir}/node %{_sourcedir}/license_xml.js 'node' '%{nodejs_version}' > license.xml
+%{buildroot}/%{_bindir}/node %{_sourcedir}/license_html.js 'node' > license.html
 
 %files
 %{_bindir}/node
@@ -284,6 +288,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
 %{_rpmconfigdir}/nodejs_native.req
 %license LICENSE
+%license license.xml
+%license license.html
+%license licenses.css
 %doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
 %doc %{_mandir}/man*/*
 
