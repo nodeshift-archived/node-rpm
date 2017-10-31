@@ -57,7 +57,7 @@ URL: http://nodejs.org/
 
 ExclusiveArch: %{nodejs_arches}
 
-Source0: node-v%{nodejs_version}.tar.gz
+Source0: node-v%{nodejs_version}-rh.tar.gz
 
 # The native module Requires generator remains in the nodejs SRPM, so it knows
 # the nodejs and v8 versions.  The remainder has migrated to the
