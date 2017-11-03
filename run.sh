@@ -1,11 +1,12 @@
 #!/bin/sh
 
-version=$(rpm -q --specfile --qf='%{version}\n' nodejs.spec | head -n1)
-echo "Building version $version"
+export version=$(rpm -q --specfile --qf='%{version}\n' nodejs.spec | head -n1)
+node_version=node-v${version}-rh
 
-git clone https://github.com/bucharest-gold/node.git -b v${version}-rh node-v${version}
-tar -zcf node-v${version}-rh.tar.gz node-v${version}
-mv node-v${version}-rh.tar.gz /opt/app-root/src/rpmbuild/SOURCES/node-v${version}-rh.tar.gz
+## Create the tarball
+./create_node_tarball.sh
+## Copy the tarball to SOURCES
+mv ${node_version}.tar.gz /opt/app-root/src/rpmbuild/SOURCES/${node_version}.tar.gz
 
 ## Build the rpm
 rpmbuild -ba --noclean --define='basebuild 0' /usr/src/node-rpm/nodejs.spec
