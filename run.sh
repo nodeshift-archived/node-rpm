@@ -9,4 +9,4 @@ node_version=node-v${version}-rh
 mv ${node_version}.tar.gz /opt/app-root/src/rpmbuild/SOURCES/${node_version}.tar.gz
 
 ## Build the rpm
-rpmbuild -ba --noclean --define='basebuild 0' /usr/src/node-rpm/nodejs.spec
+rpmbuild -ba --noclean --define='basebuild 0' /opt/app-root/src/rpmbuild/SPECS/nodejs.spec
