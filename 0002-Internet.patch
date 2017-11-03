@@ -1,0 +1,24 @@
+diff --git a/Makefile b/Makefile
+index c2f872d..9eb389c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -976,15 +976,19 @@ lint-md-clean:
+	$(RM) -r tools/remark-preset-lint-node/node_modules
+ 
+ lint-md-build:
++ifndef no-internet
+	if [ ! -d tools/remark-cli/node_modules ]; then \
+		cd tools/remark-cli && ../../$(NODE) ../../$(NPM) install; fi
+	if [ ! -d tools/remark-preset-lint-node/node_modules ]; then \
+		cd tools/remark-preset-lint-node && ../../$(NODE) ../../$(NPM) install; fi
++endif
+ 
+ lint-md: lint-md-build
++ifndef no-internet
+	@echo "Running Markdown linter..."
+	$(NODE) tools/remark-cli/cli.js -q -f \
+		./*.md doc src lib benchmark tools/doc/ tools/icu/
++endif
+ 
+ LINT_JS_TARGETS = benchmark doc lib test tools
+ LINT_JS_CMD = tools/eslint/bin/eslint.js --cache \
