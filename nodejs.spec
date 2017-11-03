@@ -58,6 +58,9 @@ URL: http://nodejs.org/
 ExclusiveArch: %{nodejs_arches}
 
 Source0: node-v%{nodejs_version}-rh.tar.gz
+Source1: license_xml.js
+Source2: license_html.js
+Source3: licenses.css
 
 # The native module Requires generator remains in the nodejs SRPM, so it knows
 # the nodejs and v8 versions.  The remainder has migrated to the
@@ -219,7 +222,7 @@ chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 mkdir -p %{buildroot}%{_pkgdocdir}/html
 cp -pr doc/* %{buildroot}%{_pkgdocdir}/html
 rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
-cp %{_sourcedir}/licenses.css licenses.css
+cp %{SOURCE3} licenses.css
 
 #node-gyp needs common.gypi too
 mkdir -p %{buildroot}%{_datadir}/node
@@ -272,8 +275,8 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
 
 # Generate license.xml and license.html
-%{buildroot}/%{_bindir}/node %{_sourcedir}/license_xml.js 'node' '%{nodejs_version}' > license.xml
-%{buildroot}/%{_bindir}/node %{_sourcedir}/license_html.js 'node' > license.html
+%{buildroot}/%{_bindir}/node %{SOURCE1} 'node' '%{nodejs_version}' > license.xml
+%{buildroot}/%{_bindir}/node %{SOURCE2} 'node' > license.html
 
 %files
 %{_bindir}/node
