@@ -75,6 +75,10 @@ BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
 BuildRequires: openssl-devel >= 1:1.0.2
+BuildRequires: openssl-devel >= 1:1.0.2
+
+# Use by tests
+BuildRequires: procps-ng
 
 #we need ABI virtual provides where SONAMEs aren't enough/not present so deps
 #break when binary compatibility is broken
@@ -312,3 +316,11 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/html
 %{_pkgdocdir}/npm/html
 %{_pkgdocdir}/npm/doc
+
+%changelog
+* Wed Nov 1 2017 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.0-1
+- Updated to use version 8.9.0
+* Fri Oct 20 2017 Andrea Vibelli <avibelli@redhat.com> - 8.7.0-1
+- Added procps-ng into build requirements list, to fix V8 related tests
+- Added patch to manage DNS lookup failures due to no internet connection
+- First build for RHOAR Node runtime
