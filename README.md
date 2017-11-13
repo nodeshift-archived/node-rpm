@@ -88,6 +88,12 @@ License information can be retrieved using the following rpm command:
     $ rpm -qa rhoar-nodejs --qf "%{name}: %{license}\n"
     rhoar-nodejs: MIT and ASL 2.0 and ISC and BSD
 
+    $ rpm -q -L rhoar-nodejs
+    /usr/share/licenses/rhoar-nodejs-8.9.1/LICENSE
+    /usr/share/licenses/rhoar-nodejs-8.9.1/license.html
+    /usr/share/licenses/rhoar-nodejs-8.9.1/license.xml
+    /usr/share/licenses/rhoar-nodejs-8.9.1/licenses.css
+
 ### Useful RPM commands
 To find the package that a node executable belongs to:
 
