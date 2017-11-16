@@ -180,6 +180,7 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
            --with-dtrace \
+           --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
@@ -316,6 +317,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Nov 16 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.2.0-1
+- Added openssl-system-ca-path configuration variable
+- Updated to use version 8.9.0
 * Wed Nov 1 2017 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.0-1
 - Updated to use version 8.9.0
 * Fri Oct 20 2017 Andrea Vibelli <avibelli@redhat.com> - 8.7.0-1
