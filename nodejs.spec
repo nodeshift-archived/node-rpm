@@ -16,7 +16,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 1
+%global nodejs_release 2
 
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h
@@ -106,17 +106,6 @@ for easily building fast, scalable network applications.
 Node.js uses an event-driven, non-blocking I/O model that
 makes it lightweight and efficient, perfect for data-intensive
 real-time applications that run across distributed devices.
-
-%package devel
-Summary: JavaScript runtime - development headers
-Group: Development/Languages
-Requires: %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Requires: openssl-devel%{?_isa}
-Requires: zlib-devel%{?_isa}
-Requires: nodejs-packaging
-
-%description devel
-Development headers for the Node.js JavaScript runtime.
 
 %package -n npm
 Summary: Node.js Package Manager
@@ -288,16 +277,6 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
 %doc %{_mandir}/man*/*
 
-
-%files devel
-%if %{?with_debug} == 1
-%{_bindir}/node_g
-%endif
-%{_includedir}/node
-%{_datadir}/node/common.gypi
-%{_pkgdocdir}/gdbinit
-%{_pkgdocdir}/lldbinit
-%{_pkgdocdir}/lldb_commands.py
 
 
 %files -n npm
