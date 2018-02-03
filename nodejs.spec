@@ -220,6 +220,8 @@ mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldbinit %{buildroot}/%{_pkgdocdir}/lldbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldb_commands.py %{buildroot}/%{_pkgdocdir}/lldb_commands.py
 
+#install -n npm
+
 # Since the old version of NPM was unbundled, there are a lot of symlinks in
 # it's node_modules directory. We need to keep these as symlinks to ensure we
 # can backtrack on this if we decide to.
