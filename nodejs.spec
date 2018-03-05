@@ -166,6 +166,9 @@ export CXXFLAGS='%{optflags} -g \
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
+# Generate the headers tar-ball
+make tar-headers
+
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
            --with-dtrace \
@@ -212,6 +215,8 @@ cp %{SOURCE3} licenses.css
 #node-gyp needs common.gypi too
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
+
+cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
 
 # Install the GDB init and lldbinit tools into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
@@ -272,6 +277,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %dir %{_datadir}/systemtap
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
+%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
 %dir %{_usr}/lib/dtrace
 %{_usr}/lib/dtrace/node.d
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
