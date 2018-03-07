@@ -287,6 +287,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 
 %files -n npm
 %{_bindir}/npm
+%{_bindir}/npx
 %{_prefix}/lib/node_modules/npm
 %ghost %{_sysconfdir}/npmrc
 %ghost %{_sysconfdir}/npmignore
