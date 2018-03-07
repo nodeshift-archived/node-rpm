@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 10
+%global nodejs_minor 11
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -66,6 +66,8 @@ Source3: licenses.css
 # the nodejs and v8 versions.  The remainder has migrated to the
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
+
+Patch1: 0001-test-tls-cnnic-whitlist.patch
 
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
@@ -147,6 +149,8 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
+%patch1 -p1
+
 %build
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
@@ -167,7 +171,7 @@ export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 # Generate the headers tar-ball
-make tar-headers
+#make tar-headers
 
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
@@ -216,7 +220,7 @@ cp %{SOURCE3} licenses.css
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
 
-cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
+#cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
 
 # Install the GDB init and lldbinit tools into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
@@ -277,7 +281,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %dir %{_datadir}/systemtap
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
-%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
+#%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
 %dir %{_usr}/lib/dtrace
 %{_usr}/lib/dtrace/node.d
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
@@ -305,6 +309,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu Mar 29 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.11.0
+- Updated to use 8.11.0
 * Wed Mar 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.10.0
 - Updated to use 8.10.0
 * Sat Jan 27 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.4-2
