@@ -12,8 +12,8 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 9
-%global nodejs_minor 10
-%global nodejs_patch 1
+%global nodejs_minor 11
+%global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
