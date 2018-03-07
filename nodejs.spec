@@ -11,9 +11,9 @@
 
 # == Node.js Version ==
 %global nodejs_epoch 1
-%global nodejs_major 9
-%global nodejs_minor 11
-%global nodejs_patch 1
+%global nodejs_major 10
+%global nodejs_minor 0
+%global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 6
-%global v8_minor 2
-%global v8_build 414
-%global v8_patch 46-node.23
+%global v8_minor 5
+%global v8_build 254
+%global v8_patch 43-node.5
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -68,6 +68,7 @@ Source3: licenses.css
 Source7: nodejs_native.attr
 
 Patch1: 0001-test-tls-cnnic-whitlist.patch
+Patch2: 0002-test-child-process-spawnsync-validation-errors.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -144,6 +145,7 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}-rh
 
 %patch1 -p1
+%patch2 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -166,8 +168,14 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 git config user.email "daniel.bevenius@gmail.com"
 git config user.name "Daniel Bevenius"
-git add test/parallel/test-tls-cnnic-whitelist.js
-git commit -m 'test: commit to allow tar-headers to pass'
+git add test
+git commit test -m 'test: commit to allow tar-headers to pass'
+# Generate the headers tar-ball
+
+sed -i "s/REPLACEME/v%{nodejs_version}/g" doc/api/*.md
+git add doc
+git commit doc -m 'doc: updating versions in doc/api/*.md'
+
 # Generate the headers tar-ball
 make tar-headers
 
