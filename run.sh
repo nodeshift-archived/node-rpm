@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export version=$(rpm -q --specfile --qf='%{version}\n' nodejs.spec | head -n1)
-node_version=node-v${version}-rc
+node_version=node-v${version}-rh
 
 ## Create the tarball
 ./create_node_tarball.sh

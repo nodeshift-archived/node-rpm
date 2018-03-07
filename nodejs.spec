@@ -57,7 +57,7 @@ URL: http://nodejs.org/
 
 ExclusiveArch: %{nodejs_arches}
 
-Source0: node-v%{nodejs_version}-rc.tar.gz
+Source0: node-v%{nodejs_version}-rh.tar.gz
 Source1: license_xml.js
 Source2: license_html.js
 Source3: licenses.css
@@ -145,7 +145,7 @@ The API documentation for the Node.js JavaScript runtime.
 
 
 %prep
-%setup -q -n node-v%{nodejs_version}-rc
+%setup -q -n node-v%{nodejs_version}-rh
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -293,6 +293,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 
 %files -n npm
 %{_bindir}/npm
+%{_bindir}/npx
 %{_prefix}/lib/node_modules/npm
 %ghost %{_sysconfdir}/npmrc
 %ghost %{_sysconfdir}/npmignore
@@ -304,8 +305,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
-* Thu Mar 1 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.10.0-cr
-- Candidate release for 8.10.0
+* Wed Mar 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.10.0
+- Updated to use 8.10.0
 * Sat Jan 27 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.4-2
 - Removed devel package
 * Mon Jan 8 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.9.4-1
