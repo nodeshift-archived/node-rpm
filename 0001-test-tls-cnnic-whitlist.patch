@@ -1,5 +1,5 @@
 diff --git a/test/parallel/test-tls-cnnic-whitelist.js b/test/parallel/test-tls-cnnic-whitelist.js
-index 4887526435..0a53c0d2c7 100644
+index 80f188f..8ad025f 100644
 --- a/test/parallel/test-tls-cnnic-whitelist.js
 +++ b/test/parallel/test-tls-cnnic-whitelist.js
 @@ -28,7 +28,7 @@ const testCases = [
@@ -10,4 +10,4 @@ index 4887526435..0a53c0d2c7 100644
 +    errorCode: 'CERT_SIGNATURE_FAILURE'
    },
    // Test 1: for the fix of node#2061
-   // agent6-cert.pem is signed by intermidate cert of ca3.
+   // agent6-cert.pem is signed by intermediate cert of ca3.
