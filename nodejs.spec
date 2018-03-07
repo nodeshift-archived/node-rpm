@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 9
 %global nodejs_minor 6
-%global nodejs_patch 0
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -299,6 +299,12 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Mar 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.6.1-1
+- Updated to use version 9.6.1
+* Wed Mar 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.6.0-1
+- Updated to use version 9.6.0
+* Wed Mar 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.5.0-1
+- Updated to use version 9.5.0
 * Thu Jan 11 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.4.0-1
 - Updated to use version 9.4.0
 * Wed Dec 13 2017 Daniel Bevenius <dbeveniu@redhat.com> - 9.3.0-1
