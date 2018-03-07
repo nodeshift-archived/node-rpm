@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 9
-%global nodejs_minor 9
+%global nodejs_minor 10
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 2
 %global v8_build 414
-%global v8_patch 46-node.22
+%global v8_patch 46-node.23
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -67,11 +67,12 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
+Patch1: 0001-test-tls-cnnic-whitlist.patch
+
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-BuildRequires: openssl-devel >= 1:1.0.2
 BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
@@ -139,9 +140,10 @@ Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 %description docs
 The API documentation for the Node.js JavaScript runtime.
 
-
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
+
+%patch1 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -299,6 +301,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Mar 28 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.10.0-1
+- Updated to use version 9.10.0
 * Thu Mar 22 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.9.0-1
 - Updated to use version 9.9.0
 * Thu Mar 8 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.8.0-1
