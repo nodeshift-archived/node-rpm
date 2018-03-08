@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/bucharest-gold/node-rpm.svg?branch=master)](https://travis-ci.org/bucharest-gold/node-rpm)
 
 ### Node.js RPM Packaging
-This purpose of this project is to create RPMs targeted Red Hat Enterprise Linux (RHEL) to allow us to help identify issues
+This purpose of this project is to create RPMs targeted CentOS to allow us to help identify issues
 early and contribute changes upstream when possible.
 
 The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
@@ -27,15 +27,15 @@ easier to run the build locally to identify the failure if there are any.
 
 #### Build the docker image
 
-    $ docker build -t bucharestgold/rhel-node .
+    $ docker build -t bucharestgold/centos-node .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/rhel-node
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/rhel-node bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node bash
 
 Then run the following command to build the RPM:
 
