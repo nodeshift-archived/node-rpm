@@ -165,7 +165,7 @@ export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 # Generate the headers tar-ball
-make tar-headers
+#make tar-headers
 
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
