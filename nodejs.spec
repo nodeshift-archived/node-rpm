@@ -180,14 +180,14 @@ make tar-headers
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make BUILDTYPE=Debug %{?_smp_mflags} test
+make -s BUILDTYPE=Debug %{?_smp_mflags} test
 %else
-make BUILDTYPE=Release %{?_smp_mflags} test
+make -s BUILDTYPE=Release %{?_smp_mflags} test
 %endif
 
 %install
 
-./tools/install.py install %{buildroot} %{_prefix}
+./tools/install.py install %{buildroot} %{_prefix} > /dev/null
 
 # Set the binary permissions properly
 chmod 0755 %{buildroot}/%{_bindir}/node
