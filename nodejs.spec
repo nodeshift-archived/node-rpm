@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 6
-%global v8_minor 5
-%global v8_build 254
-%global v8_patch 43-node.5
+%global v8_minor 6
+%global v8_build 346
+%global v8_patch 24-node.4
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -67,14 +67,13 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: 0001-test-tls-cnnic-whitlist.patch
-Patch2: 0002-test-child-process-spawnsync-validation-errors.patch
+Patch1: 0001-node_version.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-BuildRequires: openssl-devel >= 1:1.0.2
+#BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
 BuildRequires: procps-ng
@@ -145,7 +144,6 @@ The API documentation for the Node.js JavaScript runtime.
 %setup -q -n node-v%{nodejs_version}-rh
 
 %patch1 -p1
-%patch2 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -166,23 +164,19 @@ export CXXFLAGS='%{optflags} -g \
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
+# Generate the headers tar-ball
 git config user.email "daniel.bevenius@gmail.com"
 git config user.name "Daniel Bevenius"
-git add test
-git commit test -m 'test: commit to allow tar-headers to pass'
-# Generate the headers tar-ball
 
+## Only do this for a candidate release.
 sed -i "s/REPLACEME/v%{nodejs_version}/g" doc/api/*.md
-git add doc
-git commit doc -m 'doc: updating versions in doc/api/*.md'
+git add doc src/node_version.h
+git commit doc src -m 'doc: updating versions in doc/api/*.md'
 
 # Generate the headers tar-ball
 make tar-headers
 
-./configure --prefix=%{_prefix} \
-           --shared-openssl \
-           --with-dtrace \
-           --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt
+./configure --prefix=%{_prefix} --with-dtrace
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries

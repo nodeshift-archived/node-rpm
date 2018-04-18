@@ -1,0 +1,13 @@
+diff --git a/src/node_version.h b/src/node_version.h
+index 51388d6..f95ac4e 100644
+--- a/src/node_version.h
++++ b/src/node_version.h
+@@ -29,7 +29,7 @@
+ #define NODE_VERSION_IS_LTS 0
+ #define NODE_VERSION_LTS_CODENAME ""
+
+-#define NODE_VERSION_IS_RELEASE 0
++#define NODE_VERSION_IS_RELEASE 1
+
+ #ifndef NODE_STRINGIFY
+ #define NODE_STRINGIFY(n) NODE_STRINGIFY_HELPER(n)
