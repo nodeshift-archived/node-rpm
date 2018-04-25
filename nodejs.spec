@@ -67,7 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: 0001-tar-headers.patch
+#Patch1: 0001-tar-headers.patch
 
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
@@ -143,7 +143,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-%patch1 -p1
+#%patch1 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
@@ -164,10 +164,10 @@ export CXXFLAGS='%{optflags} -g \
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
-git config user.email "daniel.bevenius@gmail.com"
-git config user.name "Daniel Bevenius"
-git add tools/install.py
-git commit -m 'test: commit to allow tar-headers to pass'
+#git config user.email "daniel.bevenius@gmail.com"
+#git config user.name "Daniel Bevenius"
+#git add tools/install.py
+#git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers
 
@@ -302,6 +302,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Fri May 25 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.2.1-1
+- Updated to use version 10.2.1
 * Thu May 24 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.2.0-1
 - Updated to use version 10.2.0
 * Wed Apr 25 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.1.0-1
