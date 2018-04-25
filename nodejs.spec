@@ -67,8 +67,6 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: 0001-node_version.patch
-
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
@@ -143,8 +141,6 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-%patch1 -p1
-
 %build
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
@@ -163,15 +159,6 @@ export CXXFLAGS='%{optflags} -g \
 # Explicit new lines in C(XX)FLAGS can break naive build scripts
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
-
-# Generate the headers tar-ball
-git config user.email "daniel.bevenius@gmail.com"
-git config user.name "Daniel Bevenius"
-
-## Only do this for a candidate release.
-sed -i "s/REPLACEME/v%{nodejs_version}/g" doc/api/*.md
-git add doc src/node_version.h
-git commit doc src -m 'doc: updating versions in doc/api/*.md'
 
 # Generate the headers tar-ball
 make tar-headers
@@ -307,6 +294,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Apr 25 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.0.0-1
+- Updated to use version 10.0.0
 * Wed Mar 28 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.10.0-1
 - Updated to use version 9.10.0
 * Thu Mar 22 2018 Daniel Bevenius <dbeveniu@redhat.com> - 9.9.0-1
