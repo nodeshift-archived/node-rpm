@@ -67,6 +67,8 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
+Patch1: 0001-tar-headers.patch
+
 BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
@@ -141,6 +143,8 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
+%patch1 -p1
+
 %build
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
@@ -160,6 +164,10 @@ export CXXFLAGS='%{optflags} -g \
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
+git config user.email "daniel.bevenius@gmail.com"
+git config user.name "Daniel Bevenius"
+git add tools/install.py
+git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers
 

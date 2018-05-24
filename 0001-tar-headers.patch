@@ -1,0 +1,14 @@
+diff --git a/tools/install.py b/tools/install.py
+index 2aeed773bb..1f8379b561 100755
+--- a/tools/install.py
++++ b/tools/install.py
+@@ -162,6 +162,9 @@ def headers(action):
+   action([
+     'common.gypi',
+     'config.gypi',
++    'src/callback_scope.h',
++    'src/core.h',
++    'src/exceptions.h',
+     'src/node.h',
+     'src/node_api.h',
+     'src/node_api_types.h',
