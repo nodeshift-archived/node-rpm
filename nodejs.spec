@@ -12,8 +12,8 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 10
-%global nodejs_minor 2
-%global nodejs_patch 1
+%global nodejs_minor 3
+%global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -30,8 +30,8 @@
 
 # npm - from deps/npm/package.json
 %global npm_epoch 1
-%global npm_major 5
-%global npm_minor 6
+%global npm_major 6
+%global npm_minor 1
 %global npm_patch 0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
