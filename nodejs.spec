@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 6
 %global v8_build 346
-%gl8bal v8_patch 32-node.9
+%global v8_patch 32-node.9
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
