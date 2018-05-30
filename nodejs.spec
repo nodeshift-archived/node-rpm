@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 6
 %global v8_build 346
-%global v8_patch 32-node.8
+%gl8bal v8_patch 32-node.9
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -302,6 +302,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed May 30 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.3.0-1
+- Updated to use version 10.3.1
 * Fri May 25 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.2.1-1
 - Updated to use version 10.2.1
 * Thu May 24 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.2.0-1
