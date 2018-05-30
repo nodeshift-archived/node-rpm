@@ -7,13 +7,13 @@ early and contribute changes upstream when possible.
 The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
 [koji build](https://koji.fedoraproject.org/koji/buildinfo?buildID=861930).
 
-### Releases 
+### Releases
 Built releases are [published][] on github
 
 ### Building a new RPM
-The RPMs built from this repository use an up-to-date [fork](https://github.com/bucharest-gold/node) of 
+The RPMs built from this repository use an up-to-date [fork](https://github.com/bucharest-gold/node) of
 [nodejs/node](https://github.com/nodejs/node).
-In order to build a new version of the RPM, there must be a corresponding 
+In order to build a new version of the RPM, there must be a corresponding
 [version tag](https://github.com/bucharest-gold/node/tags} in the bucharest-gold/node fork. If one does
 not exist, you'll need to create one.
 
@@ -27,20 +27,14 @@ git clone git@github.com:bucharest-gold/node.git
 cd node
 git co rhv10.0.0-staging
 git pull upstream
-git log upstream/v10.x-staging 
-# Now find the sha for the release commit...
-# In the logs it will look something like this
-# `2018-05-29, Version 10.3.0 (Current)`
-# Find the sha for the commit and copy it
-git co <sha>
-git tag v10.3.0-rh
+git tag v10.3.0-rh v10.3.0 -m 'Node.js release 10.3.0'
 git push origin rhv10.0.0-staging --follow-tags
 ```
 
 If there is a new version released for Node.js and there is no existing staging branch for that version
 a branch should be created.
 
-1. Branch off v&lt;n&gt;x-staging (where n is the major version of Node.js) 
+1. Branch off v&lt;n&gt;x-staging (where n is the major version of Node.js)
 
 If a branch already exists, or once you have created a new branch, the normal work flow would then be:
 
@@ -86,7 +80,7 @@ If you see an error similar to this you may need to increase your memory setting
 ### RPM package information
 Information about the installed RPM can be retreived using the following rpm command:
 ```console
-[root@e8b41340469a node-rpm]# rpm -qi rhoar-nodejs 
+[root@e8b41340469a node-rpm]# rpm -qi rhoar-nodejs
 Name        : rhoar-nodejs
 Epoch       : 1
 Version     : 8.8.0
