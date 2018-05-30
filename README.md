@@ -15,9 +15,11 @@ If there is a new version released for Node.js and there is no existing staging 
 a branch should be created.
 
 The normal work flow would then be:
-1. Branch off v&lt;n&gt;x-staging (where n is the major version of Node.js) 
-2. Update Node.js version in [nodejs.spec](./src/nodejs.spec)
-3. Either run the [build locally](#running-the-build-locally) or
+1. Create a tag for the version of node to be built in [bucharest-gold/node](https://github.com/bucharest-gold/node/tags).
+In most cases the tag will just point to a node upstream tag, basically an alias for the same tag. But if we do need to provide patches this workflow allows us to use a patch, and the tag would in that case point to the patched version.
+2. Branch off v&lt;n&gt;x-staging (where n is the major version of Node.js)
+3. Update Node.js version in [nodejs.spec](./src/nodejs.spec)
+4. Either run the [build locally](#running-the-build-locally) or
   commit the changes and create a pull request against the branch in question
 
 Both of these options will run through the build process and report back any failures. It might be
