@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 10
 %global nodejs_minor 4
-%global nodejs_patch 0
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 7
 %global v8_build 288
-%global v8_patch 43-node.7
+%global v8_patch 45-node.7
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -302,8 +302,10 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
-* Thu Jun 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.4.0-1
+* Mon Jun 18 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.4.1-1
 - Updated to use version 10.4.1
+* Thu Jun 7 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.4.0-1
+- Updated to use version 10.4.0
 * Wed May 30 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.3.0-1
 - Updated to use version 10.3.1
 * Fri May 25 2018 Daniel Bevenius <dbeveniu@redhat.com> - 10.2.1-1
