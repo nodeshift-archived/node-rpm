@@ -49,15 +49,15 @@ easier to run the build locally to identify the failure if there are any.
 
 #### Build the docker image
 
-    $ docker build -t bucharestgold/node-s2i .
+    $ docker build -t bucharestgold/centos-node .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/node-s2i
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/node-s2i bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node bash
 
 Then run the following command to build the RPM:
 
