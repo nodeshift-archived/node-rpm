@@ -77,8 +77,6 @@ BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-BuildRequires: openssl-devel >= 1:1.0.2
-BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
 BuildRequires: procps-ng
@@ -178,7 +176,6 @@ git commit -m 'test: commit to allow tar-headers to pass'
 make tar-headers
 
 ./configure --prefix=%{_prefix} \
-           --shared-openssl \
            --with-dtrace \
            --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt
 
