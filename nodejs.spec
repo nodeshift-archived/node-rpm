@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 10
-%global nodejs_minor 8
+%global nodejs_minor 9
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 6
-%global v8_minor 7
-%global v8_build 288
-%global v8_patch 49-node.19
+%global v8_minor 8
+%global v8_build 275
+%global v8_patch 24-node.14
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -302,6 +302,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu Aug 16 2018 Helio Frota <hesilva@redhat.com> - 10.9.0-1
+- Updated to use version 10.9.0
 * Wed Aug 1 2018 Helio Frota <hesilva@redhat.com> - 10.8.0-1
 - Updated to use version 10.8.0
 * Wed Jul 18 2018 Helio Frota <hesilva@redhat.com> - 10.7.0-1
