@@ -177,7 +177,7 @@ make tar-headers
 
 ./configure --prefix=%{_prefix} \
            --with-dtrace \
-           --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt
+           --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt \
            --enable-silent-rules
 
 %if %{?with_debug} == 1
