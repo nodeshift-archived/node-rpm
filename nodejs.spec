@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 11
-%global nodejs_patch 3
+%global nodejs_patch 4
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -77,8 +77,6 @@ BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-BuildRequires: openssl-devel >= 1:1.0.2
-BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
 BuildRequires: procps-ng
@@ -178,15 +176,14 @@ git commit -m 'test: commit to allow tar-headers to pass'
 make tar-headers
 
 ./configure --prefix=%{_prefix} \
-           --shared-openssl \
            --with-dtrace \
            --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make BUILDTYPE=Debug %{?_smp_mflags} test-only
+make V=0 BUILDTYPE=Debug %{?_smp_mflags} test-only
 %else
-make BUILDTYPE=Release %{?_smp_mflags} test-only
+make V=0 BUILDTYPE=Release %{?_smp_mflags} test-only
 %endif
 
 %install
@@ -313,6 +310,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu Aug 16 2018 Helio Frota <hesilva@redhat.com> - 8.11.4
+- Updated to use 8.11.4
 * Wed Jun 13 2018 Helio Frota <hesilva@redhat.com> - 8.11.3
 - Updated to use 8.11.3
 * Thu Mar 29 2018 Daniel Bevenius <dbeveniu@redhat.com> - 8.11.0
