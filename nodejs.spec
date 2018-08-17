@@ -181,9 +181,9 @@ make tar-headers
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make V=0 BUILDTYPE=Debug %{?_smp_mflags} test-only
+make V= BUILDTYPE=Debug %{?_smp_mflags} test-only
 %else
-make V=0 BUILDTYPE=Release %{?_smp_mflags} test-only
+make V= BUILDTYPE=Release %{?_smp_mflags} test-only
 %endif
 
 %install
