@@ -61,6 +61,7 @@ Source0: node-v%{nodejs_version}-rh.tar.gz
 Source1: license_xml.js
 Source2: license_html.js
 Source3: licenses.css
+Source4: parse_target_arch.py
 
 # The native module Requires generator remains in the nodejs SRPM, so it knows
 # the nodejs and v8 versions.  The remainder has migrated to the
@@ -73,7 +74,6 @@ BuildRequires: python-devel
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
-#BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
 BuildRequires: procps-ng
@@ -142,6 +142,7 @@ The API documentation for the Node.js JavaScript runtime.
 
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
+cp %{SOURCE4} parse_target_arch.py
 
 #%patch1 -p1
 
@@ -169,15 +170,30 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 #git add tools/install.py
 #git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
-make tar-headers
 
+./configure --prefix=%{_prefix} --with-dtrace
+
+target_arch=`python parse_target_arch.py`
+EXTRA_FILES=$RPM_BUILD_ROOT/ExtraFiles.list
+touch %{EXTRA_FILES}
+if [ ${target_arch} != "arm64" ] ; then
+  echo "%dir %{_usr}/lib/dtrace" > %{EXTRA_FILES}
+  echo "%{_usr}/lib/dtrace/node.d" > %{EXTRA_FILES}
+fi
+
+touch tools/doc/node_modules
+
+make DESTCPU=${target_arch} tar-headers
+
+# We run configure again with-dtrace as the tar-headers target 
+# also runs configure and this option is lost.
 ./configure --prefix=%{_prefix} --with-dtrace
 
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
-make -s V= BUILDTYPE=Debug %{?_smp_mflags} test
+make -s V= BUILDTYPE=Debug %{?_smp_mflags} test-only
 %else
-make -s V= BUILDTYPE=Release %{?_smp_mflags} test
+make -s V= BUILDTYPE=Release %{?_smp_mflags} test-only
 %endif
 
 %install
@@ -267,7 +283,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{buildroot}/%{_bindir}/node %{SOURCE1} 'node' '%{nodejs_version}' > license.xml
 %{buildroot}/%{_bindir}/node %{SOURCE2} 'node' > license.html
 
-%files
+%files -f %{EXTRA_FILES}
 %{_bindir}/node
 %dir %{_prefix}/lib/node_modules
 %dir %{_datadir}/node
@@ -275,8 +291,6 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
 %{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
-%dir %{_usr}/lib/dtrace
-%{_usr}/lib/dtrace/node.d
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
 %{_rpmconfigdir}/nodejs_native.req
 %license LICENSE

@@ -1,4 +1,4 @@
-FROM openshift/base-centos7
+FROM arm64v8/centos
 
 RUN yum install -y rpmdevtools         \
                    git gcc gcc-c++     \
@@ -6,11 +6,12 @@ RUN yum install -y rpmdevtools         \
                    libicu-devel        \
                    python-devel        \
                    systemtap-sdt-devel \
-                   make
+                   make                \
+                   which
 
 USER root
+ENV RPMBUILD_DIR="/root/rpmbuild/"
 
-ENV RPMBUILD_DIR="/opt/app-root/src/rpmbuild"
 WORKDIR ${RPMBUILD_DIR}/SPECS/
 
 COPY nodejs.spec run.sh create_node_tarball.sh ${RPMBUILD_DIR}/SPECS/
