@@ -1,5 +1,6 @@
 FROM arm64v8/centos
 
+RUN echo "here........"
 RUN yum install -y rpmdevtools         \
                    git gcc gcc-c++     \
                    openssl-devel       \
@@ -7,6 +8,7 @@ RUN yum install -y rpmdevtools         \
                    python-devel        \
                    systemtap-sdt-devel \
                    make                \
+                   which               \
                    qemu-kvm            \
                    qemu-img
 
