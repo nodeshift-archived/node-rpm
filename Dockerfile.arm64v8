@@ -8,7 +8,8 @@ RUN yum install -y rpmdevtools         \
                    systemtap-sdt-devel \
                    make                \
                    which               \
-                   qemu-kvm qemu-img
+                   qemu-kvm            \
+                   qemu-img
 
 USER root
 ENV RPMBUILD_DIR="/root/rpmbuild/"
