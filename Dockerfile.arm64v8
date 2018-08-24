@@ -7,7 +7,6 @@ RUN yum install -y rpmdevtools         \
                    python-devel        \
                    systemtap-sdt-devel \
                    make                \
-                   which               \
                    qemu-kvm            \
                    qemu-img
 
