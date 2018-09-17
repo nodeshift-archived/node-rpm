@@ -2,8 +2,12 @@ language: generic
 services:
 - docker
 install:
-- docker build -t bucharestgold/node-rpm .
-- docker run -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS bucharestgold/node-rpm
+#- docker build -t bucharestgold/node-rpm .
+#- docker run -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS bucharestgold/node-rpm
+## prepare qemu
+- docker run --rm --privileged multiarch/qemu-user-static:register --reset
+- docker build -f Dockerfile.arm64v8 -t bucharestgold/node-arm-rpm .
+- docker run -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS bucharestgold/node-arm-rpm
 deploy:
   provider: releases
   api_key:

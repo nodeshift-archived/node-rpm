@@ -41,6 +41,10 @@ Then run the following command to build the RPM:
 
     $ ./run.sh
 
+#### Building for ARM
+
+    $ docker build -f Dockerfile.arm64v8 -t bucharestgold/node-arm-rpm .
+
 ### Built RPMs
 The build RPMS can be found in the [rpms](./rpms) directory and are also [published][] when a tag is pushed.
 
