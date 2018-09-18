@@ -67,7 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: 0001-test-tls-cnnic-whitlist.patch
+# Patch1: 0001-test-tls-cnnic-whitlist.patch
 
 # use system certificates instead of the bundled ones
 # modified version of Debian patch:
