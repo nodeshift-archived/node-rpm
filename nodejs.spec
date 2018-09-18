@@ -147,7 +147,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-%patch1 -p1
+#%patch1 -p1
 
 %build
 # build with debugging symbols and add defines from libuv (#892601)
