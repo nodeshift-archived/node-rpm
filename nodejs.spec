@@ -141,6 +141,20 @@ Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 %description docs
 The API documentation for the Node.js JavaScript runtime.
 
+%package fips
+Summary: JavaScript runtime with FIPS support
+License: MIT and ASL 2.0 and ISC and BSD
+Group: Development/Languages
+URL: http://nodejs.org/
+
+%description fips
+Node.js is a platform built on Chrome's JavaScript runtime
+for easily building fast, scalable network applications.
+Node.js uses an event-driven, non-blocking I/O model that
+makes it lightweight and efficient, perfect for data-intensive
+real-time applications that run across distributed devices. This build
+comes with FIPS enabled.
+
 
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
@@ -180,16 +194,50 @@ make V=0 BUILDTYPE=Debug %{?_smp_mflags} test-only
 make V=0 BUILDTYPE=Release %{?_smp_mflags} test-only
 %endif
 
-%install
+# Copy the produced build as the out directory will be used
+# for the fips build as well
+cp -r out out_non_fips
 
+# FIPS
+mkdir fipscanister
+export FIPSDIR=%{_builddir}/node-v%{nodejs_version}-rh/fipscanister
+cd deps/openssl_fips
+./config
+make
+make install
+cd %{_builddir}/node-v%{nodejs_version}-rh
+
+./configure --prefix=%{_prefix} \
+           --with-dtrace \
+           --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt \
+           --openssl-fips=$FIPSDIR
+
+%if %{?with_debug} == 1
+make V=0 BUILDTYPE=Debug %{?_smp_mflags} test-only
+%else
+make V=0 BUILDTYPE=Release %{?_smp_mflags} test-only
+%endif
+
+%install
+# Install fips first as it was built last
+./tools/install.py install %{buildroot}/fips %{_prefix}
+# Remove and then restore the normal build's output directory
+rm -rf out
+mv out_non_fips out
 ./tools/install.py install %{buildroot} %{_prefix}
+
+# The fips executable cannot have the same name (node) as the normal
+# executable, so we copy it and name it node_fips
+cp %{buildroot}/fips/%{_prefix}/bin/node %{buildroot}/%{_prefix}/bin/node_fips
 
 # Set the binary permissions properly
 chmod 0755 %{buildroot}/%{_bindir}/node
+chmod 0755 %{buildroot}/%{_bindir}/node_fips
 
 %if %{?with_debug} == 1
 # Install the debug binary and set its permissions
 install -Dpm0755 out/Debug/node %{buildroot}/%{_bindir}/node_g
+install -Dpm0755 out/Debug/node %{buildroot}/%{_bindir}/node_fips_g
 %endif
 
 # own the sitelib directory
@@ -262,6 +310,8 @@ ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
 %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8, '%{v8_version}')"
 
+%{buildroot}/%{_bindir}/node_fips --enable-fips -e "require('assert').equal(require('crypto').fips, 1)"
+
 # Ensure we have npm and that the version matches
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
 
@@ -288,7 +338,24 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
 %doc %{_mandir}/man*/*
 
-
+%files fips
+%{_bindir}/node_fips
+%dir %{_prefix}/lib/node_modules
+%dir %{_datadir}/node
+%dir %{_datadir}/systemtap
+%dir %{_datadir}/systemtap/tapset
+%{_datadir}/systemtap/tapset/node.stp
+%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
+%dir %{_usr}/lib/dtrace
+%{_usr}/lib/dtrace/node.d
+%{_rpmconfigdir}/fileattrs/nodejs_native.attr
+%{_rpmconfigdir}/nodejs_native.req
+%license LICENSE
+%license license.xml
+%license license.html
+%license licenses.css
+%doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
+%doc %{_mandir}/man*/*
 
 %files -n npm
 %{_bindir}/npm
