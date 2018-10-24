@@ -217,9 +217,8 @@ cp -p common.gypi %{buildroot}%{_datadir}/node
 
 cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
 
-# Install the GDB init and lldbinit tools into the documentation directory
+# Install the GDB init tool into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
-mv %{buildroot}/%{_datadir}/doc/node/lldbinit %{buildroot}/%{_pkgdocdir}/lldbinit
 mv %{buildroot}/%{_datadir}/doc/node/lldb_commands.py %{buildroot}/%{_pkgdocdir}/lldb_commands.py
 
 # Since the old version of NPM was unbundled, there are a lot of symlinks in
