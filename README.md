@@ -11,19 +11,19 @@ The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
 Built releases are [published][] on github
 
 ### Building a new RPM
-The RPMs built from this repository use an up-to-date [fork](https://github.com/bucharest-gold/node) of
+The RPMs built from this repository use an up-to-date [fork](https://github.com/nodeshift/node) of
 [nodejs/node](https://github.com/nodejs/node).
 In order to build a new version of the RPM, there must be a corresponding
-[version tag](https://github.com/bucharest-gold/node/tags} in the bucharest-gold/node fork. If one does
+[version tag](https://github.com/nodeshift/node/tags) in the nodeshift/node fork. If one does
 not exist, you'll need to create one.
 
-Clone the bucharest-gold/node repository, and check out the appropriate staging branch for the version you
+Clone the nodeshift/node repository, and check out the appropriate staging branch for the version you
 are updating. The staging branch name should look something like `rhv<major>.<minor>.<patch>-staging`.
 Then pull the latest updates from the upstream staging branch and create the necessary version tag for
 Red Hat tooling.
 
 ```shell
-git clone git@github.com:bucharest-gold/node.git
+git clone git@github.com:nodeshift/node.git
 cd node
 git co rhv10.0.0-staging
 git pull upstream
