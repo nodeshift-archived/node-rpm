@@ -13,6 +13,6 @@ deploy:
   skip_clean: true
   on:
     tags: true
-    repo: bucharest-gold/node-rpm
+    repo: nodeshift/node-rpm
 notifications:
   irc: chat.freenode.net#bucharest-gold
