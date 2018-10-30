@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bucharest-gold/node-rpm.svg?branch=master)](https://travis-ci.org/bucharest-gold/node-rpm)
+[![Build Status](https://travis-ci.org/nodeshift/node-rpm.svg?branch=master)](https://travis-ci.org/nodeshift/node-rpm)
 
 ### Node.js RPM Packaging
 This purpose of this project is to create RPMs targeted Red Hat Enterprise Linux (RHEL) to allow us to help identify issues
@@ -49,15 +49,15 @@ easier to run the build locally to identify the failure if there are any.
 
 #### Build the docker image
 
-    $ docker build -t bucharestgold/centos-node .
+    $ docker build -t nodeshift/centos-node .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node bash
 
 Then run the following command to build the RPM:
 
@@ -130,5 +130,5 @@ To list the documentation for an install rpm:
     /usr/share/doc/rhoar-nodejs-8.8.0/licenses.css
     ...
 
-[published]: https://github.com/bucharest-gold/node-rpm/releases
+[published]: https://github.com/nodeshift/node-rpm/releases
 
