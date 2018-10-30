@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bucharest-gold/node-rpm.svg?branch=master)](https://travis-ci.org/bucharest-gold/node-rpm)
+[![Build Status](https://travis-ci.org/nodeshift/node-rpm.svg?branch=master)](https://travis-ci.org/nodeshift/node-rpm)
 
 ### Node.js RPM Packaging
 This purpose of this project is to create RPMs targeted CentOS to allow us to help identify issues
@@ -49,14 +49,14 @@ The build RPMS can be found in the [rpms](./rpms) directory and are also [publis
     $ docker rm $(docker ps -a -q)
 
 ### Increase memory limit
-When runnnig the build you may require more than the default 2GB or memory.
+When running the build you may require more than the default 2GB or memory.
 This can be done by increasing the memory limit in Docker for Mac preferences.
 If you see an error similar to this you may need to increase your memory settings:
 
     collect2: fatal error: ld terminated with signal 9 [Killed]
 
 ### RPM package information
-Information about the installed RPM can be retreived using the following rpm command:
+Information about the installed RPM can be retrieved using the following rpm command:
 ```console
 [root@e8b41340469a node-rpm]# rpm -qi rhoar-nodejs 
 Name        : rhoar-nodejs
@@ -114,5 +114,5 @@ To list the documentation for an install rpm:
     /usr/share/doc/rhoar-nodejs-8.8.0/licenses.css
     ...
 
-[published]: https://github.com/bucharest-gold/node-rpm/releases
+[published]: https://github.com/nodeshift/node-rpm/releases
 
