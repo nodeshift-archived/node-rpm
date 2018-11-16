@@ -13,3 +13,4 @@ if [ $SILENT == "true" ]; then
   rpmbuild -ba --quiet --noclean --define='basebuild 0' /opt/app-root/src/rpmbuild/SPECS/nodejs.spec
 else
   rpmbuild -ba --noclean --define='basebuild 0' /opt/app-root/src/rpmbuild/SPECS/nodejs.spec
+fi
