@@ -1,7 +1,7 @@
 FROM openshift/base-centos7
 
 RUN yum install -y rpmdevtools         \
-                   git gcc gcc-c++     \
+                   git devtoolset-7-gcc devtoolset-7-gcc-c++     \
                    openssl-devel       \
                    libicu-devel        \
                    python-devel        \
