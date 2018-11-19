@@ -3,7 +3,7 @@ services:
 - docker
 install:
 - docker build -t bucharestgold/node-rpm .
-- docker run -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS bucharestgold/node-rpm
+- docker run -e SILENT=true -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS bucharestgold/node-rpm
 deploy:
   provider: releases
   api_key:
