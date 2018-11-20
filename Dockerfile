@@ -11,6 +11,7 @@ RUN yum install -y centos-release-scl  && \
                    systemtap-sdt-devel \
                    make              
 
+RUN scl enable devtoolset-6 bash
 ENV PATH $PATH:/opt/rh/devtoolset-6/root/usr/bin
 
 USER root
