@@ -1,12 +1,11 @@
 FROM openshift/base-centos7
 
 RUN yum install -y rpmdevtools         \
-                   git devtoolset-7-gcc devtoolset-7-gcc-c++     \
+                   git                 \
                    openssl-devel       \
                    libicu-devel        \
                    python-devel        \
-                   systemtap-sdt-devel \
-                   make
+                   systemtap-sdt-devel
 
 USER root
 WORKDIR /opt/app-root/src/rpmbuild/SPECS/
