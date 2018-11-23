@@ -71,7 +71,7 @@ Source7: nodejs_native.attr
 
 BuildRequires: python-devel
 BuildRequires: devtoolset-7-gcc
-BuildRequires: devtoolset-7-gcc-g++
+BuildRequires: devtoolset-7-gcc-c++
 BuildRequires: systemtap-sdt-devel
 #BuildRequires: openssl-devel >= 1:1.0.2
 
