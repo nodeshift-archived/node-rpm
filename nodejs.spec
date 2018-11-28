@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 8
-%global nodejs_minor 13
+%global nodejs_minor 14
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -304,6 +304,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Nov 28 2018 Helio Frota <hesilva@redhat.com> - 8.14.0
+- Updated to use 8.14.0
 * Wed Nov 21 2018 Helio Frota <hesilva@redhat.com> - 8.13.0
 - Updated to use 8.13.0
 * Wed Sep 19 2018 Daniel Bevenius <daniel.bevenius@gmail.com> - 8.12.0
