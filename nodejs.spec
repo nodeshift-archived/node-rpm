@@ -45,8 +45,11 @@
 %global __provides_exclude_from ^%{_prefix}/lib/node_modules/npm/.*$
 %global __requires_exclude_from ^%{_prefix}/lib/node_modules/npm/.*$
 
-
+%if 0%{?rhel} > 7
+Name: nodejs
+%else
 Name: rhoar-nodejs
+%endif
 Epoch: %{nodejs_epoch}
 Version: %{nodejs_version}
 Release: %{nodejs_release}%{?dist}
@@ -69,7 +72,10 @@ Source7: nodejs_native.attr
 
 #Patch1: 0001-tar-headers.patch
 
-BuildRequires: python-devel
+BuildRequires: python2-devel
+%if 0%{?rhel} > 7
+BuildRequires: python3-devel
+%endif
 BuildRequires: gcc >= 4.8.0
 BuildRequires: gcc-c++ >= 4.8.0
 BuildRequires: systemtap-sdt-devel
@@ -116,7 +122,11 @@ Release: %{npm_release}%{?dist}
 
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
+%if 0%{?rhel} > 7
+Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+%else
 Requires: rhoar-nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+%endif
 
 # Do not add epoch to the virtual NPM provides or it will break
 # the automatic dependency-generation script.
@@ -145,6 +155,18 @@ The API documentation for the Node.js JavaScript runtime.
 
 #%patch1 -p1
 
+%if 0%{?rhel} > 7
+# Replace any instances of unversioned python' with python2
+pathfix.py -i %{__python2} -pn $(find -type f)
+find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
+find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python2~" {} \;
+sed -i "s~python~python2~" $(find . -type f | grep "gyp$")
+sed -i "s~usr\/bin\/python2~usr\/bin\/python3~" ./deps/v8/tools/gen-inlining-tests.py
+sed -i "s~usr\/bin\/python.*$~usr\/bin\/python2~" ./deps/v8/tools/mb/mb_unittest.py
+find . -type f -exec sed -i "s~python -c~python2 -c~" {} \;
+sed -i "s~which('python')~which('python2')~" configure
+%endif
+
 %build
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
@@ -163,13 +185,16 @@ export CXXFLAGS='%{optflags} -g \
 # Explicit new lines in C(XX)FLAGS can break naive build scripts
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
+%if 0%{?rhel} > 7
+export RHEL_ALLOW_PYTHON2_FOR_BUILD=1
+%endif
 
 #git config user.email "daniel.bevenius@gmail.com"
 #git config user.name "Daniel Bevenius"
 #git add tools/install.py
 #git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
-make tar-headers
+make tar-headers PYTHON=%{__python2}
 
 ./configure --prefix=%{_prefix} --with-dtrace
 
@@ -182,6 +207,9 @@ make -s V= BUILDTYPE=Release %{?_smp_mflags} test
 
 %install
 
+%if 0%{?rhel} > 7
+export RHEL_ALLOW_PYTHON2_FOR_BUILD=1
+%endif
 ./tools/install.py install %{buildroot} %{_prefix} > /dev/null
 
 # Set the binary permissions properly
