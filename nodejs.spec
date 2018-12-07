@@ -122,11 +122,7 @@ Release: %{npm_release}%{?dist}
 
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
-%if 0%{?rhel} > 7
-Requires: nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-%else
-Requires: rhoar-nodejs = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-%endif
+Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 # Do not add epoch to the virtual NPM provides or it will break
 # the automatic dependency-generation script.
