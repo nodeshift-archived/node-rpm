@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 10
 %global nodejs_minor 14
-%global nodejs_patch 0
+%global nodejs_patch 2
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -23,7 +23,7 @@
 %global v8_major 6
 %global v8_minor 8
 %global v8_build 275
-%global v8_patch 32-node.36
+%global v8_patch 32-node.45
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -302,6 +302,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Dec 12 2018 Helio Frota <hesilva@redhat.com> - 10.14.2-1
+- Updated to use version 10.14.2
 * Wed Nov 28 2018 Helio Frota <hesilva@redhat.com> - 10.14.0-1
 - Updated to use version 10.14.0
 * Tue Oct 30 2018 Helio Frota <hesilva@redhat.com> - 10.13.0-1
