@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 11
-%global nodejs_minor 4
+%global nodejs_minor 5
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -304,6 +304,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Tue Dec 18 2018 Helio Frota <hesilva@redhat.com> - 11.5.0-1
+- Updated to use version 11.5.0
 * Mon Dec 10 2018 Helio Frota <hesilva@redhat.com> - 11.4.0-1
 - Updated to use version 11.4.0
 * Wed Nov 28 2018 Helio Frota <hesilva@redhat.com> - 11.3.0-1
