@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 11
-%global nodejs_minor 5
+%global nodejs_minor 6
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -31,8 +31,8 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 6
-%global npm_minor 4
-%global npm_patch 1
+%global npm_minor 5
+%global npm_patch 0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -304,6 +304,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Dec 26 2018 Helio Frota <hesilva@redhat.com> - 11.6.0-1
+- Updated to use version 11.6.0
 * Tue Dec 18 2018 Helio Frota <hesilva@redhat.com> - 11.5.0-1
 - Updated to use version 11.5.0
 * Mon Dec 10 2018 Helio Frota <hesilva@redhat.com> - 11.4.0-1
