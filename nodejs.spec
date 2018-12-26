@@ -32,7 +32,7 @@
 %global npm_epoch 1
 %global npm_major 6
 %global npm_minor 5
-%global npm_patch 0
+%global npm_patch 0-next.0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
