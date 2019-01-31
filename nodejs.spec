@@ -70,8 +70,8 @@ Source7: nodejs_native.attr
 #Patch1: 0001-tar-headers.patch
 
 BuildRequires: python-devel
-BuildRequires: gcc >= 4.8.0
-BuildRequires: gcc-c++ >= 4.8.0
+BuildRequires: devtoolset-7-gcc
+BuildRequires: devtoolset-7-gcc-c++
 BuildRequires: systemtap-sdt-devel
 #BuildRequires: openssl-devel >= 1:1.0.2
 
@@ -146,6 +146,8 @@ The API documentation for the Node.js JavaScript runtime.
 #%patch1 -p1
 
 %build
+scl enable devtoolset-7 - << \EOF
+set -ex
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
 # NULL objects. We need to pass -fno-delete-null-pointer-checks
@@ -179,6 +181,7 @@ make -s V= BUILDTYPE=Debug %{?_smp_mflags} test
 %else
 make -s V= BUILDTYPE=Release %{?_smp_mflags} test
 %endif
+EOF
 
 %install
 
