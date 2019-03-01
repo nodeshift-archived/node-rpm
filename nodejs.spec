@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 11
 %global nodejs_minor 10
-%global nodejs_patch 0
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -304,6 +304,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Fri Mar 1 2019 Helio Frota <hesilva@redhat.com> - 11.10.1-1
+- Updated to use version 11.10.1
 * Fri Feb 15 2019 Helio Frota <hesilva@redhat.com> - 11.10.0-1
 - Updated to use version 11.10.0
 * Thu Jan 31 2019 Helio Frota <hesilva@redhat.com> - 11.9.0-1
