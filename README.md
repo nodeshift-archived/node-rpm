@@ -10,6 +10,16 @@ The RPM [spec file](./src/nodejs.spec) was based on the spec file from this
 ### Releases 
 Built releases are [published][] on github
 
+#### Re-building base image
+```console
+$ docker build -t nodeshift/node12-base - < Dockerfile.base
+```
+Push to docker:
+```console
+$ docker login username
+$ docker push nodeshift/node12-base
+```
+
 ### Building a new RPM
 If there is a new version released for Node.js and there is no existing staging branch for that version
 a branch should be created.
@@ -25,17 +35,21 @@ easier to run the build locally to identify the failure if there are any.
 
 ### Running the build locally
 
+#### Build the base image
+
+    $ docker build -t nodeshift/node12-base - < Dockerfile.base
+
 #### Build the docker image
 
-    $ docker build -t bucharestgold/centos-node .
+    $ docker build -t nodeshift/centos-node .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS bucharestgold/centos-node bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node bash
 
 Then run the following command to build the RPM:
 
