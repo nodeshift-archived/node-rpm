@@ -21,6 +21,7 @@ COPY nodejs.spec run.sh create_node_tarball.sh /opt/app-root/src/rpmbuild/SPECS/
 COPY license_xml.js                                            \
      license_html.js                                           \
      licenses.css                                              \
+     node_version.patch                                        \
      nodejs_native.attr /opt/app-root/src/rpmbuild/SOURCES/
 
 CMD ["./run.sh"]
