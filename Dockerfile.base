@@ -1,0 +1,24 @@
+FROM openshift/base-centos7
+
+RUN yum install -y centos-release-scl  && \
+    yum remove -y  gcc                 && \
+    yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++  && \
+    yum install -y rpmdevtools            \
+                   git                    \
+                   openssl-devel          \
+                   libicu-devel           \
+                   python-devel           \
+                   systemtap-sdt-devel    \
+                   make
+
+ARG VERSION_TAG=v12.0.0-rh
+ENV PATH "$PATH:/opt/rh/devtoolset-7/root/usr/bin"
+ENV BUILD_DIR "/opt/app-root/src/rpmbuild/BUILD"
+
+RUN mkdir -p ${BUILD_DIR} && \
+    git clone https://github.com/nodeshift/node.git -b ${VERSION_TAG}  ${BUILD_DIR}/node && \
+    cd ${BUILD_DIR}/node && \
+    export CFLAGS="`rpm --eval "%{optflags}"` -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks" && \
+    export CXXFLAGS="`rpm --eval "%{optflags}"` -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks" && \
+    ./configure --prefix=usr --with-dtrace && \
+    make -s V=1 BUILDTYPE=Release -j4
