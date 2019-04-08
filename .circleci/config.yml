@@ -1,0 +1,12 @@
+# Javascript Node CircleCI 2.1 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+
+jobs:
+  build:
+    steps:
+     - checkout
+     - run: docker build -t nodeshift/node-rpm:$CIRCLE_BRANCH .
+     - run: docker run -e SILENT=true -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS nodeshift/node-rpm:$CIRCLE_BRANCH
