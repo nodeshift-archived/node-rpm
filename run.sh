@@ -4,6 +4,7 @@ export version=$(rpm -q --specfile --qf='%{version}\n' nodejs.spec | head -n1)
 node_version=node-v${version}-rh
 
 pushd /opt/app-root/src/rpmbuild/BUILD/node
+git fetch --tags
 git checkout v${version}-rh
 cd ..
 ln -s node rhoar-nodejs-${version}
