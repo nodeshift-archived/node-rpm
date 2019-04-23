@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 7
-%global v8_minor 3
-%global v8_build 492
-%global v8_patch 25-node.7
+%global v8_minor 4
+%global v8_build 288
+%global v8_patch 21-node.16
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -31,7 +31,7 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 6
-%global npm_minor 7
+%global npm_minor 9
 %global npm_patch 0
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
@@ -66,7 +66,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-#Patch1: 
+#Patch1:
 
 BuildRequires: python-devel
 BuildRequires: devtoolset-7-gcc
@@ -140,7 +140,7 @@ Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 The API documentation for the Node.js JavaScript runtime.
 
 %prep
-%setup -q -D -T 
+%setup -q -D -T
 
 #%patch1 -p1
 
@@ -287,6 +287,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Tue Apr 23 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.0.0-1
+- Updated to use version release 12.0.0
 * Tue Mar 26 2019 Daniel Bevenius <daniel.bevenius@gmail.com> - 12.0.0-1
 - Updated to use version pre-release 12.0.0
 * Thu Mar 21 2019 Helio Frota <hesilva@redhat.com> - 11.12.0-1
