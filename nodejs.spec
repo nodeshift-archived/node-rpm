@@ -66,7 +66,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: node_version.patch
+#Patch1:
 
 BuildRequires: python-devel
 BuildRequires: devtoolset-7-gcc
@@ -142,7 +142,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -D -T 
 
-%patch1 -p1
+#%patch1 -p1
 
 %build
 scl enable devtoolset-7 - << \EOF
@@ -153,11 +153,11 @@ set -ex
 export CFLAGS='%{optflags} -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks'
 export CXXFLAGS='%{optflags} -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks'
 
-sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
-git config user.email "daniel.bevenius@gmail.com"
-git config user.name "Daniel Bevenius"
-git add doc/api src
-git commit -m 'test: commit to allow tar-headers to pass'
+#sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
+#git config user.email "daniel.bevenius@gmail.com"
+#git config user.name "Daniel Bevenius"
+#git add doc/api src
+#git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers
 ./configure --prefix=%{_prefix} --with-dtrace
