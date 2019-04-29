@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 0
+%global nodejs_minor 1
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -287,6 +287,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Mon Apr 29 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.1.0-1
+- Updated to use version release 12.1.0
 * Tue Apr 23 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.0.0-1
 - Updated to use version release 12.0.0
 * Tue Mar 26 2019 Daniel Bevenius <daniel.bevenius@gmail.com> - 12.0.0-1
