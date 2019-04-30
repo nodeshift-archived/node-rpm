@@ -11,7 +11,7 @@ RUN yum install -y centos-release-scl  && \
                    systemtap-sdt-devel    \
                    make
 
-ARG VERSION_TAG=v12.0.0-rh
+ARG VERSION_TAG=v12.1.0-rh
 ENV PATH "$PATH:/opt/rh/devtoolset-7/root/usr/bin"
 ENV BUILD_DIR "/opt/app-root/src/rpmbuild/BUILD"
 

@@ -1,4 +1,4 @@
-FROM nodeshift/node12-base:latest
+FROM nodeshift/node12-base:12.1.0
 
 ENV PATH $PATH:/opt/rh/devtoolset-7/root/usr/bin
 
