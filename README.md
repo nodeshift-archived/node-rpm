@@ -27,15 +27,15 @@ easier to run the build locally to identify the failure if there are any.
 
 #### Build the docker image
 
-    $ docker build -t nodeshift/centos-node .
+    $ docker build -t nodeshift/ubi-nodejs .
 
 #### Run the docker image
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/ubi-nodejs
 
 #### Run the build manually
 
-    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/centos-node bash
+    $ docker run -it -v ${PWD}/rpms:/root/rpmbuild/RPMS nodeshift/ubi-nodejs bash
 
 Then run the following command to build the RPM:
 
