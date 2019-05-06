@@ -57,6 +57,7 @@ URL: http://nodejs.org/
 
 ExclusiveArch: %{nodejs_arches}
 
+Source0: node-v%{nodejs_version}-rh.tar.gz
 Source1: license_xml.js
 Source2: license_html.js
 Source3: licenses.css
@@ -140,7 +141,7 @@ Conflicts: %{name} < %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 The API documentation for the Node.js JavaScript runtime.
 
 %prep
-%setup -q -D -T
+%setup -q -n node-v%{nodejs_version}-rh
 
 %patch1 -p1
 
@@ -150,20 +151,39 @@ set -ex
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
 # NULL objects. We need to pass -fno-delete-null-pointer-checks
-export CFLAGS='%{optflags} -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks'
-export CXXFLAGS='%{optflags} -g -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DZLIB_CONST -fno-delete-null-pointer-checks'
 
 #sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
 git config user.email "daniel.bevenius@gmail.com"
 git config user.name "Daniel Bevenius"
 git add test
 git commit -m 'test: commit to allow tar-headers to pass'
+
+export CFLAGS='%{optflags} -g \
+               -D_LARGEFILE_SOURCE \
+               -D_FILE_OFFSET_BITS=64 \
+               -DZLIB_CONST \
+               -fno-delete-null-pointer-checks'
+export CXXFLAGS='%{optflags} -g \
+                 -D_LARGEFILE_SOURCE \
+                 -D_FILE_OFFSET_BITS=64 \
+                 -DZLIB_CONST \
+                 -fno-delete-null-pointer-checks'
+
+# Explicit new lines in C(XX)FLAGS can break naive build scripts
+export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
+export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
+
 # Generate the headers tar-ball
 make tar-headers
+
 ./configure --prefix=%{_prefix} --with-dtrace
-make -s V=0 BUILDTYPE=Release %{?_smp_mflags}
-make -s V=0 BUILDTYPE=Release -j1 build-addons
+
+%if %{?with_debug} == 1
+# Setting BUILDTYPE=Debug builds both release and debug binaries
+make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
+%else
 make -s V=0 BUILDTYPE=Release %{?_smp_mflags} test
+%endif
 EOF
 
 %install
