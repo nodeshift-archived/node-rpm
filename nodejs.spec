@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 1
+%global nodejs_minor 2
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 7
 %global v8_minor 4
 %global v8_build 288
-%global v8_patch 21-node.16
+%global v8_patch 21-node.17
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -67,7 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-Patch1: test-fs-copy.patch
+#Patch1: test-fs-copy.patch
 
 BuildRequires: python-devel
 BuildRequires: devtoolset-7-gcc
@@ -143,7 +143,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-%patch1 -p1
+#%patch1 -p1
 
 %build
 scl enable devtoolset-7 - << \EOF
@@ -153,10 +153,10 @@ set -ex
 # NULL objects. We need to pass -fno-delete-null-pointer-checks
 
 #sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
-git config user.email "daniel.bevenius@gmail.com"
-git config user.name "Daniel Bevenius"
-git add test
-git commit -m 'test: commit to allow tar-headers to pass'
+#git config user.email "daniel.bevenius@gmail.com"
+#git config user.name "Daniel Bevenius"
+#git add test
+#git commit -m 'test: commit to allow tar-headers to pass'
 
 export CFLAGS='%{optflags} -g \
                -D_LARGEFILE_SOURCE \
@@ -307,6 +307,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed May 08 2019 Daniel Bevenius <daniel.bevenius@gmail.com> - 12.2.0-1
+- Updated to use version release 12.2.0
 * Mon Apr 29 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.1.0-1
 - Updated to use version release 12.1.0
 * Tue Apr 23 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.0.0-1
