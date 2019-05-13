@@ -1,10 +1,13 @@
 language: generic
+cache: ccache
 services:
 - docker
 install:
 - docker build -t nodeshift/node-rpm .
 script:
-- travis_wait 180 sleep infinity & docker run -e SILENT=true -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS nodeshift/node-rpm
+- travis_wait 300 sleep infinity & docker run -e SILENT=false -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm  > docker_output.txt
+after_failure:
+- tail -f docker_output.txt
 deploy:
   provider: releases
   api_key:
