@@ -191,7 +191,11 @@ make tar-headers PYTHON=python2
 # Setting BUILDTYPE=Debug builds both release and debug binaries
 make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
 %else
-make -s V=0 BUILDTYPE=Release %{?_smp_mflags} test
+%if %{?node_quiet:1}0
+make -s V=0 BUILDTYPE=Release %{?_smp_mflags} test 2> /dev/null
+%else
+make V=1 BUILDTYPE=Release %{?_smp_mflags} test
+%endif
 %endif
 
 %install
