@@ -178,10 +178,10 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 ## Uncomment the below for pre-releases.
 #sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
-#git config user.email "daniel.bevenius@gmail.com"
-#git config user.name "Daniel Bevenius"
-#git add .
-#git commit -m 'test: commit to allow tar-headers to pass'
+git config user.email "daniel.bevenius@gmail.com"
+git config user.name "Daniel Bevenius"
+git add .
+git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers PYTHON=python2
 
