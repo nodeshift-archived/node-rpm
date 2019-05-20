@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8
 
 COPY rpmdevtools/ /root/rpmdevtools/
 RUN pushd /root/rpmdevtools && yum -y --nogpgcheck localinstall *.rpm && popd
-RUN yum install -y git                            \
+RUN yum --skip-broken install -y git              \
                    gcc                            \
                    gcc-c++                        \
                    openssl-devel                  \
@@ -11,6 +11,7 @@ RUN yum install -y git                            \
                    python2-devel                  \
                    python3-devel                  \
                    systemtap-sdt-devel            \
+                   platform-python-devel          \
                    make
 
 USER root

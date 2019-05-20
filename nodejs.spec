@@ -69,7 +69,7 @@ Source7: nodejs_native.attr
 
 #Patch1: test-fs-copy.patch
 
-BuildRequires: python3-devel
+#BuildRequires: python3-devel
 BuildRequires: gcc >= 8.2.1
 BuildRequires: gcc-c++ >= 8.2.1
 BuildRequires: systemtap-sdt-devel
