@@ -3,7 +3,6 @@ services:
 - docker
 install:
 - docker build -t nodeshift/node-rpm .
-script:
 - travis_wait 300 sleep infinity & docker run -e SILENT=true -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS nodeshift/node-rpm
 deploy:
   provider: releases
