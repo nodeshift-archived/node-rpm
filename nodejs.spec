@@ -155,7 +155,7 @@ sed -i "s~usr\/bin\/python2~usr\/bin\/python3~" ./deps/v8/tools/gen-inlining-tes
 sed -i "s~usr\/bin\/python.*$~usr\/bin\/python2~" ./deps/v8/tools/mb/mb_unittest.py
 find . -type f -exec sed -i "s~python -c~python2 -c~" {} \;
 sed -i "s~which('python')~which('python2')~" configure
-pathfix.py -i %{__python2} -pn $(find tools deps/npm -type f)
+pathfix.py -i %{__python2} -pn $(find tools deps/npm -type f) > /dev/null 2>&1
 
 set -ex
 # build with debugging symbols and add defines from libuv (#892601)
