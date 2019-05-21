@@ -184,10 +184,12 @@ git config user.name "Daniel Bevenius"
 git add .
 git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
-make tar-headers PYTHON=python2
+#make tar-headers PYTHON=python2
 
-./configure --prefix=%{_prefix} --with-dtrace
+#./configure --prefix=%{_prefix} --with-dtrace
+./configure 
 
+echo "run make..."
 set +x
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
@@ -201,6 +203,7 @@ make V=1 BUILDTYPE=Release %{?_smp_mflags} test
 %endif
 %endif
 set -ex
+echo "run make...done"
 
 %install
 
@@ -237,7 +240,7 @@ cp %{SOURCE3} licenses.css
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
 
-cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
+#cp -p node-v%{nodejs_version}-headers.tar.gz %{buildroot}%{_datadir}/node
 
 # Install the GDB init tool into the documentation directory
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
@@ -295,7 +298,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %dir %{_datadir}/systemtap
 %dir %{_datadir}/systemtap/tapset
 %{_datadir}/systemtap/tapset/node.stp
-%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
+#%{_datadir}/node/node-v%{nodejs_version}-headers.tar.gz
 %dir %{_usr}/lib/dtrace
 %{_usr}/lib/dtrace/node.d
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
