@@ -146,6 +146,7 @@ The API documentation for the Node.js JavaScript runtime.
 #%patch1 -p1
 
 # Replace any instances of unversioned python' with python2
+set +1
 find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
 find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python2~" {} \;
 sed -i "s~python~python2~" $(find . -type f | grep "gyp$")
