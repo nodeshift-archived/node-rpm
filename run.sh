@@ -15,7 +15,6 @@ if [ -d /root/.ccache ]; then
   env
   ccache -s
 fi
-env
 
 ## Build the rpm
 if [ "$SILENT" == "true" ]; then
