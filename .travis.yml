@@ -4,7 +4,7 @@ services:
 - docker
 install:
 - docker build -t nodeshift/node-rpm .
-- travis_wait 300 sleep infinity & docker run -e SILENT=false -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm
+- travis_wait 300 sleep infinity & docker run -e SILENT=true -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm
 deploy:
   provider: releases
   api_key:
