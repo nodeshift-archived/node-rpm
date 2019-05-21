@@ -18,7 +18,7 @@ fi
 
 ## Build the rpm
 if [ "$SILENT" == "true" ]; then
-  rpmbuild -ba -q --quiet --noclean --define='basebuild 0' --define='node_quiet 1' /root/rpmbuild/SPECS/nodejs.spec
+  rpmbuild -ba --quiet --noclean --define='basebuild 0' --define='node_quiet 1' /root/rpmbuild/SPECS/nodejs.spec
 else
   rpmbuild -ba --noclean --define='basebuild 0' --define='node_quiet 1' /root/rpmbuild/SPECS/nodejs.spec
 fi
