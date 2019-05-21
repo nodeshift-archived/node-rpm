@@ -188,6 +188,7 @@ make tar-headers PYTHON=python2
 
 ./configure --prefix=%{_prefix} --with-dtrace
 
+set +x
 %if %{?with_debug} == 1
 # Setting BUILDTYPE=Debug builds both release and debug binaries
 make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
@@ -199,6 +200,7 @@ make -s V=0 -j8 -j8 test 2> /dev/null 2>&1
 make V=1 BUILDTYPE=Release %{?_smp_mflags} test
 %endif
 %endif
+set -ex
 
 %install
 
