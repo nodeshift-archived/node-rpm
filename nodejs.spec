@@ -193,7 +193,7 @@ make tar-headers PYTHON=python2
 make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
 %else
 %if %{?node_quiet:1}0
-make -s V=0 -j8 
+make -s V=0 -j8 -j8 test 2> /dev/null 2>&1
 #make -s V=0 -j8 test 2> /dev/null
 %else
 make V=1 BUILDTYPE=Release %{?_smp_mflags} test
