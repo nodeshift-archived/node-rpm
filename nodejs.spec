@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 2
+%global nodejs_minor 3
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -23,7 +23,7 @@
 %global v8_major 7
 %global v8_minor 4
 %global v8_build 288
-%global v8_patch 21-node.17
+%global v8_patch 27-node.17
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -307,6 +307,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Thu May 22 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.3.0-1
+- Updated to use version release 12.3.0
 * Wed May 08 2019 Daniel Bevenius <daniel.bevenius@gmail.com> - 12.2.0-1
 - Updated to use version release 12.2.0
 * Mon Apr 29 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.1.0-1
