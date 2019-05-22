@@ -69,11 +69,11 @@ Source7: nodejs_native.attr
 
 #Patch1: test-fs-copy.patch
 
-BuildRequires: python3-devel
-BuildRequires: gcc >= 8.2.1
-BuildRequires: gcc-c++ >= 8.2.1
+BuildRequires: python-devel
+BuildRequires: devtoolset-7-gcc
+BuildRequires: devtoolset-7-gcc-c++
 BuildRequires: systemtap-sdt-devel
-BuildRequires: openssl-devel >= 1:1.1.0
+#BuildRequires: openssl-devel >= 1:1.0.2
 
 # Use by tests
 BuildRequires: procps-ng
@@ -145,21 +145,18 @@ The API documentation for the Node.js JavaScript runtime.
 
 #%patch1 -p1
 
-# Replace any instances of unversioned python' with python2
-find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
-find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python2~" {} \;
-sed -i "s~python~python2~" $(find . -type f | grep "gyp$")
-sed -i "s~usr\/bin\/python2~usr\/bin\/python3~" ./deps/v8/tools/gen-inlining-tests.py
-sed -i "s~usr\/bin\/python.*$~usr\/bin\/python2~" ./deps/v8/tools/mb/mb_unittest.py
-find . -type f -exec sed -i "s~python -c~python2 -c~" {} \;
-sed -i "s~which('python')~which('python2')~" configure
-pathfix.py -i %{__python2} -pn $(find tools deps/npm -type f)
-
 %build
+scl enable devtoolset-7 - << \EOF
 set -ex
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
 # NULL objects. We need to pass -fno-delete-null-pointer-checks
+
+#sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
+#git config user.email "daniel.bevenius@gmail.com"
+#git config user.name "Daniel Bevenius"
+#git add test
+#git commit -m 'test: commit to allow tar-headers to pass'
 
 export CFLAGS='%{optflags} -g \
                -D_LARGEFILE_SOURCE \
@@ -176,14 +173,8 @@ export CXXFLAGS='%{optflags} -g \
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
-## Uncomment the below for pre-releases.
-#sed -i 's/REPLACEME/%{nodejs_version}/g' doc/api/*.md
-git config user.email "daniel.bevenius@gmail.com"
-git config user.name "Daniel Bevenius"
-git add .
-git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
-make tar-headers PYTHON=python2
+make tar-headers
 
 ./configure --prefix=%{_prefix} --with-dtrace
 
@@ -193,6 +184,7 @@ make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
 %else
 make -s V=0 BUILDTYPE=Release %{?_smp_mflags} test
 %endif
+EOF
 
 %install
 
