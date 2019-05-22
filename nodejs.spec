@@ -307,7 +307,7 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
-* Thu May 22 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.3.0-1
+* Wed May 22 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.3.0-1
 - Updated to use version release 12.3.0
 * Wed May 08 2019 Daniel Bevenius <daniel.bevenius@gmail.com> - 12.2.0-1
 - Updated to use version release 12.2.0
