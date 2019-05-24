@@ -195,8 +195,7 @@ set +x
 make -s V=0 BUILDTYPE=Debug %{?_smp_mflags} test
 %else
 %if %{?node_quiet:1}0
-make -s V=0 -j8 test 
-#make -s V=0 -j8 test 2> /dev/null
+make -s V=0 BUILDTYPE=Release %{?_smp_mflags} test
 %else
 make V=1 BUILDTYPE=Release %{?_smp_mflags} test
 %endif

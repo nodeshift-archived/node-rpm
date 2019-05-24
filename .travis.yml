@@ -1,13 +1,23 @@
-language: generic
+language: c
 cache: ccache
 services:
 - docker
+before_install:
+- sudo fallocate -l 5G /swapfile
+- sudo chmod 600 /swapfile
+- sudo mkswap /swapfile
+- sudo swapon /swapfile
+- sudo sysctl vm.swappiness=10
 install:
 - docker build -t nodeshift/node-rpm .
 script:
 - travis_wait 300 sleep infinity & docker run -e SILENT=false -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm  > docker_output.txt
+after_script:
+- tail -n 100 docker_output.txt
 after_failure:
-- tail -f docker_output.txt
+- tail -n 100 docker_output.txt
+after_success:
+- tail -n 100 docker_output.txt
 deploy:
   provider: releases
   api_key:
