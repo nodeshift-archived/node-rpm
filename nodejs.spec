@@ -168,7 +168,7 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 
 git config user.email "daniel.bevenius@gmail.com"
 git config user.name "Daniel Bevenius"
-git add tools/install.py
+git add .
 git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers
