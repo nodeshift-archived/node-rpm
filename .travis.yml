@@ -11,7 +11,7 @@ before_install:
 install:
 - docker build -t nodeshift/node-rpm .
 script:
-- travis_wait 300 sleep infinity & docker run -e SILENT=false -it -v ${PWD}/rpms:/opt/app-root/src/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm  > docker_output.txt
+- travis_wait 300 sleep infinity & docker run -e SILENT=false -it -v ${PWD}/rpms:/root/rpmbuild/RPMS -v /home/travis/.ccache:/root/.ccache nodeshift/node-rpm  > docker_output.txt
 after_script:
 - tail -n 100 docker_output.txt
 after_failure:
