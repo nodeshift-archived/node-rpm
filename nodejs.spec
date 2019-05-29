@@ -67,7 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-#Patch1: 0001-tar-headers.patch
+Patch1: test-fs-copy.patch
 
 BuildRequires: python-devel
 BuildRequires: devtoolset-7-gcc
@@ -143,7 +143,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-#%patch1 -p1
+%patch1 -p1
 
 %build
 scl enable devtoolset-7 - << \EOF
