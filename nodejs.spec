@@ -143,9 +143,7 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %setup -q -n node-v%{nodejs_version}-rh
 
-echo '---------------------'
 %patch1 -p1
-echo '---------------------'
 
 %build
 scl enable devtoolset-7 - << \EOF
