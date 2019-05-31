@@ -67,7 +67,7 @@ Source3: licenses.css
 # nodejs-packaging SRPM.
 Source7: nodejs_native.attr
 
-#Patch1: test-fs-copy.patch
+#Patch1: openssl-rsa.patch
 
 #BuildRequires: python3-devel
 BuildRequires: gcc >= 8.2.1
@@ -186,7 +186,7 @@ git commit -m 'test: commit to allow tar-headers to pass'
 # Generate the headers tar-ball
 make tar-headers PYTHON=python2
 
-./configure --prefix=%{_prefix} --with-dtrace
+./configure --openssl-system-ca-path=/etc/pki/tls/certs/ca-bundle.crt --shared-openssl --openssl-is-fips --prefix=%{_prefix} --with-dtrace
 
 echo "run make..."
 set +x
