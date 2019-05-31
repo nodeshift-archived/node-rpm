@@ -24,6 +24,7 @@ WORKDIR /root/rpmbuild/SPECS/
 
 COPY nodejs.spec run.sh create_node_tarball.sh /root/rpmbuild/SPECS/
 COPY rsa.h /usr/include/openssl/
+RUN update-crypto-policies --set LEGACY
 
 COPY license_xml.js                                            \
      license_html.js                                           \
