@@ -12,7 +12,7 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 7
+%global nodejs_minor 8
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -32,7 +32,7 @@
 %global npm_epoch 1
 %global npm_major 6
 %global npm_minor 10
-%global npm_patch 0
+%global npm_patch 2
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
 # In order to avoid needing to keep incrementing the release version for the
@@ -307,6 +307,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Aug 07 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.8.0-1
+- Updated to use version release 12.8.0
 * Wed Jul 24 2019 Helio Frota <hesilva@redhat.com> - 12.7.0-1
 - Updated to use version release 12.7.0
 * Wed Jul 03 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.6.0-1
