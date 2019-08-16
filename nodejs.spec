@@ -13,7 +13,7 @@
 %global nodejs_epoch 1
 %global nodejs_major 8
 %global nodejs_minor 16
-%global nodejs_patch 0
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -304,6 +304,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Fri Aug 16 2019 Helio Frota <hesilva@redhat.com> - 8.16.1
+- Updated to use 8.16.1
 * Wed Apr 16 2019 Lucas Holmquist <lholmqui@redhat.com> - 8.16.0
 - Updated to use 8.15.1
 * Wed Mar 6 2019 Helio Frota <hesilva@redhat.com> - 8.15.1
