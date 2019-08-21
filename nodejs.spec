@@ -12,8 +12,8 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 8
-%global nodejs_patch 1
+%global nodejs_minor 9
+%global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 7
-%global v8_minor 5
-%global v8_build 288
-%global v8_patch 22-node.16
+%global v8_minor 6
+%global v8_build 303
+%global v8_patch 29-node.15
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -70,8 +70,8 @@ Source7: nodejs_native.attr
 #Patch1: test-fs-copy.patch
 
 BuildRequires: python-devel
-BuildRequires: devtoolset-7-gcc
-BuildRequires: devtoolset-7-gcc-c++
+BuildRequires: devtoolset-8-gcc
+BuildRequires: devtoolset-8-gcc-c++
 BuildRequires: systemtap-sdt-devel
 #BuildRequires: openssl-devel >= 1:1.0.2
 
@@ -146,7 +146,7 @@ The API documentation for the Node.js JavaScript runtime.
 #%patch1 -p1
 
 %build
-scl enable devtoolset-7 - << \EOF
+scl enable devtoolset-8 - << \EOF
 set -ex
 # build with debugging symbols and add defines from libuv (#892601)
 # Node's v8 breaks with GCC 6 because of incorrect usage of methods on
@@ -164,8 +164,10 @@ export CFLAGS='%{optflags} -g \
                -DZLIB_CONST \
                -fno-delete-null-pointer-checks'
 export CXXFLAGS='%{optflags} -g \
+                 -Wno-class-memaccess \
                  -D_LARGEFILE_SOURCE \
                  -D_FILE_OFFSET_BITS=64 \
+                 -D__STDC_FORMAT_MACROS \
                  -DZLIB_CONST \
                  -fno-delete-null-pointer-checks'
 
@@ -307,6 +309,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Aug 21 2019 Helio Frota <hesilva@redhat.com> - 12.9.0-1
+- Updated to use version release 12.9.0
 * Fri Aug 16 2019 Helio Frota <hesilva@redhat.com> - 12.8.1-1
 - Updated to use version release 12.8.1
 * Wed Aug 07 2019 Lucas Holmquist <lholmqui@redhat.com> - 12.8.0-1

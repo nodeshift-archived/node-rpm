@@ -2,7 +2,7 @@ FROM openshift/base-centos7
 
 RUN yum install -y centos-release-scl  && \
     yum remove -y  gcc                 && \
-    yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++  && \
+    yum install -y devtoolset-8-gcc devtoolset-8-gcc-c++  && \
     yum install -y rpmdevtools            \
                    git                    \
                    openssl-devel          \
@@ -11,7 +11,7 @@ RUN yum install -y centos-release-scl  && \
                    systemtap-sdt-devel    \
                    make              
 
-ENV PATH $PATH:/opt/rh/devtoolset-7/root/usr/bin
+ENV PATH $PATH:/opt/rh/devtoolset-8/root/usr/bin
 
 USER root
 WORKDIR /opt/app-root/src/rpmbuild/SPECS/
