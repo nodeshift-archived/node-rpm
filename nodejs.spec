@@ -12,8 +12,8 @@
 # == Node.js Version ==
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 10
-%global nodejs_patch 0
+%global nodejs_minor 11
+%global nodejs_patch 1
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release 1
@@ -21,9 +21,9 @@
 # == Bundled Dependency Versions ==
 # v8 - from deps/v8/include/v8-version.h and v8_embedder_string from common.gypi
 %global v8_major 7
-%global v8_minor 6
-%global v8_build 303
-%global v8_patch 29-node.16
+%global v8_minor 7
+%global v8_build 299
+%global v8_patch 11-node.12
 # V8 presently breaks ABI at least every x.y release while never bumping SONAME
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
@@ -31,7 +31,7 @@
 # npm - from deps/npm/package.json
 %global npm_epoch 1
 %global npm_major 6
-%global npm_minor 10
+%global npm_minor 11
 %global npm_patch 3
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 
@@ -309,6 +309,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules %{buildroot}/%{_bindir}/node -
 %{_pkgdocdir}/npm/doc
 
 %changelog
+* Wed Oct 02 2019 Helio Frota <hesilva@redhat.com> - 12.11.1-1
+- Updated to use version release 12.11.1
 * Wed Sep 04 2019 Helio Frota <hesilva@redhat.com> - 12.10.0-1
 - Updated to use version release 12.10.0
 * Mon Aug 26 2019 Helio Frota <hesilva@redhat.com> - 12.9.1-1
