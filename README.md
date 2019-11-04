@@ -1,6 +1,9 @@
+# DEPRECATED
+
+This is no longer supported.
+
 [![Build Status](https://travis-ci.org/nodeshift/node-rpm.svg?branch=master)](https://travis-ci.org/nodeshift/node-rpm)
 
-### Node.js RPM Packaging
 This purpose of this project is to create RPMs targeted CentOS to allow us to help identify issues
 early and contribute changes upstream when possible.
 
